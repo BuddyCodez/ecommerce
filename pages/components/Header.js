@@ -15,12 +15,7 @@ const Header = () => {
     });
   });
   const Submit = () => {
-    setProgress(10);
-    setProgress(30);
-    setProgress(50);
-    router.push({ pathname: "/search", query: { query: query } });
-    setProgress(70);
-    setProgress(100);
+    router.push(`/search?query=${query}`);
   };
   return (
     <>
