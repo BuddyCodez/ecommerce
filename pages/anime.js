@@ -55,28 +55,29 @@ const Anime = ({ data }) => {
                 <p className="storyline">{anime.description}</p>
               </div>
             </div>
-            <div className="episode-list">
-              <h2 className="h2">Select Episode: {anime.totalEpisodes}</h2>
-              <ul className="Episodes">
-                {anime.episodes.map((episode) => {
-                  return (
-                    <li key={episode.id}>
-                      <Link
-                        className="btn btn-primary"
-                        href={
-                          "watch?id=" +
-                          episode.id +
-                          "&anime=" +
-                          query.anime
-                        }
-                      >
-                        <ion-icon name="play-circle-outline"></ion-icon>
-                        <span>Episode No: {episode.number}</span>
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
+          </section>
+          <section className="tv-series">
+            <div className="container">
+              <div className="episode-list">
+                <h2 className="h2">Select Episode: {anime.totalEpisodes}</h2>
+                <ul className="Episodes">
+                  {anime.episodes.map((episode) => {
+                    return (
+                      <li key={episode.id}>
+                        <Link
+                          className="btn btn-primary"
+                          href={
+                            "watch?id=" + episode.id + "&anime=" + query.anime
+                          }
+                        >
+                          <ion-icon name="play-circle-outline"></ion-icon>
+                          <span>Episode No: {episode.number}</span>
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
             </div>
           </section>
         </article>
