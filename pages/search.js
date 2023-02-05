@@ -58,7 +58,7 @@ export async function getServerSideProps(context) {
   const url = "https://api.consumet.org/anime/gogoanime/" + query.query;
   const { data } = await axios.get(url);
   const anime = data;
-  console.log(anime);
+  // console.log(anime);
   return {
     props: {
       anime,
