@@ -29,9 +29,9 @@ const Header = () => {
         <div className="container">
           <div className="overlay" data-overlay></div>
 
-          <Link href="/" className="logo">
+          <a href="/" className="logo">
             <h3>AnimePlus</h3>
-          </Link>
+          </a>
 
           <div className="header-actions">
             <input
