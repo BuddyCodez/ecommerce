@@ -48,7 +48,7 @@ export default function Document() {
           type="module"
           src="https://cdn.jsdelivr.net/npm/@vime/core@^5/dist/vime/vime.esm.js"
         ></script>
-        <script src="/js/script.js"></script>
+        <script src="/js/script.js" ></script>
       </body>
     </Html>
   );

@@ -137,6 +137,20 @@ const Header = () => {
                   <ion-icon name="logo-youtube"></ion-icon>
                 </Link>
               </li>
+              <li>
+                <input
+                  type="text"
+                  placeholder="Search"
+                  className="search-input"
+                  onChange={(e) => setQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      if (!query) return;
+                      Submit();
+                    }
+                  }}
+                />
+              </li>
             </ul>
           </nav>
         </div>
