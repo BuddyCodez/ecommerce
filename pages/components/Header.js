@@ -15,7 +15,7 @@ const Header = () => {
     });
   });
   const Submit = () => {
-    router.replace(`/search?query=${query}`);
+    window.location.href = `/search?query=${query}`;
   };
   return (
     <>
