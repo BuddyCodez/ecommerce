@@ -25,7 +25,11 @@ export default function Home({ popular }) {
   );
 }
 export async function getStaticProps() {
-  const res = await axios.get("https://gogoanime.consumet.stream/popular");
+  const res = await axios.get("https://gogoanime.consumet.stream/popular", {
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
   const popular = res.data;
   // console.log(popular);
   return {

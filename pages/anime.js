@@ -88,7 +88,11 @@ export default Anime;
 export async function getServerSideProps(context) {
   const { query } = context;
   const url = "https://api.consumet.org/anime/gogoanime/info/" + query.anime;
-  const { data } = await axios.get(url);
+  const { data } = await axios.get(url, {
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
 
   // console.log(data);
   return {

@@ -8,24 +8,17 @@ const TopRated = ({ popular }) => {
   function PushPage(item) {
     router.push({ pathname: "/anime", query: { anime: item } });
   }
-  function Decrement() {
+  function Change(type) {
     fetch(`https://gogoanime.consumet.stream/popular?page=${page}`)
       .then((response) => response.json())
       .then((animelist) => {
         setAnime(animelist);
         if (page > 1) {
-          setPage(page - 1);
+         type == "next" ? setPage(page + 1) : setPage(page - 1);
         }
       });
   }
-  function Increment() {
-    fetch(`https://gogoanime.consumet.stream/popular?page=${page}`)
-      .then((response) => response.json())
-      .then((animelist) => {
-        setAnime(animelist);
-        setPage(page + 1);
-      });
-  }
+
 
   return (
     <section className="top-rated">
@@ -64,16 +57,16 @@ const TopRated = ({ popular }) => {
         </ul>
         <div className="More">
           {page == 1 ? (
-            <button className="BtnFilter" onClick={Decrement} disabled>
+            <button className="BtnFilter"  disabled>
               <ion-icon name="chevron-back-outline"></ion-icon>
             </button>
           ) : (
-            <button className="BtnFilter" onClick={Decrement}>
+            <button className="BtnFilter" onClick={() => Change("previous")}>
               <ion-icon name="chevron-back-outline"></ion-icon>
             </button>
           )}
           <label className="Page">Page: {page}</label>
-          <button className="BtnFilter" onClick={Increment}>
+          <button className="BtnFilter" onClick={() => Change("next")}>
             <ion-icon name="chevron-forward-outline"></ion-icon>
           </button>
         </div>
