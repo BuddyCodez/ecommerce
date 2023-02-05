@@ -38,6 +38,8 @@ const watch = () => {
       setFilterdSource(filterd);
     };
     filter();
+    setVideoQuality("480p");
+    setVideoQuality("360p");
   }, [source, videoQuality]);
   useEffect(() => {
     const submenu = document.querySelector('vm-submenu[label="Quality"]');
