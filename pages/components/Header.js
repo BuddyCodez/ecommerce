@@ -15,7 +15,7 @@ const Header = () => {
     });
   });
   const Submit = () => {
-    router.push(`/search?query=${query}`);
+    router.replace(`/search?query=${query}`);
   };
   return (
     <>
