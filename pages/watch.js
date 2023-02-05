@@ -99,7 +99,7 @@ const watch = ({ anime, url, query }) => {
 export default watch;
 export async function getServerSideProps(context) {
   const { query } = context;
-  const uri = "https://api.consumet.org/anime/gogoanime/watch/" + query.id;
+  const uri = "https://api.consumet.org/anime/gogoanime/watch/" + query.id + "&?server=gogocdn";
   const { data } = await axios.get(uri, {
     params: { server: "gogocdn" },
     headers: {
