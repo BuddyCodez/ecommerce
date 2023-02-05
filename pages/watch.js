@@ -97,17 +97,16 @@ export default watch;
 export async function getServerSideProps(context) {
   const { query } = context;
   const uri =
-    "https://api.consumet.org/anime/gogoanime/watch/" +
+    "https://api.consumet.org/anime/zoro/watch?episodeId=" +
     query.id +
-    "&?server=streamsb";
-  const { data } = await axios.get(uri, {headers: {
+    "&server=vidcloud";
+  const { data } = await axios.get(uri, {
+    headers: {
       "Access-Control-Allow-Origin": "*",
-  }
+    },
   });
-  const servers = await (await axios.get("https://api.consumet.org/anime/gogoanime/servers/" + query.id)).data;
-  console.log(servers);
   const res2 = await axios.get(
-    `https://api.consumet.org/anime/gogoanime/info/${query.anime}`,
+    `https://api.consumet.org/anime/zoro/info?id=${query.anime}`,
     {
       headers: {
         "Access-Control-Allow-Origin": "*",
