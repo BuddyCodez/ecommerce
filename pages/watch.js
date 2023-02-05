@@ -32,7 +32,7 @@ const watch = ({ anime, url, query }) => {
                 {anime.animeTitle}
               </h1>
               <div className="flex flex-col justify-center items-center gap-2">
-                <vm-player contorls style={{ width: "450px" }}>
+                <vm-player contorls class="player">
                   <vm-hls cross-origin="true" poster={anime.image}>
                     <source
                       data-src={FilterdSource[0].url}

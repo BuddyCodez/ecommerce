@@ -1,6 +1,17 @@
 .label {
-    gap: 1rem;
+  gap: 1rem;
 }
 .radio {
-    border: solid 1px black;
+  border: solid 1px black;
+}
+.player {
+  width: 450px;
+}
+@media (max-width: 768px) {
+  .player {
+    width: 80vw;
+  }
+  .Episodes li {
+    margin: 10px;
+  }
 }
