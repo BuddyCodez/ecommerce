@@ -27,7 +27,7 @@ export default function Home({ popular }) {
 export async function getStaticProps() {
   const res = await axios.get("https://gogoanime.consumet.stream/popular");
   const popular = res.data;
-  console.log(popular);
+  // console.log(popular);
   return {
     props: {
       popular,
