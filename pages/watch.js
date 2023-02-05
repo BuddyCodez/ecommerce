@@ -1,24 +1,54 @@
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Layout from "./layout/main";
-
-const watch = ({ anime, url, query }) => {
+const watch = () => {
+  const { query } = useRouter();
+  const [anime, setAnime] = useState([]);
+  const [source, setSource] = useState([]);
+  const [FilterdSource, setFilterdSource] = useState([]);
   const [videoQuality, setVideoQuality] = useState("360p");
-  const FilterdSource = url.sources.filter((source) => {
-    return source.quality === videoQuality;
-  });
-  console.log(FilterdSource);
+  useEffect(() => {
+    const getAnime = async () => {
+      const url = "https://api.consumet.org/anime/gogoanime/info/" + query.anime;
+      const { data } = await axios.get(url);
+      setAnime(data);
+      console.log(data);
+    };
+    const getAnimeSource = async () => {
+      const url = "https://api.consumet.org/anime/gogoanime/watch/" + query.id;
+      const { data } = await axios.get(url);
+      setSource(data.sources);
+    };
+    if (query.anime) {
+      getAnime();
+    }
+    if (query.id) {
+      getAnimeSource();
+    }
+  }, [query]);
+  useEffect(() => {
+    const filter = async () => {
+      console.log(source);
+      const filterd = source.filter((item) => {
+        return item.quality === videoQuality;
+      });
+      console.log(filterd);
+      setFilterdSource(filterd);
+    };
+    filter();
+  }, [source, videoQuality]);
   useEffect(() => {
     const submenu = document.querySelector('vm-submenu[label="Quality"]');
     const radioGroup = submenu.querySelector("vm-menu-radio-group");
-    console.log(radioGroup);
     radioGroup.addEventListener("click", (event) => {
       const radio = event.target;
       submenu.hint = radio.value;
       setVideoQuality(radio.value);
     });
-  });
+  }, []);
+
   return (
     <Layout>
       <article>
@@ -29,13 +59,13 @@ const watch = ({ anime, url, query }) => {
               style={{ width: "100%" }}
             >
               <h1 className="section-subtitle text-2xl sm:text-md">
-                {anime.animeTitle}
+                {anime?.animeTitle}
               </h1>
               <div className="flex flex-col justify-center items-center gap-2">
                 <vm-player contorls class="player">
-                  <vm-hls cross-origin="true" poster={anime.image}>
+                  <vm-hls cross-origin="true" poster={anime?.image}>
                     <source
-                      data-src={FilterdSource[0].url}
+                      data-src={FilterdSource[0]?.url}
                       type="application/x-mpegURL"
                     />
                   </vm-hls>
@@ -65,19 +95,16 @@ const watch = ({ anime, url, query }) => {
                   </vm-default-ui>
                 </vm-player>
                 <div className="episode-list">
-                  <h2 className="h2">Select Episode: {anime.totalEpisodes}</h2>
+                  <h2 className="h2">Select Episode: {anime?.totalEpisodes}</h2>
                   <ul className="Episodes">
-                    {anime.episodes.map((episode) => {
+                    {anime?.episodes?.map((episode) => {
                       if (episode.id === query.id) return;
                       return (
-                        <li key={episode.episodeId}>
+                        <li key={episode.id}>
                           <Link
                             className="btn btn-primary"
                             href={
-                              "watch?id=" +
-                              episode.id +
-                              "&anime=" +
-                              query.anime
+                              "watch?id=" + episode.id + "&anime=" + query.anime
                             }
                           >
                             <ion-icon name="play-circle-outline"></ion-icon>
@@ -97,22 +124,3 @@ const watch = ({ anime, url, query }) => {
   );
 };
 export default watch;
-export async function getServerSideProps(context) {
-  const { query } = context;
-  const uri = "https://api.consumet.org/anime/gogoanime/watch/" + query.id;
-  const { data } = await axios.get(uri, {
-    params: { server: "gogocdn" },
-  });
-  const res2 = await axios.get(
-    `https://api.consumet.org/anime/gogoanime/info/${query.anime}`
-  );
-  const anime = await res2.data;
-  // console.log(anime);
-  return {
-    props: {
-      url: data,
-      anime,
-      query,
-    },
-  };
-}
