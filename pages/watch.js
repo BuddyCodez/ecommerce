@@ -99,7 +99,7 @@ export async function getServerSideProps(context) {
   const uri =
     "https://api.consumet.org/anime/gogoanime/watch/" +
     query.id +
-    "&?server=gogocdn";
+    "&?server=streamsb";
   const { data } = await axios.get(uri, {headers: {
       "Access-Control-Allow-Origin": "*",
   }
