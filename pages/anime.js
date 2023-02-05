@@ -35,11 +35,11 @@ const Anime = ({ data }) => {
                     <div className="badge badge-outline">HD</div>
                   </div>
 
-                  {/* <div className="ganre-wrapper">
+                  <div className="ganre-wrapper">
                     {anime.genres.forEach((index, genre) => {
                       return <a href="#">{genre}, </a>;
                     })}
-                  </div> */}
+                  </div>
 
                   <div className="date-time">
                     <div>
@@ -64,7 +64,10 @@ const Anime = ({ data }) => {
                       <Link
                         className="btn btn-primary"
                         href={
-                          "watch?id=" + episode.id + "&anime=" + query.anime
+                          "watch?id=" +
+                          episode.id +
+                          "&anime=" +
+                          query.anime
                         }
                       >
                         <ion-icon name="play-circle-outline"></ion-icon>
@@ -84,14 +87,10 @@ const Anime = ({ data }) => {
 export default Anime;
 export async function getServerSideProps(context) {
   const { query } = context;
-  const url = "https://api.consumet.org/anime/zoro/info?id=" + query.anime;
-  const { data } = await axios.get(url, {
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-    },
-  });
+  const url = "https://api.consumet.org/anime/gogoanime/info/" + query.anime;
+  const { data } = await axios.get(url);
 
-  console.log(data);
+  // console.log(data);
   return {
     props: {
       data,

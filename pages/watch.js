@@ -74,7 +74,10 @@ const watch = ({ anime, url, query }) => {
                           <Link
                             className="btn btn-primary"
                             href={
-                              "watch?id=" + episode.id + "&anime=" + query.anime
+                              "watch?id=" +
+                              episode.id +
+                              "&anime=" +
+                              query.anime
                             }
                           >
                             <ion-icon name="play-circle-outline"></ion-icon>
@@ -96,25 +99,15 @@ const watch = ({ anime, url, query }) => {
 export default watch;
 export async function getServerSideProps(context) {
   const { query } = context;
-  const uri =
-    "https://api.consumet.org/anime/zoro/watch?episodeId=" +
-    query.id +
-    "&server=vidcloud";
+  const uri = "https://api.consumet.org/anime/gogoanime/watch/" + query.id;
   const { data } = await axios.get(uri, {
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-    },
+    params: { server: "gogocdn" },
   });
   const res2 = await axios.get(
-    `https://api.consumet.org/anime/zoro/info?id=${query.anime}`,
-    {
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-      },
-    }
+    `https://api.consumet.org/anime/gogoanime/info/${query.anime}`
   );
   const anime = await res2.data;
-  console.log(data);
+  // console.log(anime);
   return {
     props: {
       url: data,

@@ -55,12 +55,8 @@ const SearchResult = ({ anime }) => {
 export default SearchResult;
 export async function getServerSideProps(context) {
   const query = context.query;
-  const url = "https://api.consumet.org/anime/zoro/" + query.query;
-  const { data } = await axios.get(url, {
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-    },
-  });
+  const url = "https://api.consumet.org/anime/gogoanime/" + query.query;
+  const { data } = await axios.get(url);
   const anime = data;
   // console.log(anime);
   return {
