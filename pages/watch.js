@@ -68,19 +68,20 @@ const watch = ({ anime, url, query }) => {
                   <h2 className="h2">Select Episode: {anime.totalEpisodes}</h2>
                   <ul className="Episodes">
                     {anime.episodes.map((episode) => {
+                      if (episode.id === query.id) return;
                       return (
                         <li key={episode.episodeId}>
                           <Link
                             className="btn btn-primary"
                             href={
                               "watch?id=" +
-                              episode.episodeId +
+                              episode.id +
                               "&anime=" +
                               query.anime
                             }
                           >
                             <ion-icon name="play-circle-outline"></ion-icon>
-                            <span>Episode No: {episode.episodeNum}</span>
+                            <span>Episode No: {episode.number}</span>
                           </Link>
                         </li>
                       );
