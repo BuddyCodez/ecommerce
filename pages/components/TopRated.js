@@ -1,30 +1,36 @@
-import { useEffect, useState } from "react";
-
-const TopRated = () => {
-  const [anime, setAnime] = useState([]);
-  const [page, setPage] = useState(2);
-  const LoadMore = () => {
+import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/router";
+const TopRated = ({ popular }) => {
+  const [anime, setAnime] = useState(popular);
+  const [page, setPage] = useState(1);
+  const router = useRouter();
+  function PushPage(item) {
+    router.push({ pathname: "/anime", query: { anime: item } });
+  }
+  function Decrement() {
     fetch(`https://gogoanime.consumet.stream/popular?page=${page}`)
       .then((response) => response.json())
       .then((animelist) => {
-        let newAnime = [...anime, ...animelist];
-        setAnime(newAnime);
-        console.log("Page2", animelist);
-        setPage(page + 1);
+        setAnime(animelist);
+        if (page > 1) {
+          setPage(page - 1);
+        }
       });
-  };
-  useEffect(() => {
-    fetch("https://gogoanime.consumet.stream/popular")
+  }
+  function Increment() {
+    fetch(`https://gogoanime.consumet.stream/popular?page=${page}`)
       .then((response) => response.json())
       .then((animelist) => {
         setAnime(animelist);
-        console.log(animelist);
+        setPage(page + 1);
       });
-  }, []);
+  }
+
   return (
     <section className="top-rated">
       <div className="container">
-        <p className="section-subtitle">Online Streaming</p>
+        <p className="section-subtitle">Online Anime Streaming</p>
 
         <h2 className="h2 section-title">Top Rated Animes</h2>
 
@@ -33,19 +39,19 @@ const TopRated = () => {
             return (
               <li key={item.animeId + item.animeTitle}>
                 <div className="movie-card">
-                  <a href="./movie-details.html">
+                  <button onClick={() => PushPage(item.animeId)}>
                     <figure className="card-banner">
                       <img
                         src={item.animeImg}
                         alt="Sonic the Hedgehog 2 movie poster"
                       />
                     </figure>
-                  </a>
+                  </button>
 
                   <div className="title-wrapper">
-                    <a href="./movie-details.html">
+                    <button onClick={() => PushPage(item.animeId)}>
                       <h3 className="card-title">{item.animeTitle}</h3>
-                    </a>
+                    </button>
 
                     <time dateTime={item.releasedDate}>
                       Release Date: {item.releasedDate}
@@ -57,8 +63,18 @@ const TopRated = () => {
           })}
         </ul>
         <div className="More">
-          <button className="btn btn-primary" onClick={LoadMore}>
-            Load More
+          {page == 1 ? (
+            <button className="BtnFilter" onClick={Decrement} disabled>
+              <ion-icon name="chevron-back-outline"></ion-icon>
+            </button>
+          ) : (
+            <button className="BtnFilter" onClick={Decrement}>
+              <ion-icon name="chevron-back-outline"></ion-icon>
+            </button>
+          )}
+          <label className="Page">Page: {page}</label>
+          <button className="BtnFilter" onClick={Increment}>
+            <ion-icon name="chevron-forward-outline"></ion-icon>
           </button>
         </div>
       </div>

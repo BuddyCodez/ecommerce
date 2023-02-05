@@ -1,9 +1,10 @@
+import axios from "axios";
 import Head from "next/head";
 import Image from "next/image";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import TopRated from "./components/TopRated";
-export default function Home() {
+export default function Home({ popular }) {
   return (
     <>
       <Head>
@@ -17,9 +18,19 @@ export default function Home() {
       <main>
         <article>
           <Hero />
-          <TopRated />
+          <TopRated popular={popular} />
         </article>
       </main>
     </>
   );
+}
+export async function getStaticProps() {
+  const res = await axios.get("https://gogoanime.consumet.stream/popular");
+  const popular = res.data;
+  console.log(popular);
+  return {
+    props: {
+      popular,
+    },
+  };
 }

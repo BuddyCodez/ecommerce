@@ -3,8 +3,8 @@ import { Html, Head, Main, NextScript } from "next/document";
 export default function Document() {
   return (
     <Html lang="en">
-      <meta charset="UTF-8" />
-      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta charSet="UTF-8" />
+      <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
 
       <title>AnimePlus - All in one Anime Collection</title>
 
@@ -13,9 +13,13 @@ export default function Document() {
         href="/images/favicon.svg"
         type="image/svg+xml"
       />
-
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin />
       <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@vime/core@^5/themes/default.css"
+      />
+
       <link
         rel="preconnect"
         href="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
@@ -32,7 +36,6 @@ export default function Document() {
       <body id="top">
         <Main />
         <NextScript />
-        <script src="/js/script.js" />
         <script
           type="module"
           src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
@@ -41,6 +44,11 @@ export default function Document() {
           noModule
           src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
         ></script>
+        <script
+          type="module"
+          src="https://cdn.jsdelivr.net/npm/@vime/core@^5/dist/vime/vime.esm.js"
+        ></script>
+        <script src="/js/script.js"></script>
       </body>
     </Html>
   );
