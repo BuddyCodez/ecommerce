@@ -9,6 +9,8 @@ const watch = () => {
   const [source, setSource] = useState([]);
   const [FilterdSource, setFilterdSource] = useState([]);
   const [videoQuality, setVideoQuality] = useState("720p");
+  const [time, setTime] = useState(-1);
+  const router = useRouter();
   useEffect(() => {
     const getAnime = async () => {
       const url =
@@ -16,6 +18,37 @@ const watch = () => {
       const { data } = await axios.get(url);
       setAnime(data);
       console.log(data);
+      const currentEp = data.episodes.filter((item) => {
+        return item.id === query.id;
+      })[0];
+      const filterNextEp = data.episodes.filter((item) => {
+        return item.number > currentEp.number;
+      })[0];
+      const filterPrevEp = data.episodes
+        .filter((item) => {
+          return item.number < currentEp.number;
+        })
+        .reverse()[0];
+      const NextBtn = document.querySelector(`vm-menu-item[label='Next Episode']`);
+      const PrevBtn = document.querySelector(`vm-menu-item[label='Previous Episode']`);
+      if (filterNextEp) {
+        NextBtn.hint = filterNextEp.number;
+        NextBtn.addEventListener("click", () => {
+          router.push(`/watch?id=${filterNextEp.id}&anime=${query.anime}`);
+        });
+      } else {
+        NextBtn.hint = "Series End";
+        NextBtn.disabled = true;
+      }
+      if (filterPrevEp) {
+        PrevBtn.hint = filterPrevEp.number;
+        PrevBtn.addEventListener("click", () => {
+          router.push(`/watch?id=${filterPrevEp.id}&anime=${query.anime}`);
+        });
+      } else {
+        PrevBtn.hint = "First Episode";
+        PrevBtn.disabled = true;
+      }
     };
     const getAnimeSource = async () => {
       const url = "https://api.consumet.org/anime/gogoanime/watch/" + query.id;
@@ -34,16 +67,16 @@ const watch = () => {
   }, [query]);
   useEffect(() => {
     const filter = async () => {
-      console.log("source",source);
-      
+      console.log("source", source);
+
       const filterd = source.filter((item) => {
         return item.quality === videoQuality;
       });
       console.log(filterd);
       setFilterdSource(filterd);
+
     };
     filter();
-
   }, [source, videoQuality]);
   useEffect(() => {
     const submenu = document.querySelector('vm-submenu[label="Quality"]');
@@ -52,6 +85,23 @@ const watch = () => {
       const radio = event.target;
       submenu.hint = radio.value;
       setVideoQuality(radio.value);
+    });
+  }, []);
+  useEffect(() => {
+    const Player = document.querySelector("vm-player");
+    const forward = document.querySelector("vm-menu-item[label='Forward']");
+    const backward = document.querySelector("vm-menu-item[label='Backward']");
+    forward.addEventListener("click", () => {
+      console.log("forward");
+      if (Player.currentTime <= Player.duration) {
+        Player.currentTime += 10;
+      }
+    });
+    backward.addEventListener("click", () => {
+      console.log("backward");
+      if (Player.currentTime >= 0) {
+        Player.currentTime -= 10;
+      }
     });
   }, []);
 
@@ -100,36 +150,18 @@ const watch = () => {
                       </vm-submenu>
                       <vm-menu-item label="Forward" hint="10s"></vm-menu-item>
                       <vm-menu-item label="Backward" hint="10s"></vm-menu-item>
-                      <vm-menu-item label="Next Episode" hint="next"></vm-menu-item>
+                      <vm-menu-item
+                        label="Next Episode"
+                        hint="next"
+                      ></vm-menu-item>
+                      <vm-menu-item
+                        label="Previous Episode"
+                        hint="prevs"
+                      ></vm-menu-item>
                     </vm-settings>
                   </vm-default-ui>
                 </vm-player>
               </div>
-            </div>
-          </div>
-        </section>
-        <section className="tv-series">
-          <div className="container">
-            <div className="episode-list">
-              <h2 className="h2">Select Episode: {anime?.totalEpisodes}</h2>
-              <ul className="Episodes">
-                {anime?.episodes?.map((episode) => {
-                  if (episode.id > query.id) return;
-                  return (
-                    <li key={episode.id}>
-                      <Link
-                        className="btn btn-primary"
-                        href={
-                          "watch?id=" + episode.id + "&anime=" + query.anime
-                        }
-                      >
-                        <ion-icon name="play-circle-outline"></ion-icon>
-                        <span>Episode No: {episode.number}</span>
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
             </div>
           </div>
         </section>

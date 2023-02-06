@@ -21,7 +21,7 @@ const TopRated = ({ popular }) => {
 
 
   return (
-    <section className="top-rated">
+    <section className="top-rated" id="Trending">
       <div className="container">
         <p className="section-subtitle">Online Anime Streaming</p>
 

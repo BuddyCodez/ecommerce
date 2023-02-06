@@ -78,33 +78,22 @@ const Header = () => {
               </li>
 
               <li>
-                <Link href="#" className="navbar-link">
-                  Movie
+                <Link href="/#Trending" className="navbar-link">
+                  Trending
                 </Link>
               </li>
 
               <li>
                 <Link href="#" className="navbar-link">
-                  Tv Show
+                  Anime Movies
                 </Link>
               </li>
 
-              <li>
-                <Link href="#" className="navbar-link">
-                  Web Series
-                </Link>
-              </li>
-
-              <li>
-                <Link href="#" className="navbar-link">
-                  Pricing
-                </Link>
-              </li>
               <li>
                 <input
                   type="text"
                   placeholder="Search"
-                  className="search-input"
+                  className="search-input mobileOnly"
                   onChange={(e) => setQuery(e.target.value)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
@@ -113,38 +102,6 @@ const Header = () => {
                     }
                   }}
                 />
-              </li>
-            </ul>
-
-            <ul className="navbar-social-list">
-              <li>
-                <Link href="#" className="navbar-social-link">
-                  <ion-icon name="logo-twitter"></ion-icon>
-                </Link>
-              </li>
-
-              <li>
-                <Link href="#" className="navbar-social-link">
-                  <ion-icon name="logo-facebook"></ion-icon>
-                </Link>
-              </li>
-
-              <li>
-                <Link href="#" className="navbar-social-link">
-                  <ion-icon name="logo-pinterest"></ion-icon>
-                </Link>
-              </li>
-
-              <li>
-                <Link href="#" className="navbar-social-link">
-                  <ion-icon name="logo-instagram"></ion-icon>
-                </Link>
-              </li>
-
-              <li>
-                <Link href="#" className="navbar-social-link">
-                  <ion-icon name="logo-youtube"></ion-icon>
-                </Link>
               </li>
             </ul>
           </nav>

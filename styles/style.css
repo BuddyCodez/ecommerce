@@ -1025,9 +1025,12 @@ body.active {
 /*-----------------------------------*\
  * #MOVIE DETAIL 
 \*-----------------------------------*/
-
+.mobileOnly {
+  visibility: hidden;
+  display: none;
+}
 .movie-detail {
-  background: url("../public/images/movie-detail-bg.png") no-repeat;
+  background: url("/images/bg.jpg") no-repeat;
   background-size: cover;
   background-position: center;
   padding-top: 160px;
@@ -1729,3 +1732,11 @@ body.active {
     transform: rotate(-0.25turn);
   }
 }
+
+@media (max-width: 991px) {
+.mobileOnly{
+  display: block;
+  visibility: visible;
+}
+}
+  

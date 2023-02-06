@@ -36,8 +36,12 @@ const Anime = ({ data }) => {
                   </div>
 
                   <div className="ganre-wrapper">
-                    {anime.genres.forEach((index, genre) => {
-                      return <a href="#">{genre}, </a>;
+                    {anime.genres.map((gen, index) => {
+                      return (
+                        <a>
+                          {index == anime.genres.length - 1 ? gen : gen + ", "}
+                        </a>
+                      );
                     })}
                   </div>
 
