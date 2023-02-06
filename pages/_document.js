@@ -6,7 +6,7 @@ export default function Document() {
       <meta charSet="UTF-8" />
       <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
 
-      <title>AnimePlus - All in one Anime Collection</title>
+      <title>AniMatrix - All in one Anime Collection</title>
 
       <link
         rel="shortcut icon"
@@ -48,7 +48,7 @@ export default function Document() {
           type="module"
           src="https://cdn.jsdelivr.net/npm/@vime/core@^5/dist/vime/vime.esm.js"
         ></script>
-        <script src="/js/script.js" ></script>
+        <script src="/js/script.js"></script>
       </body>
     </Html>
   );

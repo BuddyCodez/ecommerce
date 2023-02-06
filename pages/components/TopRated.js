@@ -25,7 +25,7 @@ const TopRated = ({ popular }) => {
       <div className="container">
         <p className="section-subtitle">Online Anime Streaming</p>
 
-        <h2 className="h2 section-title">Top Rated Animes</h2>
+        <h2 className="h2 section-title">Top Airing Animes</h2>
 
         <ul className="movies-list">
           {anime?.map((item) => {
@@ -55,21 +55,7 @@ const TopRated = ({ popular }) => {
             );
           })}
         </ul>
-        <div className="More">
-          {page == 1 ? (
-            <button className="BtnFilter"  disabled>
-              <ion-icon name="chevron-back-outline"></ion-icon>
-            </button>
-          ) : (
-            <button className="BtnFilter" onClick={() => Change("previous")}>
-              <ion-icon name="chevron-back-outline"></ion-icon>
-            </button>
-          )}
-          <label className="Page">Page: {page}</label>
-          <button className="BtnFilter" onClick={() => Change("next")}>
-            <ion-icon name="chevron-forward-outline"></ion-icon>
-          </button>
-        </div>
+
       </div>
     </section>
   );

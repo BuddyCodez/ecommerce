@@ -6,6 +6,59 @@ const Header = () => {
   const [query, setQuery] = useState("");
   const [progress, setProgress] = useState(0);
   const router = useRouter();
+  const Genre = [
+    "action",
+    "adventure",
+    "cars",
+    "comedy",
+    "crime",
+    "dementia",
+    "demons",
+    "drama",
+    "dub",
+    "ecchi",
+    "family",
+    "fantasy",
+    "game",
+    "gourmet",
+    "harem",
+    "historical",
+    "horror",
+    "josei",
+    "kids",
+    "magic",
+    "martial-arts",
+    "mecha",
+    "military",
+    "Mmusic",
+    "mystery",
+    "parody",
+    "police",
+    "psychological",
+    "romance",
+    "samurai",
+    "school",
+    "sci-fi",
+    "seinen",
+    "shoujo",
+    "shoujo-ai",
+    "shounen",
+    "shounen-ai",
+    "slice-of-Life",
+    "space",
+    "sports",
+    "super-power",
+    "supernatural",
+    "suspense",
+    "thriller",
+    "vampire",
+    "yaoi",
+    "yuri",
+  ];
+  const SearchGenre = (e) => {
+    const genre = e.target.innerText.toLowerCase();
+    window.location.href = `/search?genre=${genre}`;
+  }
   useEffect(() => {
     router.events.on("routeChangeStart", () => {
       setProgress(40);
@@ -30,7 +83,7 @@ const Header = () => {
           <div className="overlay" data-overlay></div>
 
           <a href="/" className="logo">
-            <h3>AnimePlus</h3>
+            <h3>AniMatrix</h3>
           </a>
 
           <div className="header-actions">
@@ -72,19 +125,51 @@ const Header = () => {
 
             <ul className="navbar-list">
               <li>
-                <Link href="/" className="navbar-link">
+                <Link href="/" className="btn btn-outline btn-info">
                   Home
                 </Link>
               </li>
-
               <li>
-                <Link href="/#Trending" className="navbar-link">
+                <div className="dropdown dropdown-bottom dropdown-end">
+                  <label tabindex="0" className="btn btn-outline btn-info">
+                    Genres
+                  </label>
+                  <ul
+                    tabindex="0"
+                    class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
+                  >
+                    <li>
+                      <button onClick={(e) => SearchGenre(e)}>Action</button>
+                    </li>
+                    <li>
+                      <button onClick={(e) => SearchGenre(e)}>Drama</button>
+                    </li>
+                    <li>
+                      <button onClick={(e) => SearchGenre(e)}>Comedy</button>
+                    </li>
+                    <li>
+                      <button onClick={(e) => SearchGenre(e)}>Horror</button>
+                    </li>
+                    <li>
+                      <button onClick={(e) => SearchGenre(e)}>Thriller</button>
+                    </li>
+                    <li>
+                      <button onClick={(e) => SearchGenre(e)}>Sci-Fi</button>
+                    </li>
+                    <li>
+                      <a onClick={(e) => SearchGenre(e)}>Romance</a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+              <li>
+                <Link href="/#Trending" className=" btn btn-outline btn-info">
                   Trending
                 </Link>
               </li>
 
               <li>
-                <Link href="#" className="navbar-link">
+                <Link href="/search?genre=movie" className=" btn btn-outline btn-info">
                   Anime Movies
                 </Link>
               </li>

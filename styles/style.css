@@ -23,7 +23,7 @@
   --gunmetal-1: hsl(229, 15%, 21%);
   --gunmetal-2: hsl(216, 22%, 18%);
   --gainsboro: hsl(0, 7%, 88%);
-  --citrine: hsl(188, 79%, 62%);
+  --citrine: hsl(var(--in));
   --xiketic: hsl(253, 21%, 13%);
   --gray-x: hsl(0, 0%, 74%);
   --white: hsl(0, 100%, 100%);
@@ -506,6 +506,7 @@ body.active {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 }
 
 .menu-close-btn {
@@ -521,6 +522,9 @@ body.active {
 .navbar-list {
   border-top: 1px solid hsla(0, 0%, 100%, 0.1);
   margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 .navbar-link {
@@ -592,7 +596,7 @@ body.active {
   margin-top: 60px;
 }
 
-.hero-subtitle {
+.hero-subtitle  {
   color: var(--citrine);
   font-size: var(--fs-4);
   font-weight: var(--fw-700);
@@ -1317,7 +1321,7 @@ body.active {
     width: 2px;
     height: 14px;
   }
-  .episode-list{
+  .episode-list {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1734,9 +1738,8 @@ body.active {
 }
 
 @media (max-width: 991px) {
-.mobileOnly{
-  display: block;
-  visibility: visible;
+  .mobileOnly {
+    display: block;
+    visibility: visible;
+  }
 }
-}
-  

@@ -3,7 +3,7 @@ const Hero = () => {
     <section className="hero">
       <div className="container">
         <div className="hero-content">
-          <p className="hero-subtitle">AnimePlus</p>
+          <p className="hero-subtitle text-info">AniMatrix</p>
 
           <h1 className="h1 hero-title">
             Unlimited <strong>Animes</strong>, Ads Free Watching, & More.
@@ -37,7 +37,7 @@ const Hero = () => {
             </div>
           </div>
 
-          <button className="btn btn-primary">
+          <button className="btn btn-info">
             <ion-icon name="play"></ion-icon>
 
             <span>Watch now</span>

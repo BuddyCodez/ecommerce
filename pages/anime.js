@@ -69,7 +69,7 @@ const Anime = ({ data }) => {
                     return (
                       <li key={episode.id}>
                         <Link
-                          className="btn btn-primary"
+                          className="btn btn-info"
                           href={
                             "watch?id=" + episode.id + "&anime=" + query.anime
                           }

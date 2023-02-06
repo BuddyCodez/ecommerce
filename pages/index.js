@@ -12,7 +12,7 @@ export default function Home({ popular }) {
           name="viewport"
           content="width=device-width, initial-scale=1.0"
         ></meta>
-        <title>AnimePlus</title>
+        <title>AniMatrix</title>
       </Head>
       <Header />
       <main>
@@ -25,7 +25,7 @@ export default function Home({ popular }) {
   );
 }
 export async function getStaticProps() {
-  const res = await axios.get("https://gogoanime.consumet.stream/popular", {
+  const res = await axios.get("https://gogoanime.consumet.stream/top-airing", {
     headers: {
       "Access-Control-Allow-Origin": "*",
     },
