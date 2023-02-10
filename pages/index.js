@@ -1,9 +1,11 @@
 import axios from "axios";
 import Head from "next/head";
 import Image from "next/image";
+import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import TopRated from "./components/TopRated";
+import Layout from "./layout/main";
 export default function Home({ popular }) {
   return (
     <>
@@ -14,13 +16,12 @@ export default function Home({ popular }) {
         ></meta>
         <title>AniMatrix</title>
       </Head>
-      <Header />
-      <main>
+      <Layout>
         <article>
           <Hero />
           <TopRated popular={popular} />
         </article>
-      </main>
+      </Layout>
     </>
   );
 }

@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import axios from "axios";
 import Layout from "./layout/main";
+import { useEffect } from "react";
 const SearchResult = ({ anime, genre }) => {
   const { query } = useRouter();
 
@@ -10,9 +11,9 @@ const SearchResult = ({ anime, genre }) => {
       <article>
         <section className="top-rated">
           <div className="container">
-            {anime?.length > 0 ? (
+            {anime?.length > 0 || anime.results?.length > 0 ? (
               <h2 className="h2 section-title">
-                {anime.length} Search Results for {query.query}
+                {genre ? anime.length : anime.results.length}  Search Results for {query.query}
               </h2>
             ) : (
               <h2 className="h2 section-title">
@@ -34,8 +35,7 @@ export async function getServerSideProps(context) {
   console.log(query);
   if (query.genre) {
     if ((query.genre = "movie")) {
-      const url =
-        "https://gogoanime.consumet.stream/anime-movies"
+      const url = "https://gogoanime.consumet.stream/anime-movies";
       const { data } = await axios.get(url);
       const anime = data;
       console.log(anime);
@@ -61,7 +61,7 @@ export async function getServerSideProps(context) {
     const url = "https://api.consumet.org/anime/gogoanime/" + query.query;
     const { data } = await axios.get(url);
     const anime = data;
-    // console.log(anime);
+    console.log(anime);
     return {
       props: {
         anime,

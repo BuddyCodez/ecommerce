@@ -3,13 +3,13 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Layout from "./layout/main";
+import { BsFillSkipEndFill, BsFillSkipStartFill,} from "react-icons/bs";
 const watch = () => {
   const { query } = useRouter();
   const [anime, setAnime] = useState([]);
   const [source, setSource] = useState([]);
   const [FilterdSource, setFilterdSource] = useState([]);
   const [videoQuality, setVideoQuality] = useState("720p");
-  const [time, setTime] = useState(-1);
   const router = useRouter();
   useEffect(() => {
     const getAnime = async () => {
@@ -29,8 +29,12 @@ const watch = () => {
           return item.number < currentEp.number;
         })
         .reverse()[0];
-      const NextBtn = document.querySelector(`vm-menu-item[label='Next Episode']`);
-      const PrevBtn = document.querySelector(`vm-menu-item[label='Previous Episode']`);
+      const NextBtn = document.querySelector(
+        `vm-menu-item[label='Next Episode']`
+      );
+      const PrevBtn = document.querySelector(
+        `vm-menu-item[label='Previous Episode']`
+      );
       if (filterNextEp) {
         NextBtn.hint = filterNextEp.number;
         NextBtn.addEventListener("click", () => {
@@ -54,9 +58,10 @@ const watch = () => {
       const url = "https://api.consumet.org/anime/gogoanime/watch/" + query.id;
       const { data } = await axios.get(url);
       setSource(data.sources);
+      setVideoQuality("480p");
       setTimeout(() => {
         setVideoQuality("360p");
-      }, 3000);
+      }, 5000);
     };
     if (query.anime) {
       getAnime();
@@ -74,7 +79,6 @@ const watch = () => {
       });
       console.log(filterd);
       setFilterdSource(filterd);
-
     };
     filter();
   }, [source, videoQuality]);
@@ -89,8 +93,8 @@ const watch = () => {
   }, []);
   useEffect(() => {
     const Player = document.querySelector("vm-player");
-    const forward = document.querySelector("vm-menu-item[label='Forward']");
-    const backward = document.querySelector("vm-menu-item[label='Backward']");
+    const forward = document.querySelector("button.forward");
+    const backward = document.querySelector("button.backward");
     forward.addEventListener("click", () => {
       console.log("forward");
       if (Player.currentTime <= Player.duration) {
@@ -125,41 +129,74 @@ const watch = () => {
                       type="application/x-mpegURL"
                     />
                   </vm-hls>
-                  <vm-default-ui no-click-to-play no-settings>
+                  <vm-ui>
+                    <vm-loading-screen></vm-loading-screen>
                     <vm-spinner></vm-spinner>
-                    <vm-settings>
-                      <vm-submenu label="Quality" hint="360p">
-                        <vm-menu-radio-group value="1">
-                          <vm-menu-radio
-                            label="360"
-                            value="360p"
-                          ></vm-menu-radio>
-                          <vm-menu-radio
-                            label="480p"
-                            value="480p"
-                          ></vm-menu-radio>
-                          <vm-menu-radio
-                            label="720p"
-                            value="720p"
-                          ></vm-menu-radio>
-                          <vm-menu-radio
-                            label="1080p"
-                            value="1080p"
-                          ></vm-menu-radio>
-                        </vm-menu-radio-group>
-                      </vm-submenu>
-                      <vm-menu-item label="Forward" hint="10s"></vm-menu-item>
-                      <vm-menu-item label="Backward" hint="10s"></vm-menu-item>
-                      <vm-menu-item
-                        label="Next Episode"
-                        hint="next"
-                      ></vm-menu-item>
-                      <vm-menu-item
-                        label="Previous Episode"
-                        hint="prevs"
-                      ></vm-menu-item>
-                    </vm-settings>
-                  </vm-default-ui>
+                    <vm-controls full-width>
+                      <vm-control-group>
+                        <vm-scrubber-control></vm-scrubber-control>
+                      </vm-control-group>
+
+                      <vm-control-group space="both">
+                        <vm-control>
+                          <vm-tooltip direction='right'>Backward 10s</vm-tooltip>
+                        <button className="backward">
+                          <BsFillSkipStartFill className="icon" />
+                        </button>
+                        </vm-control>
+                        <vm-playback-control></vm-playback-control>
+                        <vm-control>
+                          <vm-tooltip>Forward 10s</vm-tooltip>
+                          <button className="forward">
+                            <BsFillSkipEndFill className="icon" />
+                          </button>
+                       </vm-control>
+               
+                        <vm-volume-control></vm-volume-control>
+                        <vm-control-spacer></vm-control-spacer>
+                        <vm-fullscreen-control>
+
+                        </vm-fullscreen-control>
+                        <vm-contol>
+
+                        <vm-settings-control>
+                          <vm-settings>
+                            <vm-submenu label="Quality" hint="360p">
+                              <vm-menu-radio-group value="1">
+                                <vm-menu-radio
+                                  label="360"
+                                  value="360p"
+                                ></vm-menu-radio>
+                                <vm-menu-radio
+                                  label="480p"
+                                  value="480p"
+                                ></vm-menu-radio>
+                                <vm-menu-radio
+                                  label="720p"
+                                  value="720p"
+                                ></vm-menu-radio>
+                                <vm-menu-radio
+                                  label="1080p"
+                                  value="1080p"
+                                  ></vm-menu-radio>
+                              </vm-menu-radio-group>
+                            </vm-submenu>
+                            <vm-menu-item label="Forward" hint="10s"></vm-menu-item>
+                            <vm-menu-item label="Backward" hint="10s"></vm-menu-item>
+                            <vm-menu-item
+                              label="Next Episode"
+                              hint="next"
+                            ></vm-menu-item>
+                            <vm-menu-item
+                              label="Previous Episode"
+                              hint="prevs"
+                            ></vm-menu-item>
+                          </vm-settings>
+                        </vm-settings-control>
+                                  </vm-contol>
+                      </vm-control-group>
+                    </vm-controls>
+                  </vm-ui>
                 </vm-player>
               </div>
             </div>

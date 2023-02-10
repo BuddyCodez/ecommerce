@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "postbuild": "next-sitemap",
     "lint": "next lint"
   },
   "dependencies": {
@@ -13,8 +14,10 @@
     "axios": "^1.3.1",
     "daisyui": "^2.50.0",
     "next": "13.1.6",
+    "next-sitemap": "^3.1.52",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-icons": "^4.7.1",
     "react-top-loading-bar": "^2.3.1"
   },
   "devDependencies": {

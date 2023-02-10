@@ -6,59 +6,10 @@ const Header = () => {
   const [query, setQuery] = useState("");
   const [progress, setProgress] = useState(0);
   const router = useRouter();
-  const Genre = [
-    "action",
-    "adventure",
-    "cars",
-    "comedy",
-    "crime",
-    "dementia",
-    "demons",
-    "drama",
-    "dub",
-    "ecchi",
-    "family",
-    "fantasy",
-    "game",
-    "gourmet",
-    "harem",
-    "historical",
-    "horror",
-    "josei",
-    "kids",
-    "magic",
-    "martial-arts",
-    "mecha",
-    "military",
-    "Mmusic",
-    "mystery",
-    "parody",
-    "police",
-    "psychological",
-    "romance",
-    "samurai",
-    "school",
-    "sci-fi",
-    "seinen",
-    "shoujo",
-    "shoujo-ai",
-    "shounen",
-    "shounen-ai",
-    "slice-of-Life",
-    "space",
-    "sports",
-    "super-power",
-    "supernatural",
-    "suspense",
-    "thriller",
-    "vampire",
-    "yaoi",
-    "yuri",
-  ];
   const SearchGenre = (e) => {
     const genre = e.target.innerText.toLowerCase();
     window.location.href = `/search?genre=${genre}`;
-  }
+  };
   useEffect(() => {
     router.events.on("routeChangeStart", () => {
       setProgress(40);
@@ -67,7 +18,8 @@ const Header = () => {
       setProgress(100);
     });
   });
-  const Submit = () => {
+  const Submit = async (e) => {
+    e.preventDefault();
     window.location.href = `/search?query=${query}`;
   };
   return (
@@ -78,7 +30,7 @@ const Header = () => {
         progress={progress}
         onLoaderFinished={() => setProgress(0)}
       />
-      <header className="header" data-header>
+      <header className="header" data-header style={{ zIndex: "99999" }}>
         <div className="container">
           <div className="overlay" data-overlay></div>
 
@@ -95,7 +47,7 @@ const Header = () => {
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   if (!query) return;
-                  Submit();
+                  Submit(e);
                 }
               }}
             />
@@ -131,12 +83,12 @@ const Header = () => {
               </li>
               <li>
                 <div className="dropdown dropdown-bottom dropdown-end">
-                  <label tabindex="0" className="btn btn-outline btn-info">
+                  <label tabIndex="0" className="btn btn-outline btn-info">
                     Genres
                   </label>
                   <ul
-                    tabindex="0"
-                    class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
+                    tabIndex="0"
+                    className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
                   >
                     <li>
                       <button onClick={(e) => SearchGenre(e)}>Action</button>
@@ -169,7 +121,10 @@ const Header = () => {
               </li>
 
               <li>
-                <Link href="/search?genre=movie" className=" btn btn-outline btn-info">
+                <Link
+                  href="/search?genre=movie"
+                  className=" btn btn-outline btn-info"
+                >
                   Anime Movies
                 </Link>
               </li>
@@ -183,7 +138,7 @@ const Header = () => {
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       if (!query) return;
-                      Submit();
+                      Submit(e);
                     }
                   }}
                 />

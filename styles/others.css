@@ -18,10 +18,33 @@
 
 .hero-content {
   display: flex;
-  align-items: start;
+  align-items: flex-start;
   justify-content: center;
   flex-direction: column;
 }
 .navbar {
   flex-direction: column;
+}
+.SkipBtn {
+  position: absolute;
+  z-index: 100000000000000000;
+  width: 50px;
+  scale: 1;
+  height: 100%;
+  color: white;
+  right: 30%;
+  cursor: pointer;
+}
+#__next {
+  height: 100vh;
+}
+
+@media (min-width: 48rem) {
+  .footer {
+    grid-auto-flow: row;
+  }
+}
+
+input {
+  width: 200px;
 }

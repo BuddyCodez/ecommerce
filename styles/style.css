@@ -56,7 +56,7 @@
    * transition
    */
 
-  --transition-1: 0.15s ease;
+  --transition-1: 0.2s ease-in-out;
   --transition-2: 0.25s ease-in;
 
   /**
@@ -111,7 +111,6 @@ button {
 
 html {
   font-family: var(--ff-poppins);
-  scroll-behavior: smooth;
 }
 
 body {
@@ -525,6 +524,7 @@ body.active {
   display: flex;
   flex-direction: column;
   width: 100%;
+  gap: 1rem;
 }
 
 .navbar-link {
@@ -907,6 +907,7 @@ body.active {
   background-size: cover;
   background-position: center;
   padding-block: 80px 50px;
+  width: 100%;
 }
 
 .footer-brand-wrapper .logo {
@@ -977,6 +978,7 @@ body.active {
 
 .footer-bottom {
   padding-block: 25px;
+  width: 100%;
 }
 
 .copyright {

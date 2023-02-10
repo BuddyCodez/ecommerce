@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const Hero = () => {
   return (
     <section className="hero">
@@ -37,11 +39,11 @@ const Hero = () => {
             </div>
           </div>
 
-          <button className="btn btn-info">
+          <Link className="btn btn-info" href="#Trending">
             <ion-icon name="play"></ion-icon>
 
             <span>Watch now</span>
-          </button>
+          </Link>
         </div>
       </div>
     </section>
