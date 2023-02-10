@@ -12,7 +12,11 @@ With a user-friendly interface and high-quality video streaming, we ensure that 
 Our team is constantly updating our anime library to ensure that our users have access to the latest and greatest anime shows. We also have a community of anime enthusiasts who discuss and share their thoughts on various anime shows, making our website a hub for all things anime.
 
 At Animatrix, we believe in providing the best possible experience to our users, which is why we are dedicated to delivering high-quality anime content, fast and reliable streaming, and an active community. So why wait? Start watching your favorite anime shows today and join the Animatrix community!" />
-      <meta name="keywords" content="Anime,
+      <meta name="keywords" content="
+Animatrix,
+animatrix,
+ANIMATRIX,
+Anime,
 Japanese animation,
 Cartoons,
 Animated series,
@@ -79,7 +83,8 @@ User-friendly anime website" />
           type="module"
           src="https://cdn.jsdelivr.net/npm/@vime/core@^5/dist/vime/vime.esm.js"
         ></script>
-
+        <script async="async" data-cfasync="false" src="//pl18435446.highcpmrevenuenetwork.com/fc745d0acb0cbc647bac2c26215a047c/invoke.js"></script>
+        <div id="container-fc745d0acb0cbc647bac2c26215a047c"></div>
       </body>
     </Html>
   );

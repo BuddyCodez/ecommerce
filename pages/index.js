@@ -14,6 +14,7 @@ export default function Home({ popular }) {
           name="viewport"
           content="width=device-width, initial-scale=1.0"
         ></meta>
+        
         <title>AniMatrix</title>
         <meta name="google-site-verification" content="d8Q9bSGyoBL8RSathwiLAJd3qbQhUcl_au7udJd5XZo" />
       </Head>
