@@ -38,7 +38,9 @@
 #__next {
   height: 100vh;
 }
-
+.spacer {
+  width: 80%;
+}
 @media (min-width: 48rem) {
   .footer {
     grid-auto-flow: row;

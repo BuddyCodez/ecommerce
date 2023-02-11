@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import Script from "next/script";
+import axios from "axios";
 const TopRated = ({ popular }) => {
   const [anime, setAnime] = useState(popular);
   const [page, setPage] = useState(1);
   const router = useRouter();
   function PushPage(item) {
-    router.push({ pathname: "/anime", query: { anime: item } });
+    router.push({ pathname: "/search", query: { query: item.title.english } });
   }
   function Change(type) {
     fetch(`https://gogoanime.consumet.stream/popular?page=${page}`)
@@ -14,7 +16,7 @@ const TopRated = ({ popular }) => {
       .then((animelist) => {
         setAnime(animelist);
         if (page > 1) {
-         type == "next" ? setPage(page + 1) : setPage(page - 1);
+          type == "next" ? setPage(page + 1) : setPage(page - 1);
         }
       });
   }
@@ -23,32 +25,50 @@ const TopRated = ({ popular }) => {
   return (
     <section className="top-rated" id="Trending">
       <div className="container">
+        <Script async="async" data-cfasync="false" src="//pl18435446.highcpmrevenuenetwork.com/fc745d0acb0cbc647bac2c26215a047c/invoke.js"></Script>
+        <div id="container-fc745d0acb0cbc647bac2c26215a047c"></div>
         <p className="section-subtitle">Online Anime Streaming</p>
 
-        <h2 className="h2 section-title">Top Airing Animes</h2>
+        <h2 className="h2 section-title">Top Trending Animes</h2>
 
         <ul className="movies-list">
-          {anime?.map((item) => {
+          {anime?.results.map((item) => {
             return (
-              <li key={item.animeId + item.animeTitle}>
+              <li key={item.id + item.title}>
                 <div className="movie-card">
-                  <button onClick={() => PushPage(item.animeId)}>
+                  <button onClick={() => PushPage(item.id)}>
                     <figure className="card-banner">
                       <img
-                        src={item.animeImg}
-                        alt="Sonic the Hedgehog 2 movie poster"
+                        src={item.image}
+                        alt={item.title.english}
                       />
                     </figure>
                   </button>
 
                   <div className="title-wrapper">
-                    <button onClick={() => PushPage(item.animeId)}>
-                      <h3 className="card-title">{item.animeTitle}</h3>
+                    <button onClick={() => PushPage(item)}>
+                      <h3 className="card-title">{item.title.english.length > 25 ? item.title.english.slice(0, 25) + "..." : item.title.english}</h3>
                     </button>
 
-                    <time dateTime={item.releasedDate}>
-                      Release Date: {item.releasedDate}
+                    <time dateTime={item.releaseDate}>
+                      {item.releaseDate}
                     </time>
+
+                  </div>
+                  <div className="card-meta">
+                    <div className="badge badge-outline">1080p</div>
+
+                    <div className="duration">
+                      <ion-icon name="time-outline"></ion-icon>
+
+                      <time dateTime={item.duration}>{item.duration} min</time>
+                    </div>
+
+                    <div className="rating">
+                      <ion-icon name="star"></ion-icon>
+
+                      <data>{item.rating}</data>
+                    </div>
                   </div>
                 </div>
               </li>

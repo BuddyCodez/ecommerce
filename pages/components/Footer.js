@@ -12,7 +12,7 @@ const Footer = () => {
         <div className="container">
           <div className="footer-brand-wrapper">
             <a href="./index.html" className="logo">
-              <h1 className="logo-text">AniMatrix</h1>
+              <h1 className="logo-text">Animeterra</h1>
             </a>
 
             <ul className="footer-list">
@@ -30,11 +30,11 @@ const Footer = () => {
 
               <li>
                 <div className="dropdown dropdown-top dropdown-end">
-                  <label tabindex="0" className="footer-link">
+                  <label tabIndex="0" className="footer-link">
                     Genres
                   </label>
                   <ul
-                    tabindex="0"
+                    tabIndex="0"
                     className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
                   >
                     <li>
@@ -73,32 +73,7 @@ const Footer = () => {
           <div className="divider"></div>
 
           <div className="quicklink-wrapper">
-            <ul className="quicklink-list">
-              <li>
-                <a href="#" className="quicklink-link">
-                  Faq
-                </a>
-              </li>
-
-              <li>
-                <a href="#" className="quicklink-link">
-                  Help center
-                </a>
-              </li>
-
-              <li>
-                <a href="#" className="quicklink-link">
-                  Terms of use
-                </a>
-              </li>
-
-              <li>
-                <a href="#" className="quicklink-link">
-                  Privacy
-                </a>
-              </li>
-            </ul>
-
+            <div className="spacer" />
             <ul className="social-list">
               <li>
                 <a

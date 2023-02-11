@@ -7,7 +7,7 @@ const Layout = ({ children }) => {
       <Header />
       <main>{children}</main>
       <Footer />
-      <a href="#top" class="go-top" data-go-top>
+      <a href="#top" className="go-top" data-go-top>
         <ion-icon name="chevron-up"></ion-icon>
       </a>
     </>

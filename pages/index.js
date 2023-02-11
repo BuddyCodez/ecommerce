@@ -14,8 +14,8 @@ export default function Home({ popular }) {
           name="viewport"
           content="width=device-width, initial-scale=1.0"
         ></meta>
-        
-        <title>AniMatrix</title>
+
+        <title>Animeterra</title>
         <meta name="google-site-verification" content="d8Q9bSGyoBL8RSathwiLAJd3qbQhUcl_au7udJd5XZo" />
       </Head>
       <Layout>
@@ -28,13 +28,13 @@ export default function Home({ popular }) {
   );
 }
 export async function getStaticProps() {
-  const res = await axios.get("https://gogoanime.consumet.stream/top-airing", {
+  const res = await axios.get("https://api.consumet.org/meta/anilist/trending", {
     headers: {
       "Access-Control-Allow-Origin": "*",
     },
   });
   const popular = res.data;
-  // console.log(popular);
+  console.log(popular);
   return {
     props: {
       popular,

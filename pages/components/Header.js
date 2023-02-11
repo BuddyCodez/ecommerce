@@ -35,7 +35,7 @@ const Header = () => {
           <div className="overlay" data-overlay></div>
 
           <a href="/" className="logo">
-            <h3>AniMatrix</h3>
+            <h3>Animeterra</h3>
           </a>
 
           <div className="header-actions">
