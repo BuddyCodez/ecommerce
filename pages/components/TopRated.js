@@ -47,7 +47,7 @@ const TopRated = ({ popular }) => {
 
                   <div className="title-wrapper">
                     <button onClick={() => PushPage(item)}>
-                      <h3 className="card-title">{item.title.english.length > 25 ? item.title.english.slice(0, 25) + "..." : item.title.english}</h3>
+                      <h3 className="card-title">{String(item.title.english).length > 25 ? String(item.title.english).slice(0, 25) + "..." : String(item.title.english)}</h3>
                     </button>
 
                     <time dateTime={item.releaseDate}>
@@ -67,17 +67,18 @@ const TopRated = ({ popular }) => {
                     <div className="rating">
                       <ion-icon name="star"></ion-icon>
 
-                      <data>{item.rating}</data>
+                      <data>{(item.rating / 10)} / 10</data>
                     </div>
                   </div>
                 </div>
+                
               </li>
-            );
+        );
           })}
-        </ul>
+      </ul>
 
-      </div>
-    </section>
+    </div>
+    </section >
   );
 };
 export default TopRated;

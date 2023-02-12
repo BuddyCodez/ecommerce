@@ -9,9 +9,6 @@ const SearchResult = ({ anime, genre }) => {
 
   return (
     <>
-      <Head>
-        <Script type='text/javascript' src='//pl18436770.highcpmrevenuenetwork.com/7b/2d/4a/7b2d4ab5df4690e0b64c364d2af7aa66.js' />
-      </Head>
     <Layout>
       <article>
         <section className="top-rated">
