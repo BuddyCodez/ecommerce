@@ -12,30 +12,8 @@ With a user-friendly interface and high-quality video streaming, we ensure that 
 Our team is constantly updating our anime library to ensure that our users have access to the latest and greatest anime shows. We also have a community of anime enthusiasts who discuss and share their thoughts on various anime shows, making our website a hub for all things anime.
 
 At Animeterra, we believe in providing the best possible experience to our users, which is why we are dedicated to delivering high-quality anime content, fast and reliable streaming, and an active community. So why wait? Start watching your favorite anime shows today and join the Animeterra community!" />
-      <meta name="keywords" content="
-Animeterra,
-Animeterra,
-Animeterra,
-Anime,
-Japanese animation,
-Cartoons,
-Animated series,
-Streaming,
-Online anime,
-Watch anime,
-Best anime,
-Latest anime,
-Classic anime
-Popular anime,
-Anime shows,
-Anime movies,
-Anime episodes,
-Anime community,
-Anime discussion,
-Anime news,
-Anime merchandise,
-High-quality anime,
-User-friendly anime website" />
+      <meta name="keywords" content=" Animeterra, animeterra, ANIMETERRA, Anime, Japanese animation, Cartoons, Animated series
+" />
       <meta property="og:title" content="Animeterra" />
       <meta property="og:image" content="/images/favlogo.png" />
       <meta property="og:url" content="https://animematrix.vercel.app/" />

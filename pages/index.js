@@ -1,8 +1,5 @@
 import axios from "axios";
 import Head from "next/head";
-import Image from "next/image";
-import Footer from "./components/Footer";
-import Header from "./components/Header";
 import Hero from "./components/Hero";
 import TopRated from "./components/TopRated";
 import Layout from "./layout/main";
@@ -28,16 +25,12 @@ export default function Home({ popular }) {
   );
 }
 export async function getStaticProps() {
-  const res = await axios.get("https://api.consumet.org/meta/anilist/trending", {
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-    },
-  });
+  const res = await axios.get("https://api.consumet.org/meta/anilist/trending");
   const popular = res.data;
-  console.log(popular);
   return {
     props: {
       popular,
     },
+
   };
 }
