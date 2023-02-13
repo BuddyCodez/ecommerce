@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://animematrix.vercel.app
+
+# Sitemaps
+Sitemap: https://animematrix.vercel.app/sitemap.xml
