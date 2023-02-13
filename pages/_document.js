@@ -43,7 +43,6 @@ At Animeterra, we believe in providing the best possible experience to our users
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
         rel="stylesheet"
       ></link>
-      <script type='text/javascript' src='//pl18436770.highcpmrevenuenetwork.com/7b/2d/4a/7b2d4ab5df4690e0b64c364d2af7aa66.js'></script>
       <Head />
       <body id="top">
         <Main />
