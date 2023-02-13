@@ -25,7 +25,7 @@ export default function Home({ popular }) {
   );
 }
 export async function getStaticProps() {
-  const res = await axios.get("https://api.consumet.org/meta/anilist/trending");
+  const res = await axios.get("https://api.consumet.org/meta/anilist/popular");
   const popular = res.data;
   return {
     props: {
