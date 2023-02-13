@@ -25,7 +25,12 @@ export default function Home({ popular }) {
   );
 }
 export async function getStaticProps() {
-  const res = await axios.get("https://api.consumet.org/meta/anilist/popular");
+  const res = await axios.get("https://api.consumet.org/meta/anilist/popular", {
+    headers: {
+      Accept: "application/json",
+      "User-Agent": "axios 0.21.1"
+    }
+  });
   const popular = res.data;
   return {
     props: {
