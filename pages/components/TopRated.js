@@ -71,13 +71,13 @@ const TopRated = ({ popular }) => {
                     </div>
                   </div>
                 </div>
-                
-              </li>
-        );
-          })}
-      </ul>
 
-    </div>
+              </li>
+            );
+          })}
+        </ul>
+
+      </div>
     </section >
   );
 };
