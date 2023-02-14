@@ -15,7 +15,8 @@ const watch = () => {
     const getAnime = async () => {
       const url =
         "https://api.consumet.org/anime/gogoanime/info/" + query.anime;
-      const { data } = await axios.get(url);
+      const res = await fetch(url);
+      const data = await res.json();
       setAnime(data);
       console.log(data);
       const currentEp = data.episodes.filter((item) => {
@@ -56,7 +57,8 @@ const watch = () => {
     };
     const getAnimeSource = async () => {
       const url = "https://api.consumet.org/anime/gogoanime/watch/" + query.id;
-      const { data } = await axios.get(url);
+      const res = await fetch(url);
+      const data = await res.json();
       setSource(data.sources);
       setVideoQuality("480p");
       setTimeout(() => {
