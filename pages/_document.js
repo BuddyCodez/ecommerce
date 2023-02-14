@@ -7,7 +7,11 @@ export default function Document() {
       <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
      
       <meta name="google-site-verification" content="d8Q9bSGyoBL8RSathwiLAJd3qbQhUcl_au7udJd5XZo" />
-      
+      <link
+        rel="shortcut icon"
+        href="/images/BrandedLogo.png"
+        type="image/svg+xml"
+      />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link
