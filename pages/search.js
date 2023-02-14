@@ -9,27 +9,27 @@ const SearchResult = ({ anime, genre }) => {
 
   return (
     <>
-    <Layout>
-      <article>
-        <section className="top-rated">
-          <div className="container">
-            {anime?.length > 0 || anime.results?.length > 0 ? (
-              <h2 className="h2 section-title">
-                {genre ? anime.length : anime.results.length}  Search Results for {query.query}
-              </h2>
-            ) : (
-              <h2 className="h2 section-title">
-                {" "}
-                No Search Results for {query.query}
-              </h2>
-            )}
+      <Layout>
+        <article>
+          <section className="top-rated">
+            <div className="container">
+              {anime?.length > 0 || anime.results?.length > 0 ? (
+                <h2 className="h2 section-title">
+                  {genre ? anime.length : anime.results.length}  Search Results for {query.query}
+                </h2>
+              ) : (
+                <h2 className="h2 section-title">
+                  {" "}
+                  No Search Results for {query.query}
+                </h2>
+              )}
 
-            {genre ? <Genre anime={anime} /> : <QuerySearch anime={anime} />}
-          </div>
-        </section>
-      </article>
-    </Layout>
-  </>
+              {genre ? <Genre anime={anime} /> : <QuerySearch anime={anime} />}
+            </div>
+          </section>
+        </article>
+      </Layout>
+    </>
   );
 };
 export default SearchResult;
@@ -39,7 +39,8 @@ export async function getServerSideProps(context) {
   if (query.genre) {
     if ((query.genre = "movie")) {
       const url = "https://gogoanime.consumet.stream/anime-movies";
-      const { data } = await axios.get(url);
+      const res = await fetch(url);
+      const data = await res.json();
       const anime = data;
       console.log(anime);
       return {
@@ -50,7 +51,8 @@ export async function getServerSideProps(context) {
       };
     } else {
       const url = "https://gogoanime.consumet.stream/genre/" + query.genre;
-      const { data } = await axios.get(url);
+      const res = await fetch(url);
+      const data = await res.json();
       const anime = data;
       console.log(anime);
       return {
@@ -62,7 +64,8 @@ export async function getServerSideProps(context) {
     }
   } else {
     const url = "https://api.consumet.org/anime/gogoanime/" + query.query;
-    const { data } = await axios.get(url);
+    const res = await fetch(url);
+    const data = await res.json();
     const anime = data;
     console.log(anime);
     return {
