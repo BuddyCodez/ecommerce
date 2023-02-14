@@ -579,7 +579,7 @@ body.active {
 \*-----------------------------------*/
 
 .hero {
-  background: url("https://wallpapercave.com/wp/wp2301709.jpg") no-repeat;
+  background: url("../public/images/herobackground.webp") no-repeat;
 
   background-size: cover;
   background-position: center;
