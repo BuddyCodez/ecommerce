@@ -27,7 +27,7 @@ const Header = () => {
   });
   const Submit = async (e) => {
     e.preventDefault();
-    window.location.href = `/search?query=${query}`;
+    window.location.href = `/search?keyword=${query}`;
   };
   return (
     <>
@@ -37,12 +37,12 @@ const Header = () => {
         progress={progress}
         onLoaderFinished={() => setProgress(0)}
       />
-      <header style={{ zIndex: "99999" }}>
+      <header className="bg-gray-900" style={{position: 'fixed', zIndex: "99999", width: "100vw" }}>
 
-        <nav className=" border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-900">
+        <nav className=" border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-900" style={{width: "100%",}}>
           <div className="container flex flex-wrap items-center justify-between mx-auto">
-            <a href="https://flowbite.com/" className="flex items-center">
-              <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Animetronix</span>
+            <a href="/" className="flex items-center">
+              <span className="self-center text-xl font-bold italic whitespace-nowrap text-info ">Animetronix</span>
             </a>
             <div className="flex md:order-2">
               <button type="button" data-collapse-toggle="navbar-search" aria-controls="navbar-search" aria-expanded="false" className="md:hidden text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark: focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 mr-1">
@@ -76,7 +76,7 @@ const Header = () => {
               </div>
               <ul className="flex flex-col p-4 mt-4 border border-gray-100 rounded-lg  md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 dark:bg-gray-900 dark:border-gray-700 text-white" id="targetEl" >
                 <li>
-                  <Link href="#" className="block py-2 pl-3 pr-4 text-white bg-info rounded md:bg-transparent md:text-info md:p-0 dark:text-white" aria-current="page">Home</Link>
+                  <Link href="/" className="block py-2 pl-3 pr-4 text-white bg-info rounded md:bg-transparent md:text-info md:p-0 dark:text-white" aria-current="page">Home</Link>
                 </li>
                 <li>
                   <Link href="#Trending" className="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-info md:p-0 md:dark:hover:text-white dark:text-gray-400 dark: dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Trending</Link>

@@ -61,12 +61,6 @@ const watch = () => {
     const Player = document.querySelector("vm-player");
     const forward = document.querySelector("button.forward");
     const backward = document.querySelector("button.backward");
-    Player.addEventListener('vmCurrentTimeChange', event => {
-      if (event.currentTime == event.duration) {
-        console.log("Episode Ended Skiping to next episode");
-        window.location.href = `/anime?animesearch=${query.anime}`
-      }
-    });
     forward.addEventListener("click", () => {
       console.log("forward");
       if (Player.currentTime <= Player.duration) {

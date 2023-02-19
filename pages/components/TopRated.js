@@ -8,7 +8,7 @@ const TopRated = ({ popular }) => {
   const [page, setPage] = useState(1);
   const router = useRouter();
   function PushPage(item) {
-    router.push({ pathname: "/anime", query: { animesearch: item.id } });
+    router.push({ pathname: "/anime", query: { animeid: item.id } });
   }
   function Change(type) {
     fetch(`https://gogoanime.consumet.stream/popular?page=${page}`)

@@ -1036,6 +1036,7 @@ body.active {
   display: none;
 }
 .movie-detail {
+   height: 100%;
   background: url("/images/bg.jpg") no-repeat;
   background-size: cover;
   background-position: center;
