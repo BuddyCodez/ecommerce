@@ -14,55 +14,19 @@ const watch = () => {
   useEffect(() => {
     const getAnime = async () => {
       const url =
-        "https://api.consumet.org/anime/gogoanime/info/" + query.anime;
+        "https://api.consumet.org/meta/anilist/info/" + query.anime;
       const res = await fetch(url);
       const data = await res.json();
       setAnime(data);
-      console.log(data);
-      const currentEp = data.episodes.filter((item) => {
-        return item.id === query.id;
-      })[0];
-      const filterNextEp = data.episodes.filter((item) => {
-        return item.number > currentEp.number;
-      })[0];
-      const filterPrevEp = data.episodes
-        .filter((item) => {
-          return item.number < currentEp.number;
-        })
-        .reverse()[0];
-      const NextBtn = document.querySelector(
-        `vm-menu-item[label='Next Episode']`
-      );
-      const PrevBtn = document.querySelector(
-        `vm-menu-item[label='Previous Episode']`
-      );
-      if (filterNextEp) {
-        NextBtn.hint = filterNextEp.number;
-        NextBtn.addEventListener("click", () => {
-          router.push(`/watch?id=${filterNextEp.id}&anime=${query.anime}`);
-        });
-      } else {
-        NextBtn.hint = "Series End";
-        NextBtn.disabled = true;
-      }
-      if (filterPrevEp) {
-        PrevBtn.hint = filterPrevEp.number;
-        PrevBtn.addEventListener("click", () => {
-          router.push(`/watch?id=${filterPrevEp.id}&anime=${query.anime}`);
-        });
-      } else {
-        PrevBtn.hint = "First Episode";
-        PrevBtn.disabled = true;
-      }
     };
     const getAnimeSource = async () => {
       const url = "https://api.consumet.org/anime/gogoanime/watch/" + query.id;
       const res = await fetch(url);
       const data = await res.json();
       setSource(data.sources);
-      setVideoQuality("480p");
+      setVideoQuality("360p");
       setTimeout(() => {
-        setVideoQuality("360p");
+        setVideoQuality("480p");
       }, 5000);
     };
     if (query.anime) {
@@ -97,6 +61,12 @@ const watch = () => {
     const Player = document.querySelector("vm-player");
     const forward = document.querySelector("button.forward");
     const backward = document.querySelector("button.backward");
+    Player.addEventListener('vmCurrentTimeChange', event => {
+      if (event.currentTime == event.duration) {
+        console.log("Episode Ended Skiping to next episode");
+        window.location.href = `/anime?animesearch=${query.anime}`
+      }
+    });
     forward.addEventListener("click", () => {
       console.log("forward");
       if (Player.currentTime <= Player.duration) {
