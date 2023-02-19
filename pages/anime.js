@@ -213,6 +213,7 @@ export async function getServerSideProps(context) {
       const url = "https://api.consumet.org/meta/anilist/info/" + query.animeid + "&provider=gogoanime";
       const res = await fetch(url);
       data = await res.json();
+      console.log(data);
       const episodeId = data.episodes[0].id.split("-episode")
       const episodeUrl = episodeId[0] + "-dub-episode" + episodeId[1]
       console.log(episodeUrl)
