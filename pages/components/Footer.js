@@ -12,7 +12,7 @@ const Footer = () => {
         <div className="container">
           <div className="footer-brand-wrapper">
             <a href="./index.html" className="logo">
-              <h1 className="logo-text">Animeterra</h1>
+              <h1 className="logo-text">Animetronix</h1>
             </a>
 
             <ul className="footer-list">

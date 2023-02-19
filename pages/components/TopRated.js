@@ -8,7 +8,7 @@ const TopRated = ({ popular }) => {
   const [page, setPage] = useState(1);
   const router = useRouter();
   function PushPage(item) {
-    router.push({ pathname: "/search", query: { query: item.title.english } });
+    router.push({ pathname: "/anime", query: { animesearch: item.id } });
   }
   function Change(type) {
     fetch(`https://gogoanime.consumet.stream/popular?page=${page}`)
@@ -23,16 +23,13 @@ const TopRated = ({ popular }) => {
 
 
   return (
-    <section className="top-rated" id="Trending">
+    <section className="top-rated">
       <div className="container">
-        <Script async="async" data-cfasync="false" src="//pl18435446.highcpmrevenuenetwork.com/fc745d0acb0cbc647bac2c26215a047c/invoke.js"></Script>
-        <div id="container-fc745d0acb0cbc647bac2c26215a047c"></div>
         <p className="section-subtitle">Online Anime Streaming</p>
-
         <h2 className="h2 section-title">Top Trending Animes</h2>
 
-        <ul className="movies-list">
-          {anime?.results.map((item) => {
+        <ul className="movies-list" id="Trending">
+          {anime?.results?.map((item) => {
             return (
               <li key={item.id + item.title}>
                 <div className="movie-card">

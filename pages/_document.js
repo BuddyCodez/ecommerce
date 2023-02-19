@@ -47,8 +47,7 @@ export default function Document() {
           type="module"
           src="https://cdn.jsdelivr.net/npm/@vime/core@^5/dist/vime/vime.esm.js"
         ></script>
-        <script type='text/javascript' src='//pl18442663.highcpmrevenuenetwork.com/ab/43/7e/ab437ea4fd64f45e9101bb954d65f219.js'></script>
-      </body>
+         </body>
     </Html>
   );
 }

@@ -12,7 +12,7 @@ export default function Home({ popular }) {
           content="width=device-width, initial-scale=1.0"
         ></meta>
 
-        <title>Animeterra</title>
+        <title>Animetronix</title>
         <meta name="google-site-verification" content="d8Q9bSGyoBL8RSathwiLAJd3qbQhUcl_au7udJd5XZo" />
       </Head>
       <Layout>
@@ -25,8 +25,13 @@ export default function Home({ popular }) {
   );
 }
 export async function getStaticProps() {
-  const res = await fetch("https://api.consumet.org/meta/anilist/popular");
-  const popular = await res.json();
+  let popular
+  try {
+    const res = await fetch("https://api.consumet.org/meta/anilist/popular");
+    popular = await res.json();
+  } catch (e) {
+    popular = [];
+  }
   // console.log(popular);
   return {
     props: {

@@ -63,7 +63,7 @@ export async function getServerSideProps(context) {
       };
     }
   } else {
-    const url = "https://api.consumet.org/anime/gogoanime/" + query.query;
+    const url = "https://api.consumet.org/meta/anilist/" + query.query;
     const res = await fetch(url);
     const data = await res.json();
     const anime = data;
@@ -110,22 +110,24 @@ const QuerySearch = ({ anime }) => {
   return (
     <ul className="movies-list">
       {anime?.results?.map((item) => {
+        console.log(item.title)
         return (
-          <li key={item.id + item.title}>
+          <li key={item.id}>
             <div className="movie-card">
-              <Link href={"/anime?anime=" + item.id}>
+              <Link href={"/anime?animesearch=" + item.id}>
                 <figure className="card-banner">
-                  <img src={item.image} alt={item.title} />
+                  <img src={item.image} alt={item.title?.english} />
                 </figure>
               </Link>
 
               <div className="title-wrapper">
-                <Link href={"/anime?anime=" + item.id}>
-                  <h3 className="card-title">{item.title}</h3>
+                <Link href={"/anime?animesearch=" + item.id}>
+                  {item.title?.english ? (<h3 className="card-title">{item.title?.english}</h3>) : <h3 className="card-title">{item.title?.userPreferred.length > 20 ? item.title?.userPreferred.slice(0,20) + ".." : item.title?.userPreferred}</h3>}
+                 
                 </Link>
 
                 <span className="section-subtitle">
-                  {String(item.subOrDub).toUpperCase()}
+                  Rating: {item?.rating / 10}
                 </span>
               </div>
             </div>
