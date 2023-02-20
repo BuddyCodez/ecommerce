@@ -11,7 +11,7 @@ const Anime = ({ data, dub }) => {
   useEffect(() => {
     if (anime) {
       const movieDetail = document.querySelector(".movie-detail");
-      movieDetail.style.background = `url(${anime?.image}) no-repeat`;
+      movieDetail.style.background = `url(${anime?.cover}) no-repeat`;
       movieDetail.style.backgroundSize = 'cover';
 
     }
@@ -31,8 +31,8 @@ const Anime = ({ data, dub }) => {
     ];
     const options = {
       defaultTabId: 'sub',
-      activeClasses: 'text-blue-600 hover:text-blue-600 dark:text-blue-500 dark:hover:text-blue-400 border-blue-600 dark:border-blue-500',
-      inactiveClasses: 'text-gray-500 hover:text-gray-600 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300',
+      activeClasses: 'text-info hover:text-info dark:text-info-500 dark:hover:text-blue-400 border-blue-600 dark:border-blue-500',
+      inactiveClasses: 'text-gray-300 hover:text-gray-400 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300',
     };
     const tabs = new Tabs(tabElements, options);
 
@@ -40,7 +40,7 @@ const Anime = ({ data, dub }) => {
   return (
     <Layout>
       <main>
-        {anime ?
+        {anime?.id ?
           (<article>
             <section className="movie-detail">
               <div className="container">
@@ -74,7 +74,7 @@ const Anime = ({ data, dub }) => {
 
                     <div className="ganre-wrapper">
                       {anime?.genres?.map((genre, index) => {
-                        return <span class="bg-transparent border border-info text-info text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-gray-700 dark:text-gray-300">{genre}</span>
+                        return <span class="bg-transparent border border-info text-info text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-gray-700 dark:text-gray-300 hover:bg-info transition-all hover:text-black cursor-pointer" >{genre}</span>
                       })}
 
                     </div>
@@ -90,7 +90,7 @@ const Anime = ({ data, dub }) => {
                     </div>
                   </div>
 
-                  <p className="storyline">{anime?.description}</p>
+                  <p className="storyline">{String(anime?.description).replace("<br> <br> (Source: Crunchyroll)", " ")}</p>
                 </div>
               </div>
             </section>
@@ -126,16 +126,16 @@ const Anime = ({ data, dub }) => {
                           {anime?.episodes?.map((ep) => {
 
                             return (
-                              <tr class="border dark:bg-gray-800 border-gray-50  hover:bg-gray-400 hover:text-black text-white">
+                              <tr class="border dark:bg-gray-800 border-gray-50  hover:bg-cyan-500 hover:text-black text-white">
                                 <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap dark:text-white">
                                   {ep.number}
                                 </th>
                                 <td className="w-max">
                                   {ep.title}
                                 </td>
-                                <td className=" flex justify-center items-center" style={{ height: "50px" }}>
+                                <td className=" flex justify-center items-center hover:dark:text-cyan-700 text-info group-hover:text-cyan-300" style={{ height: "50px" }}>
                                   <Link href={`/watch?id=${ep.id}&anime=${anime.id}`}>
-                                    <BsPlayCircle style={{ scale: "2.0", }} className=" hover:dark:text-info text-info" />
+                                    <BsPlayCircle style={{ scale: "2.0", }}/>
                                   </Link>
                                 </td>
                               </tr>
@@ -192,6 +192,7 @@ const Anime = ({ data, dub }) => {
 
               </div>
             </section>
+            <Recommendations recommendations={anime?.recommendations} />
           </article>) : (
             <>
               <h1>No Anime Found or Server may be down.</h1>
@@ -247,4 +248,62 @@ export async function getServerSideProps(context) {
       dub: dubAvailable
     },
   };
+}
+
+const Recommendations = ({ recommendations }) => {
+  return (
+    <>
+      <section class="tv-series">
+        <div class="container">
+
+          <p class="section-subtitle">Recommendations</p>
+
+          <h2 class="h2 section-title">Recommended Animes</h2>
+
+          <ul class="movies-list">
+
+            {recommendations?.map((anime) => {
+              return (
+                <li>
+                  <div class="movie-card" key={anime.id}>
+
+                    <Link href={`/anime?animeid=${anime.id}`}>
+                      <figure class="card-banner">
+                        <img src={anime.image} alt={anime.title.english} />
+                      </figure>
+                    </Link>
+
+                    <div class="title-wrapper">
+                      <Link href={`/anime?animeid=${anime.id}`}>
+                        <h3 class="card-title">{anime.title.english}</h3>
+                      </Link>
+
+                      <time datetime={anime.episodes}>{anime.episodes} episodes</time>
+                    </div>
+
+                    <div class="card-meta">
+                      <div class="badge badge-outline hover:bg-info hover:text-black cursor-pointer">{anime.status.toUpperCase()}</div>
+
+                      <div class="duration">
+                        <time datetime="PT47M">{anime.type == "TV" ? "Series" : anime.type}</time>
+                      </div>
+
+                      <div class="rating">
+                        <ion-icon name="star"></ion-icon>
+
+                        <data>{anime.rating / 10}</data>
+                      </div>
+                    </div>
+
+                  </div>
+                </li>
+              )
+            })}
+
+          </ul>
+
+        </div>
+      </section>
+    </>
+  );
 }
