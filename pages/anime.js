@@ -210,7 +210,7 @@ export async function getServerSideProps(context) {
 
   try {
     if (query?.animeid) {
-      const url = "https://api.consumet.org/meta/anilist/info/" + query.animeid + "&provider=gogoanime";
+      const url = "https://api.consumet.org/meta/anilist/info/" + query.animeid + "?provider=gogoanime";
       console.log("URL", url);
       const res = await fetch(url);
       data = await res.json();
