@@ -214,7 +214,7 @@ export async function getServerSideProps(context) {
       console.log("URL", url);
       const res = await fetch(url);
       data = await res.json();
-      console.log("Logs", await res.json());
+      console.log("Logs", data);
       const episodeId = data.episodes[0].id.split("-episode")
       const episodeUrl = episodeId[0] + "-dub-episode" + episodeId[1]
       console.log(episodeUrl)
