@@ -4,66 +4,66 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Layout from "./layout/main";
 import { BsFillSkipEndFill, BsFillSkipStartFill, BsPlayCircle, } from "react-icons/bs";
-const watch = () => {
+import AniSkip from "./utils/aniskip";
+import useSWR from 'swr'
+const watch = ({ anime, Episodes }) => {
+  const fetcher = (...args) => fetch(...args).then((res) => res.json())
   const { query } = useRouter();
-  const [anime, setAnime] = useState([]);
-  const [source, setSource] = useState([]);
   const [FilterdSource, setFilterdSource] = useState([]);
-  const [videoQuality, setVideoQuality] = useState("720p");
-  const [episodes, setEpisodes] = useState(null);
+  const [videoQuality, setVideoQuality] = useState("360p");
+  const [episodes, setEpisodes] = useState(Episodes);
+  const { data, error } = useSWR("https://api.consumet.org/anime/gogoanime/watch/" + query?.id, fetcher);
+  const source = data?.sources;
   const dub = query.id?.includes("dub")
   useEffect(() => {
     const getAnime = async () => {
-      const url =
-        "https://api.consumet.org/meta/anilist/info/" + query.anime;
-      const res = await fetch(url);
-      const data = await res.json();
-      setAnime(data);
       const queryId = query?.id.replace("-dub", "");
-      console.log(queryId);
-      const currentEP = data?.episodes.filter((ep) => {
+      const currentEP = episodes.filter((ep) => {
         return ep.id == queryId
       });
-      const FilterNextEp = data?.episodes.filter((ep) => {
+      const FilterNextEp = episodes.filter((ep) => {
         return ep.number > currentEP[0].number
       })
       setEpisodes(FilterNextEp);
-    };
-    const getAnimeSource = async () => {
-      const url = "https://api.consumet.org/anime/gogoanime/watch/" + query.id;
-      const res = await fetch(url);
-      const data = await res.json();
-      setSource(data.sources);
-      setVideoQuality("360p");
-      setTimeout(() => {
-        setVideoQuality("480p");
-      }, 5000);
+      const animeskip = new AniSkip({
+        userId: Math.random().toString(36).substring(7),
+      });
+      const Player = document.querySelector("vm-player");
+
+      animeskip.getSkipTimes(anime.malId, currentEP[0].number, 0).then((data) => {
+
+        const FilterOpenings = data.filter((item) => {
+          return item.skipType === "op";
+        });
+        Player.addEventListener('vmCurrentTimeChange', event => {
+          const skip = document.querySelector("#SkipBtn").checked;
+          const currentTime = event.detail;
+          if (skip && Math.floor(currentTime) >= Math.floor(FilterOpenings[0]?.interval?.startTime) && Math.floor(currentTime) < Math.floor(FilterOpenings[0]?.interval?.endTime)) {
+            Player.currentTime = FilterOpenings[0]?.interval?.endTime;
+          }
+          if (Math.floor(currentTime) == Math.floor(event.duration)) {
+            const epid = FilterNextEp[0].id.split("-episode")
+            const id = epid[0] + "-dub-episode" + epid[1]
+            window.location.href = "/watch?id=" + query.id.includes("dub") ? id : FilterNextEp[0].id + "&anime=" + anime.id;
+          }
+        });
+      });
     };
     if (query.anime) {
       getAnime();
-    }
-    if (query.id) {
-      getAnimeSource();
+   
     }
   }, [query]);
   useEffect(() => {
     const filter = async () => {
-      const filterd = source.filter((item) => {
+      console.log(source);
+      const filterd = source?.filter((item) => {
         return item.quality === videoQuality;
       });
-      setFilterdSource(filterd);
+      setFilterdSource(filterd || []);
     };
     filter();
   }, [source, videoQuality]);
-  useEffect(() => {
-    const submenu = document.querySelector('vm-submenu[label="Quality"]');
-    const radioGroup = submenu.querySelector("vm-menu-radio-group");
-    radioGroup.addEventListener("click", (event) => {
-      const radio = event.target;
-      submenu.hint = radio.value;
-      setVideoQuality(radio.value);
-    });
-  }, []);
   useEffect(() => {
     const Player = document.querySelector("vm-player");
     const forward = document.querySelector("button.forward");
@@ -81,6 +81,7 @@ const watch = () => {
       }
     });
   }, []);
+
 
   return (
     <Layout>
@@ -105,6 +106,7 @@ const watch = () => {
                   <vm-ui>
                     <vm-loading-screen></vm-loading-screen>
                     <vm-spinner></vm-spinner>
+
                     <vm-controls full-width>
                       <vm-control-group>
                         <vm-scrubber-control></vm-scrubber-control>
@@ -124,48 +126,16 @@ const watch = () => {
                             <BsFillSkipEndFill className="icon" />
                           </button>
                         </vm-control>
+                        <vm-time-progress separator="/" />
 
                         <vm-volume-control></vm-volume-control>
                         <vm-control-spacer></vm-control-spacer>
                         <vm-fullscreen-control>
-
                         </vm-fullscreen-control>
+                        <vm-settings-control></vm-settings-control>
                         <vm-contol>
 
-                          <vm-settings-control>
-                            <vm-settings>
-                              <vm-submenu label="Quality" hint="360p">
-                                <vm-menu-radio-group value="1">
-                                  <vm-menu-radio
-                                    label="360"
-                                    value="360p"
-                                  ></vm-menu-radio>
-                                  <vm-menu-radio
-                                    label="480p"
-                                    value="480p"
-                                  ></vm-menu-radio>
-                                  <vm-menu-radio
-                                    label="720p"
-                                    value="720p"
-                                  ></vm-menu-radio>
-                                  <vm-menu-radio
-                                    label="1080p"
-                                    value="1080p"
-                                  ></vm-menu-radio>
-                                </vm-menu-radio-group>
-                              </vm-submenu>
-                              <vm-menu-item label="Forward" hint="10s"></vm-menu-item>
-                              <vm-menu-item label="Backward" hint="10s"></vm-menu-item>
-                              <vm-menu-item
-                                label="Next Episode"
-                                hint="next"
-                              ></vm-menu-item>
-                              <vm-menu-item
-                                label="Previous Episode"
-                                hint="prevs"
-                              ></vm-menu-item>
-                            </vm-settings>
-                          </vm-settings-control>
+
                         </vm-contol>
                       </vm-control-group>
                     </vm-controls>
@@ -175,99 +145,59 @@ const watch = () => {
             </div>
           </div>
           <div className="container flex-col mt-3">
-            <p className="h1 section-title">Next Episodes in List</p>
-            <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
-              <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="myTab" data-tabs-toggle="#myTabContent" role="tablist">
-                <li class="mr-2" role="presentation">
-                  <button class="inline-block p-4 border-b-2 rounded-t-lg" id="sub-tab" data-tabs-target="#sub" type="button" role="tab" aria-controls="sub" aria-selected="false">SUB</button>
-                </li>
-                <li class="mr-2" role="presentation">
-                  <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="dub-tab" data-tabs-target="#dub" type="button" role="tab" aria-controls="dub" aria-selected="false">DUB</button>
-                </li>                    </ul>
-            </div>
-            <div id="myTabContent">
-              <div class="hidden p-4 rounded-lg  dark:bg-gray-800" id="sub" role="tabpanel" aria-labelledby="sub-tab">
-                <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                  <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 bg:dark-gray-700">
-                    <thead class="text-xs text-gray-700 uppercase bg-info border rounded-lg dark:bg-gray-700 dark:text-gray-400">
-                      <tr>
-                        <th scope="col" class="px-6 py-3">
-                          Episode Number
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                          Episode Title
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                          Watch
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {episodes?.map((ep) => {
+            <label className="relative inline-flex items-center cursor-pointer text-info">
+              <input type="checkbox" value="" className="sr-only peer" defaultChecked={true} id="SkipBtn" onChange={(e) => {
+                const skipText = document.querySelector("#skipText");
+                skipText.innerHTML = e.target.checked ? "ON" : "OFF";
 
-                        return (
-                          <tr class="border dark:bg-gray-800 border-gray-50  hover:bg-cyan-500 hover:text-black text-white" key={ep.id}>
-                            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap dark:text-white">
-                              {ep.number}
-                            </th>
-                            <td className="w-max">
-                              {ep.title}
-                            </td>
-                            <td className=" flex justify-center items-center hover:dark:text-cyan-700 text-info group-hover:text-cyan-300" style={{ height: "50px" }}>
-                              <Link href={`/watch?id=${ep.id}&anime=${anime.id}`}>
-                                <BsPlayCircle style={{ scale: "2.0", }} />
-                              </Link>
-                            </td>
-                          </tr>
-                        );
-                      })}
+              }} />
 
-                    </tbody>
-                  </table>
-                </div>  </div>
-              <div class="hidden p-4 rounded-lg  dark:bg-gray-800" id="dub" role="tabpanel" aria-labelledby="dub-tab">
-                {dub ? (<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                  <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 bg:dark-gray-700">
-                    <thead class="text-xs text-gray-700 uppercase bg-info border rounded-lg dark:bg-gray-700 dark:text-gray-400">
-                      <tr>
-                        <th scope="col" class="px-6 py-3">
-                          Episode Number
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                          Episode Title
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                          Watch
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {episodes?.map((ep) => {
-                        const epid = ep.id.split("-episode")
-                        const id = epid[0] + "-dub-episode" + epid[1]
-                        return (
-                          <tr class="border dark:bg-gray-800 border-gray-50  hover:bg-gray-400 hover:text-black text-white" key={ep.id}>
-                            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap dark:text-white">
-                              {ep.number}
-                            </th>
-                            <td className="w-max">
-                              {ep.title}
-                            </td>
-                            <td className=" flex justify-center items-center" style={{ height: "50px" }}>
-                              <Link href={`/watch?id=${dub ? id : ep.id}&anime=${anime.id}`}>
-                                <BsPlayCircle style={{ scale: "2.0", }} className=" hover:dark:text-info text-info" />
-                              </Link>
-                            </td>
-                          </tr>
-                        );
-                      })}
+              <div className="w-11 h-6 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300  rounded-full peer bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-info " ></div>
+              <span className="ml-3 text-sm font-mediu inline-block" >Skip Intro : <span className="text-red-600 inline-block" id="skipText">ON</span></span>
+            </label>
+            <p className="detail-subtitle">Next Up</p>
 
-                    </tbody>
-                  </table>
-                </div>) : ("Dub UnAvailable")}
-              </div>
-            </div>
+            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 bg:dark-gray-700">
+              <thead className="text-xs text-gray-700 uppercase bg-info border rounded-lg dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th scope="col" className="px-6 py-3">
+                    Episode Number
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Episode Title
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Watch
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {episodes?.map((ep) => {
+                  const epid = ep.id.split("-episode")
+                  const id = epid[0] + "-dub-episode" + epid[1]
+                  return (
+                    <tr className="border dark:bg-gray-800 border-gray-50  hover:bg-cyan-500 hover:text-black text-white" key={ep.id}>
+                      <th scope="row" className="px-6 py-4 font-medium whitespace-nowrap dark:text-white">
+                        {ep.number}
+                      </th>
+                      <td className="w-max">
+                        {ep.title}
+                      </td>
+                      <td className=" flex justify-center items-center hover:dark:text-cyan-700 text-info group-hover:text-cyan-300" style={{ height: "50px" }}>
+                        <Link href={`/watch?id=${dub ? id : ep.id}&anime=${anime.id}`}>
+                          <BsPlayCircle style={{ scale: "2.0", }} />
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })}
+
+              </tbody>
+            </table>
+
+
           </div>
+
 
         </section>
       </article>
@@ -275,3 +205,16 @@ const watch = () => {
   );
 };
 export default watch;
+export async function getServerSideProps(context) {
+  const { id, anime } = context.query;
+  const url =
+    "https://api.consumet.org/meta/anilist/info/" + anime;
+  const animeData = await fetch(url).then((res) => res.json());
+  const episodes = animeData.episodes;
+  return {
+    props: {
+      Episodes: episodes,
+      anime: animeData,
+    },
+  };
+}

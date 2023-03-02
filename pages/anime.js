@@ -2,12 +2,22 @@ import Link from "next/link";
 import Layout from "./layout/main";
 import { useRouter } from "next/router";
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { BsPlayBtn, BsPlayCircle } from "react-icons/bs";
 import { Tabs } from "flowbite";
 const Anime = ({ data, dub }) => {
   const { query } = useRouter();
   const anime = data;
+  const [episodes, setEpisodes] = useState(anime.episodes);
+  const [mode, setMode] = useState("dub");
+  function HandleInputSearch(element) {
+    if (!element.target.value) return setEpisodes(data.episodes);
+    let FilteredEp = []
+    FilteredEp = anime.episodes.filter((e) => {
+      return e.title.toLowerCase().includes(element.target.value);
+    })
+    setEpisodes(FilteredEp);
+  }
   useEffect(() => {
     if (anime) {
       const movieDetail = document.querySelector(".movie-detail");
@@ -34,7 +44,7 @@ const Anime = ({ data, dub }) => {
       activeClasses: 'text-info hover:text-info dark:text-info-500 dark:hover:text-blue-400 border-blue-600 dark:border-blue-500',
       inactiveClasses: 'text-gray-300 hover:text-gray-400 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300',
     };
-    const tabs = new Tabs(tabElements, options);
+    // const tabs = new Tabs(tabElements, options);
 
   }, [])
   return (
@@ -47,9 +57,6 @@ const Anime = ({ data, dub }) => {
                 <figure className="movie-detail-banner">
                   <img src={anime?.image} alt={anime?.title} />
 
-                  <button className="play-btn">
-                    <ion-icon name="play-circle-outline"></ion-icon>
-                  </button>
                 </figure>
 
                 <div className="movie-detail-content">
@@ -73,7 +80,7 @@ const Anime = ({ data, dub }) => {
                     </div>
 
                     <div className="ganre-wrapper">
-                      {anime?.genres?.map((genre, index) => {
+                      {anime?.genres?.map((genre) => {
                         return <span class="bg-transparent border border-info text-info text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-gray-700 dark:text-gray-300 hover:bg-info transition-all hover:text-black cursor-pointer" >{genre}</span>
                       })}
 
@@ -96,97 +103,35 @@ const Anime = ({ data, dub }) => {
             </section>
             <section className="tv-series">
               <div className="container">
-                <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
-                  <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="myTab" data-tabs-toggle="#myTabContent" role="tablist">
-                    <li class="mr-2" role="presentation">
-                      <button class="inline-block p-4 border-b-2 rounded-t-lg" id="sub-tab" data-tabs-target="#sub" type="button" role="tab" aria-controls="sub" aria-selected="false">SUB</button>
-                    </li>
-                    <li class="mr-2" role="presentation">
-                      <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="dub-tab" data-tabs-target="#dub" type="button" role="tab" aria-controls="dub" aria-selected="false">DUB</button>
-                    </li>                    </ul>
-                </div>
-                <div id="myTabContent">
-                  <div class="hidden p-4 rounded-lg  dark:bg-gray-800" id="sub" role="tabpanel" aria-labelledby="sub-tab">
-                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 bg:dark-gray-700">
-                        <thead class="text-xs text-gray-700 uppercase bg-info border rounded-lg dark:bg-gray-700 dark:text-gray-400">
-                          <tr>
-                            <th scope="col" class="px-6 py-3">
-                              Episode Number
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                              Episode Title
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                              Watch
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {anime?.episodes?.map((ep) => {
+                <label className="relative inline-flex items-center cursor-pointer text-info">
+                  <input type="checkbox" value="" className="sr-only peer" defaultChecked={dub ? true : false}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setMode("dub");
+                      } else {
+                        setMode("sub");
+                      }
+                    }} />
 
-                            return (
-                              <tr class="border dark:bg-gray-800 border-gray-50  hover:bg-cyan-500 hover:text-black text-white">
-                                <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap dark:text-white">
-                                  {ep.number}
-                                </th>
-                                <td className="w-max">
-                                  {ep.title}
-                                </td>
-                                <td className=" flex justify-center items-center hover:dark:text-cyan-700 text-info group-hover:text-cyan-300" style={{ height: "50px" }}>
-                                  <Link href={`/watch?id=${ep.id}&anime=${anime.id}`}>
-                                    <BsPlayCircle style={{ scale: "2.0", }}/>
-                                  </Link>
-                                </td>
-                              </tr>
-                            );
-                          })}
-
-                        </tbody>
-                      </table>
-                    </div>  </div>
-                  <div class="hidden p-4 rounded-lg  dark:bg-gray-800" id="dub" role="tabpanel" aria-labelledby="dub-tab">
-                    {dub ? (<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 bg:dark-gray-700">
-                        <thead class="text-xs text-gray-700 uppercase bg-info border rounded-lg dark:bg-gray-700 dark:text-gray-400">
-                          <tr>
-                            <th scope="col" class="px-6 py-3">
-                              Episode Number
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                              Episode Title
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                              Watch
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {anime?.episodes?.map((ep) => {
-                            const epid = ep.id.split("-episode")
-                            const id = epid[0] + "-dub-episode" + epid[1]
-                            return (
-                              <tr class="border dark:bg-gray-800 border-gray-50  hover:bg-gray-400 hover:text-black text-white">
-                                <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap dark:text-white">
-                                  {ep.number}
-                                </th>
-                                <td className="w-max">
-                                  {ep.title}
-                                </td>
-                                <td className=" flex justify-center items-center" style={{ height: "50px" }}>
-                                  <Link href={`/watch?id=${dub ? id : ep.id}&anime=${anime.id}`}>
-                                    <BsPlayCircle style={{ scale: "2.0", }} className=" hover:dark:text-info text-info" />
-                                  </Link>
-                                </td>
-                              </tr>
-                            );
-                          })}
-
-                        </tbody>
-                      </table>
-                    </div>) : ("Dub UnAvailable")}
+                  <div className="w-11 h-6 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300  rounded-full peer bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-info " ></div>
+                  <span className="ml-3 text-sm font-medium">{dub ? "Dub Mode" : "Sub Mode"}</span>
+                </label>
+                <div className="relative overflow-x-hidden sm:rounded-lg ">
+                  <div className="flex items-center justify-center pb-4 md:justify-end ">
+                 
+                    <label for="table-search" className="sr-only">Search</label>
+                    <div className="relative ">
+                      <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <svg className="w-5 h-5 text-white dark:text-gray-400" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
+                      </div>
+                      <input type="text" id="table-search" className="block p-2 pl-10 text-sm  border rounded-md w-80  focus:border-info bg-gray-700  dark:placeholder-gray-400 text-white " placeholder="Search Episode by title"
+                        onChange={HandleInputSearch}
+                      />
+                    </div>
                   </div>
+                  <EpisodeView episodes={episodes} mode={mode} anime={anime} dub={dub} />
                 </div>
+
 
 
 
@@ -199,8 +144,8 @@ const Anime = ({ data, dub }) => {
             </>
           )
         }
-      </main>
-    </Layout>
+      </main >
+    </Layout >
   );
 };
 export default Anime;
@@ -249,46 +194,96 @@ export async function getServerSideProps(context) {
     },
   };
 }
+const EpisodeView = ({ episodes, dub, anime, mode }) => {
+  return (
+      <ul className="blog-posts-list shadow-none">
+        {episodes?.map((episode) => {
+          const epid = episode.id.split("-episode")
+          const id = epid[0] + "-dub-episode" + epid[1]
+          if (!episode || episodes.length === 0) return "No Episodes Found!";
+          return (
+            <li className="blog-post-item" key={episode.number}>
+              <Link href={`/watch?id=${dub && mode == "dub" ? id : episode.id}&anime=${anime.id}`}>
+                <figure className="blog-banner-box">
+                  <img
+                    src={episode.image}
+                    alt={episode.title}
+
+                    loading="lazy"
+                  />
+                </figure>
+
+                <div className="blog-content">
+                  <div className="blog-meta">
+                    <p className="blog-category">Episode {episode.number}</p>
+                    <span className="dot"></span>
+
+                    <time dateTime={new Date(episode.airDate).toLocaleDateString()}>
+                      Air Date: {new Date(episode.airDate).toLocaleDateString(
+                        "en-US",
+                        {
+                          
+                          year: "numeric",
+                          month: "numeric",
+                          day: "numeric",
+                        }
+                      )}
+                    </time>
+                  </div>
+
+                  <h3 className="h3 blog-item-title">Title: {episode.title.length > 22 ? episode.title.substring(0, 22) + ".." : episode.title}</h3>
+
+                  
+                </div>
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+  
+  );
+};
+
 
 const Recommendations = ({ recommendations }) => {
   return (
     <>
-      <section class="tv-series">
-        <div class="container">
+      <section className="tv-series">
+        <div className="container">
 
-          <p class="section-subtitle">Recommendations</p>
+          <p className="section-subtitle">Recommendations</p>
 
-          <h2 class="h2 section-title">Recommended Animes</h2>
+          <h2 className="h2 section-title">Recommended Animes</h2>
 
-          <ul class="movies-list">
+          <ul className="movies-list">
 
             {recommendations?.map((anime) => {
               return (
                 <li>
-                  <div class="movie-card" key={anime.id}>
+                  <div className="movie-card" key={anime.id}>
 
                     <Link href={`/anime?animeid=${anime.id}`}>
-                      <figure class="card-banner">
+                      <figure className="card-banner">
                         <img src={anime.image} alt={anime.title.english} />
                       </figure>
                     </Link>
 
-                    <div class="title-wrapper">
+                    <div className="title-wrapper">
                       <Link href={`/anime?animeid=${anime.id}`}>
-                        <h3 class="card-title">{anime.title.english}</h3>
+                        <h3 className="card-title">{anime.title.english}</h3>
                       </Link>
 
-                      <time datetime={anime.episodes}>{anime.episodes} episodes</time>
+                      <time dateTime={anime.episodes}>{anime.episodes} episodes</time>
                     </div>
 
-                    <div class="card-meta">
-                      <div class="badge badge-outline hover:bg-info hover:text-black cursor-pointer">{anime.status.toUpperCase()}</div>
+                    <div className="card-meta">
+                      <div className="badge badge-outline hover:bg-info hover:text-black cursor-pointer">{anime.status.toUpperCase()}</div>
 
-                      <div class="duration">
-                        <time datetime="PT47M">{anime.type == "TV" ? "Series" : anime.type}</time>
+                      <div className="duration">
+                        <time dateTime="PT47M">{anime.type == "TV" ? "SERIES" : anime.type}</time>
                       </div>
 
-                      <div class="rating">
+                      <div className="rating">
                         <ion-icon name="star"></ion-icon>
 
                         <data>{anime.rating / 10}</data>

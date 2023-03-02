@@ -8,15 +8,14 @@ import { useEffect, useState } from "react";
 const SearchResult = ({ anime, genre }) => {
   const { query } = useRouter();
   const [animes, setAnimes] = useState(anime);
-  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(null);
   async function HandlePageShift(type) {
+    let page = animes.currentPage
     setLoading(true);
     if (type == "prev" && page > 1) {
-      setPage(page - 1);
-
+      page -= 1;
     } else if (type == "next" && animes.hasNextPage) {
-      setPage(page + 1);
+      page += 1;
     }
     const url = "https://api.consumet.org/meta/anilist/" + query.keyword;
     const { data } = await axios.get(url, {
