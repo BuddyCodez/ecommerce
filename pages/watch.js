@@ -27,8 +27,7 @@ const watch = ({ anime, Episodes }) => {
 
       const Player = document.querySelector("vm-player");
       const res = await fetch("/api/skip?malid=" + anime?.malId + "&epnumber=" + currentEP[0].number + "&eplen=" + 0);
-      console.log("anime", currentEP[0].number, await res.json());
-      const data = res.json();
+      const data = await res.json();
       const FilterOpenings = data.filter((item) => {
         return item.skipType === "op";
       });
