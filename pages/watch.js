@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Layout from "./layout/main";
 import { BsFillSkipEndFill, BsFillSkipStartFill, BsPlayCircle, } from "react-icons/bs";
-import AniSkip from "./utils/aniskip";
 import useSWR from 'swr'
 const watch = ({ anime, Episodes }) => {
   const fetcher = (...args) => fetch(...args).then((res) => res.json())
@@ -25,6 +24,7 @@ const watch = ({ anime, Episodes }) => {
         return ep.number > currentEP[0].number
       })
       setEpisodes(FilterNextEp);
+      const AniSkip = (await import("./utils/aniskip")).default;
       const animeskip = new AniSkip({
         userId: Math.random().toString(36).substring(7),
       });
