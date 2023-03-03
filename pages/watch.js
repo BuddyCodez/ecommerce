@@ -24,36 +24,32 @@ const watch = ({ anime, Episodes }) => {
         return ep.number > currentEP[0].number
       })
       setEpisodes(FilterNextEp);
-      const animeskip = new ((await import("./utils/aniskip")).default)({
-        userId: Math.random().toString(36).substring(7)
-      });
 
       const Player = document.querySelector("vm-player");
-
-      animeskip.getSkipTimes(anime.malId, currentEP[0].number, 0).then((data) => {
-
-        const FilterOpenings = data.filter((item) => {
-          return item.skipType === "op";
-        });
-        Player.addEventListener('vmCurrentTimeChange', event => {
-          const skip = document.querySelector("#SkipBtn").checked;
-          const currentTime = event.detail;
-          if (skip && Math.floor(currentTime) >= Math.floor(FilterOpenings[0]?.interval?.startTime) && Math.floor(currentTime) < Math.floor(FilterOpenings[0]?.interval?.endTime)) {
-            Player.currentTime = FilterOpenings[0]?.interval?.endTime;
-          }
-          if (Math.floor(currentTime) == Math.floor(event.duration)) {
-            const epid = FilterNextEp[0].id.split("-episode")
-            const id = epid[0] + "-dub-episode" + epid[1]
-            window.location.href = "/watch?id=" + query.id.includes("dub") ? id : FilterNextEp[0].id + "&anime=" + anime.id;
-          }
-        });
+      const res = await fetch("/api/skip?malid=" + anime?.malId + "&epnumber=" + currentEP[0].number + "&eplen=" + 0);
+      console.log("anime", currentEP[0].number, await res.json());
+      const data = res.json();
+      const FilterOpenings = data.filter((item) => {
+        return item.skipType === "op";
+      });
+      Player.addEventListener('vmCurrentTimeChange', event => {
+        const skip = document.querySelector("#SkipBtn").checked;
+        const currentTime = event.detail;
+        if (skip && Math.floor(currentTime) >= Math.floor(FilterOpenings[0]?.interval?.startTime) && Math.floor(currentTime) < Math.floor(FilterOpenings[0]?.interval?.endTime)) {
+          Player.currentTime = FilterOpenings[0]?.interval?.endTime;
+        }
+        if (Math.floor(currentTime) == Math.floor(event.duration)) {
+          const epid = FilterNextEp[0].id.split("-episode")
+          const id = epid[0] + "-dub-episode" + epid[1]
+          window.location.href = "/watch?id=" + query.id.includes("dub") ? id : FilterNextEp[0].id + "&anime=" + anime.id;
+        }
       });
     };
     if (query.anime) {
       getAnime();
 
     }
-  }, [query]);
+  }, [anime]);
   useEffect(() => {
     const filter = async () => {
       console.log(source);
