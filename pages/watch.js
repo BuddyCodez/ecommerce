@@ -24,10 +24,10 @@ const watch = ({ anime, Episodes }) => {
         return ep.number > currentEP[0].number
       })
       setEpisodes(FilterNextEp);
-      const AniSkip = (await import("./utils/aniskip")).default;
-      const animeskip = new AniSkip({
-        userId: Math.random().toString(36).substring(7),
+      const animeskip = new ((await import("./utils/aniskip")).default)({
+        userId: Math.random().toString(36).substring(7)
       });
+
       const Player = document.querySelector("vm-player");
 
       animeskip.getSkipTimes(anime.malId, currentEP[0].number, 0).then((data) => {
@@ -51,7 +51,7 @@ const watch = ({ anime, Episodes }) => {
     };
     if (query.anime) {
       getAnime();
-   
+
     }
   }, [query]);
   useEffect(() => {
