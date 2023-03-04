@@ -8,8 +8,8 @@ export default function handler(req, res) {
     providerName: "gogoanime",
   });
   if (!malid || !epnumber) return res.status(400).json({ error: "Missing parameters" });
-  if (isNaN(epnumber)) return res.status(400).json({ error: "epnumber must be a number" });
   if (!eplen) eplen = 0;
+  if (isNaN(epnumber)) return res.status(400).json({ error: "epnumber must be a number" });
   aniskip.getSkipTimes(malid, epnumber, eplen).then((data) => {
     res.status(200).json(data);
   });
