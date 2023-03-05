@@ -5,6 +5,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { BsPlayBtn, BsPlayCircle } from "react-icons/bs";
 import { Tabs } from "flowbite";
+import { Card, Grid, Row, Text } from "@nextui-org/react";
 const Anime = ({ data, dub }) => {
   const { query } = useRouter();
   const anime = data;
@@ -97,7 +98,7 @@ const Anime = ({ data, dub }) => {
                     </div>
                   </div>
 
-                  <p className="storyline">{String(anime?.description).replace("<br> <br> (Source: Crunchyroll)", " ")}</p>
+                  <p className="storyline">{String(anime?.description).replace("<br>", "\n").replace("(Source: Crunchyroll)", "Source => AnimeTronix")}</p>
                 </div>
               </div>
             </section>
@@ -116,19 +117,7 @@ const Anime = ({ data, dub }) => {
                   <div className="w-11 h-6 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300  rounded-full peer bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-info " ></div>
                   <span className="ml-3 text-sm font-medium">{dub ? "Dub Mode" : "Sub Mode"}</span>
                 </label>
-                <div className="relative overflow-x-hidden sm:rounded-lg ">
-                  <div className="flex items-center justify-center pb-4 md:justify-end ">
-                 
-                    <label for="table-search" className="sr-only">Search</label>
-                    <div className="relative ">
-                      <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <svg className="w-5 h-5 text-white dark:text-gray-400" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
-                      </div>
-                      <input type="text" id="table-search" className="block p-2 pl-10 text-sm  border rounded-md w-80  focus:border-info bg-gray-700  dark:placeholder-gray-400 text-white " placeholder="Search Episode by title"
-                        onChange={HandleInputSearch}
-                      />
-                    </div>
-                  </div>
+                <div className="relative overflow-hidden sm:rounded-lg ">
                   <EpisodeView episodes={episodes} mode={mode} anime={anime} dub={dub} />
                 </div>
 
@@ -195,52 +184,53 @@ export async function getServerSideProps(context) {
   };
 }
 const EpisodeView = ({ episodes, dub, anime, mode }) => {
+  const router = useRouter();
   return (
-      <ul className="blog-posts-list shadow-none">
-        {episodes?.map((episode) => {
-          const epid = episode.id.split("-episode")
-          const id = epid[0] + "-dub-episode" + epid[1]
-          if (!episode || episodes.length === 0) return "No Episodes Found!";
-          return (
-            <li className="blog-post-item" key={episode.number}>
-              <Link href={`/watch?id=${dub && mode == "dub" ? id : episode.id}&anime=${anime.id}`}>
-                <figure className="blog-banner-box">
-                  <img
-                    src={episode.image}
-                    alt={episode.title}
 
-                    loading="lazy"
-                  />
-                </figure>
 
-                <div className="blog-content">
-                  <div className="blog-meta">
-                    <p className="blog-category">Episode {episode.number}</p>
-                    <span className="dot"></span>
+    <Grid.Container gap={2} justify="flex-start" style={{ overflowY: 'hidden' }}>
+      {episodes.map((ep, index) => {
+        const epid = ep.id.split("-episode");
+        const id = epid[0] + "-dub-episode" + epid[1];
+        if (!ep || episodes.length === 0) return "No Episodes Found!";
+        return (
+          <Grid xs={6} sm={3} key={index}>
+            <Card isPressable variant="bordered" color="primary"
+              onPress={() => {
+                router.push(`/watch?id=${dub && mode == "dub" ? id : ep.id}&anime=${anime.id}`);
+              }}
+            >
+              <Card.Body css={{ p: 0 }}>
+                <Card.Image
+                  src={ep.image}
+                  objectFit="cover"
+                  width="100%"
+                  height={140}
+                  alt={ep.title}
+                  showSkeleton={true}
+                />
+              </Card.Body>
+              <Card.Footer css={{ justifyItems: "flex-start" }} isBlurred={true}>
+                <Row wrap="wrap" justify="space-between" align="center">
+                  <Text b>{ep.title}</Text>
+                  <Text css={{ color: "$accents7", fontWeight: "$semibold", fontSize: "$sm" }}>
+                    Air Date: {new Date(ep.airDate).toLocaleDateString(
+                      "en-US",
+                      {
 
-                    <time dateTime={new Date(episode.airDate).toLocaleDateString()}>
-                      Air Date: {new Date(episode.airDate).toLocaleDateString(
-                        "en-US",
-                        {
-                          
-                          year: "numeric",
-                          month: "numeric",
-                          day: "numeric",
-                        }
-                      )}
-                    </time>
-                  </div>
-
-                  <h3 className="h3 blog-item-title">Title: {episode.title.length > 22 ? episode.title.substring(0, 22) + ".." : episode.title}</h3>
-
-                  
-                </div>
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
-  
+                        year: "numeric",
+                        month: "numeric",
+                        day: "numeric",
+                      }
+                    )}
+                  </Text>
+                </Row>
+              </Card.Footer>
+            </Card>
+          </Grid>
+        )
+      })}
+    </Grid.Container>
   );
 };
 

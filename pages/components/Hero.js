@@ -1,3 +1,4 @@
+import { Button } from "@nextui-org/react";
 import Link from "next/link";
 
 const Hero = () => {
@@ -39,14 +40,24 @@ const Hero = () => {
             </div>
           </div>
 
-          <Link className="btn btn-info" href="#Trending">
-            <ion-icon name="play"></ion-icon>
-
-            <span>Watch now</span>
-          </Link>
+          <Button shadow color="primary" auto icon={
+            <ion-icon name="play-outline"></ion-icon>
+          }
+            ripple='true'
+            id="NextBtn"
+            style={
+              {
+                background: 'var(--nextui-colors-primary)',
+                backgroundImage: 'none',
+                color: 'black'
+              }
+            }
+          >
+            Watch Now
+          </Button>
         </div>
       </div>
-    </section>
+    </section >
   );
 };
 export default Hero;

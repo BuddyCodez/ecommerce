@@ -4,8 +4,18 @@ import '@/styles/others.css';
 import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/react';
 import { DefaultSeo, LogoJsonLd } from 'next-seo';
+import { createTheme, NextUIProvider } from '@nextui-org/react';
 
 export default function App({ Component, pageProps }) {
+  const theme = createTheme({
+    type: 'dark',
+     theme: {
+      colors: {
+         primary: 'hsl(var(--in))',
+         primaryShadow: 'hsl(var(--in))',
+      }
+    }
+  })
   return <>
     <LogoJsonLd url='https://animematrix.vercel.app/' logo='https://animematrix.vercel.app/images/BrandedLogo.png' />
     <DefaultSeo
@@ -30,7 +40,9 @@ export default function App({ Component, pageProps }) {
         site_name: 'Animetronix - All in one anime platform',
 
       }} />
-    <Component {...pageProps} />
+    <NextUIProvider theme={theme}>
+      <Component {...pageProps} />
+    </NextUIProvider>
     <Analytics />
     <Script src='/js/script.js' />
   </>

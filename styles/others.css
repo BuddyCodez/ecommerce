@@ -47,7 +47,7 @@
   }
 }
 
-input.search-input{
+input.search-input {
   width: 200px;
 }
 #dropdownNavbar li {
@@ -57,7 +57,7 @@ input.search-input{
   position: relative;
 }
 .movie-detail::before {
-  content: ' ';
+  content: " ";
   display: block;
   position: absolute;
   left: 0;
@@ -65,7 +65,7 @@ input.search-input{
   width: 100%;
   height: 100%;
   opacity: 0.9;
-  background-image: linear-gradient(to right, rgb(0,0,0), rgb(0,0,0));
+  background-image: linear-gradient(to right, rgb(0, 0, 0), rgb(0, 0, 0));
   background-repeat: no-repeat;
   background-position: 50% 0;
   background-size: cover;
@@ -73,7 +73,9 @@ input.search-input{
 .container {
   position: relative;
 }
-.blog-posts { margin-bottom: 10px; }
+.blog-posts {
+  margin-bottom: 10px;
+}
 
 .blog-posts-list {
   display: flex;
@@ -116,9 +118,13 @@ input.search-input{
   transition: var(--transition-1);
 }
 
-.blog-post-item > a:hover .blog-banner-box img { transform: scale(1.1); }
+.blog-post-item > a:hover .blog-banner-box img {
+  transform: scale(1.1);
+}
 
-.blog-content { padding: 15px; }
+.blog-content {
+  padding: 15px;
+}
 
 .blog-meta {
   display: flex;
@@ -147,7 +153,9 @@ input.search-input{
   transition: var(--transition-1);
 }
 
-.blog-post-item > a:hover .blog-item-title { color: var(--orange-yellow-crayola); }
+.blog-post-item > a:hover .blog-item-title {
+  color: var(--orange-yellow-crayola);
+}
 
 .blog-text {
   color: var(--light-gray);
@@ -156,3 +164,51 @@ input.search-input{
   line-height: 1.6;
 }
 
+.nextui-c-eXOOPO {
+  background: var(--jet);
+  color: white;
+}
+.NavbarToggler:focus,
+button:focus,
+input:focus,
+a:focus {
+  outline: none;
+  border: none;
+  box-shadow: none;
+}
+.NavbarToggler {
+  margin-right: 10px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: none;
+  visibility: hidden;
+  opacity: 0;
+}
+.nextui-navbar-collapse-wrapper {
+  overflow-y: hidden;
+  height: 100vh;
+}
+@media (max-width: 768px) {
+  .NavbarToggler {
+    display: block;
+    visibility: visible;
+    opacity: 1;
+  }
+}
+#Loader {
+  width: 100%;
+  height: 100%;
+  background: black;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000000000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+
+}
