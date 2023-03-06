@@ -13,7 +13,7 @@ export default function Trending({ anime }) {
                     <h1 className="h2 section-title">Trending Animes</h1>
                     <p className="h2 section-subtitle">Top Trending Animes</p>
                 </div>
-                <Grid.Container gap={2} justify="flex-start">
+                <Grid.Container gap={2} justify="center">
                     {anime?.results?.map((item, index) => (
                         <Grid xs={7} sm={3} key={index}>
                             <Card isPressable variant="bordered"

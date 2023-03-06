@@ -224,7 +224,7 @@ const Recommendations = ({ recommendations }) => {
 
           <h2 className="h2 section-title">Recommended Animes</h2>
 
-          <Grid.Container gap={2} justify="flex-start">
+          <Grid.Container gap={2} justify="center">
             {recommendations?.map((item, index) => (
               <Grid xs={7} sm={3} key={index}>
                 <Card isPressable variant="bordered"
