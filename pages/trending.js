@@ -15,7 +15,7 @@ export default function Trending({ anime }) {
                 </div>
                 <Grid.Container gap={2} justify="flex-start">
                     {anime?.results?.map((item, index) => (
-                        <Grid xs={6} sm={3} key={index}>
+                        <Grid xs={7} sm={3} key={index}>
                             <Card isPressable variant="bordered"
                                 css={
                                     {

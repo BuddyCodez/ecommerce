@@ -226,7 +226,7 @@ const Recommendations = ({ recommendations }) => {
 
           <Grid.Container gap={2} justify="flex-start">
             {recommendations?.map((item, index) => (
-              <Grid xs={6} sm={3} key={index}>
+              <Grid xs={7} sm={3} key={index}>
                 <Card isPressable variant="bordered"
                   css={
                     {
