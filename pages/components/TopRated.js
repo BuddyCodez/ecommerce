@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import Script from "next/script";
 import axios from "axios";
+import { Badge, Card, Col, Grid, Row, Text } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 const TopRated = ({ popular }) => {
   const [anime, setAnime] = useState(popular);
   const [page, setPage] = useState(1);
@@ -10,69 +12,105 @@ const TopRated = ({ popular }) => {
   function PushPage(item) {
     router.push({ pathname: "/anime", query: { animeid: item.id } });
   }
-  function Change(type) {
-    fetch(`https://gogoanime.consumet.stream/popular?page=${page}`)
-      .then((response) => response.json())
-      .then((animelist) => {
-        setAnime(animelist);
-        if (page > 1) {
-          type == "next" ? setPage(page + 1) : setPage(page - 1);
-        }
-      });
-  }
-
 
   return (
     <section className="top-rated">
       <div className="container">
         <p className="section-subtitle">Online Anime Streaming</p>
         <h2 className="h2 section-title">Top Trending Animes</h2>
+        <div className="sectionAll">
+          <Button light color="primary" auto ripple={true}
+            iconRight={<ion-icon name="arrow-forward-outline"></ion-icon>}
+            onPress={() => {
+              router.push("/trending");
+            }}
+          >
+            View All
+          </Button>
+        </div>
+        <Grid.Container gap={2} justify="flex-start">
+          {anime?.results?.map((item, index) => (
+            <Grid xs={6} sm={3} key={index}>
+              <Card isPressable variant="bordered" onPress={() => {
+                router.push({ pathname: "/anime", query: { animeid: item.id } });
+              }}
+              disableRipple={false}
+              >
+                <Card.Body css={{ p: 0 }} >
+                  <Card.Image
+                    src={item.image}
+                    objectFit="cover"
+                    width="100%"
+                    height="100%"
+                    alt={item?.title?.english}
+                    showSkeleton={true}
+                  />
+                </Card.Body>
+                <Card.Footer css={{ justifyItems: "flex-start" }} isBlurred={true}>
+                  <Col wrap="wrap" justify="space-between" align="center" className="text-info">
+                    <Text b css={{
+                      fontFamily: 'poppins'
+                    }}>{item?.title?.english}</Text>
+                    <Row css={{
+                      marginTop: '5px',
+                    }}
+                      justify="space-around"
+                      align="center"
+                    >
+                      <Text css={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
 
-        <ul className="movies-list" id="Trending">
-          {anime?.results?.map((item) => {
-            return (
-              <li key={item.id + item.title}>
-                <div className="movie-card">
-                  <button onClick={() => PushPage(item.id)}>
-                    <figure className="card-banner">
-                      <img
-                        src={item.image}
-                        alt={item.title.english}
-                      />
-                    </figure>
-                  </button>
-
-                  <div className="title-wrapper">
-                    <button onClick={() => PushPage(item)}>
-                      <h3 className="card-title">{String(item.title.english).length > 25 ? String(item.title.english).slice(0, 25) + "..." : String(item.title.english)}</h3>
-                    </button>
-
-                    <time dateTime={item.releaseDate}>
-                      {item.releaseDate}
-                    </time>
-
-                  </div>
-                  <div className="card-meta">
-                    <div className="badge badge-outline">1080p</div>
-
-                    <div className="duration">
-                      <ion-icon name="time-outline"></ion-icon>
-
-                      <time dateTime={item.duration}>{item.duration} min</time>
-                    </div>
-
-                    <div className="rating">
-                      <ion-icon name="star"></ion-icon>
-
-                      <data>{(item.rating / 10)} / 10</data>
-                    </div>
-                  </div>
-                </div>
-
-              </li>
-            );
-          })}
-        </ul>
+                        color: '$primary',
+                        fontFamily: 'poppins',
+                        verticalAlign: 'middle'
+                      }}>
+                        <span style={{ color: 'white' }}>Rating: &nbsp;&nbsp;</span> {item.rating / 10} <ion-icon name="star" style={{ padding: '5px' }}></ion-icon>
+                      </Text>
+                      <Text css={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        gap: '10px',
+                        color: '$primary',
+                        fontFamily: 'poppins',
+                        verticalAlign: 'middle'
+                      }}>
+                        <span style={{ color: 'white' }}>Type:</span> {item.type}
+                      </Text>
+                    </Row>
+                    <Row css={{
+                      marginTop: '5px',
+                    }}
+                      justify="space-around"
+                      align="center"
+                    >
+                      <Text >
+                        <Badge enableShadow color='primary' disableOutline disableAnimation={false} css={{
+                          color: 'Black',
+                        }}>
+                          {item.duration} Mins
+                        </Badge>
+                      </Text>
+                      <Text css={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        gap: '10px',
+                        color: '$primary',
+                        fontFamily: 'poppins',
+                        verticalAlign: 'middle'
+                      }}>
+                        <span style={{ color: 'white' }}>Air Date:</span> {item.releaseDate}
+                      </Text>
+                    </Row>
+                  </Col>
+                </Card.Footer>
+              </Card>
+            </Grid>
+          ))}
+        </Grid.Container>
 
       </div>
     </section >

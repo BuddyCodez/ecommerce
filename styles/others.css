@@ -191,6 +191,14 @@ a:focus {
   overflow-y: hidden;
   height: 100vh;
 }
+.sectionAll {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-end;
+  height: 55px;
+}
+
 @media (max-width: 768px) {
   .NavbarToggler {
     display: block;
@@ -210,5 +218,4 @@ a:focus {
   justify-content: center;
   align-items: center;
   gap: 1rem;
-
 }

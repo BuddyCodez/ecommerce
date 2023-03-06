@@ -1,14 +1,13 @@
-import Link from "next/link";
+
 import Layout from "./layout/main";
 import { useRouter } from "next/router";
-import axios from "axios";
 import { useEffect, useState } from "react";
-import { BsPlayBtn, BsPlayCircle } from "react-icons/bs";
-import { Tabs } from "flowbite";
-import { Card, Grid, Row, Text } from "@nextui-org/react";
+import { Card, Grid, Row, Col, Text, Badge} from "@nextui-org/react";
+import FourZeroFour from "./404";
 const Anime = ({ data, dub }) => {
   const { query } = useRouter();
   const anime = data;
+  if (!anime || !query.animeid) return <FourZeroFour />;
   const [episodes, setEpisodes] = useState(anime.episodes);
   const [mode, setMode] = useState("dub");
   function HandleInputSearch(element) {
@@ -20,34 +19,13 @@ const Anime = ({ data, dub }) => {
     setEpisodes(FilteredEp);
   }
   useEffect(() => {
-    if (anime) {
+    if (anime && query.animeid && anime.cover != null) {
       const movieDetail = document.querySelector(".movie-detail");
       movieDetail.style.background = `url(${anime?.cover}) no-repeat`;
       movieDetail.style.backgroundSize = 'cover';
-
     }
   }, []);
-  useEffect(() => {
-    const tabElements = [
-      {
-        id: 'sub',
-        triggerEl: document.querySelector('#sub-tab'),
-        targetEl: document.querySelector('#sub')
-      },
-      {
-        id: 'dub',
-        triggerEl: document.querySelector('#dub-tab'),
-        targetEl: document.querySelector('#dub')
-      },
-    ];
-    const options = {
-      defaultTabId: 'sub',
-      activeClasses: 'text-info hover:text-info dark:text-info-500 dark:hover:text-blue-400 border-blue-600 dark:border-blue-500',
-      inactiveClasses: 'text-gray-300 hover:text-gray-400 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300',
-    };
-    // const tabs = new Tabs(tabElements, options);
 
-  }, [])
   return (
     <Layout>
       <main>
@@ -98,7 +76,7 @@ const Anime = ({ data, dub }) => {
                     </div>
                   </div>
 
-                  <p className="storyline">{String(anime?.description).replace("<br>", "\n").replace("(Source: Crunchyroll)", "Source => AnimeTronix")}</p>
+                  <p className="storyline">{String(anime?.description).replaceAll("<br>", "\n").replaceAll("<i>", "").replaceAll("</i>", "").replaceAll("(Source: Crunchyroll)", "")}</p>
                 </div>
               </div>
             </section>
@@ -117,7 +95,8 @@ const Anime = ({ data, dub }) => {
                   <div className="w-11 h-6 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300  rounded-full peer bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-info " ></div>
                   <span className="ml-3 text-sm font-medium">{dub ? "Dub Mode" : "Sub Mode"}</span>
                 </label>
-                <div className="relative overflow-hidden sm:rounded-lg ">
+                <div className="relative overflow-hidden sm:rounded-lg">
+                  <span className="hero-subtitle h1">{anime?.title?.english} Episodes ({episodes.length}):</span>
                   <EpisodeView episodes={episodes} mode={mode} anime={anime} dub={dub} />
                 </div>
 
@@ -129,7 +108,7 @@ const Anime = ({ data, dub }) => {
             <Recommendations recommendations={anime?.recommendations} />
           </article>) : (
             <>
-              <h1>No Anime Found or Server may be down.</h1>
+             <FourZeroFour />
             </>
           )
         }
@@ -175,7 +154,7 @@ export async function getServerSideProps(context) {
     console.log(e);
     data = [];
   }
-  // console.log(data);
+  if (!data) data = undefined;
   return {
     props: {
       data,
@@ -245,7 +224,93 @@ const Recommendations = ({ recommendations }) => {
 
           <h2 className="h2 section-title">Recommended Animes</h2>
 
-          <ul className="movies-list">
+          <Grid.Container gap={2} justify="flex-start">
+            {recommendations?.map((item, index) => (
+              <Grid xs={6} sm={3} key={index}>
+                <Card isPressable variant="bordered" onPress={() => {
+                  router.push({ pathname: "/anime", query: { animeid: item.id } });
+                }}
+                  disableRipple={false}
+                >
+                  <Card.Body css={{ p: 0 }} >
+                    <Card.Image
+                      src={item.image}
+                      objectFit="cover"
+                      width="100%"
+                      height="100%"
+                      alt={item?.title?.english}
+                      showSkeleton={true}
+                    />
+                  </Card.Body>
+                  <Card.Footer css={{ justifyItems: "flex-start" }} isBlurred={true}>
+                    <Col wrap="wrap" justify="space-between" align="center" className="text-info">
+                      <Text b css={{
+                        fontFamily: 'poppins'
+                      }}>{item?.title?.english}</Text>
+                      <Row css={{
+                        marginTop: '5px',
+                      }}
+                        justify="space-around"
+                        align="center"
+                      >
+                        <Text css={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+
+                          color: '$primary',
+                          fontFamily: 'poppins',
+                          verticalAlign: 'middle'
+                        }}>
+                          <span style={{ color: 'white' }}>Rating: &nbsp;&nbsp;</span> {item.rating / 10} <ion-icon name="star" style={{ padding: '5px' }}></ion-icon>
+                        </Text>
+                        <Text css={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          gap: '10px',
+                          color: '$primary',
+                          fontFamily: 'poppins',
+                          verticalAlign: 'middle'
+                        }}>
+                          <span style={{ color: 'white' }}>Type:</span> {item.type}
+                        </Text>
+                      </Row>
+                      <Row css={{
+                        marginTop: '5px',
+                      }}
+                        justify="space-around"
+                        align="center"
+                      >
+                        <Text >
+                          <Badge enableShadow color='primary' disableOutline disableAnimation={false} css={{
+                            color: 'Black',
+                          }}>
+                            {item.status.toUpperCase()}
+                          </Badge>
+                        </Text>
+                   
+                        <Text css={
+                          {
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            gap: '10px',
+                            color: '$primary',
+                            fontFamily: 'poppins',
+                            verticalAlign: 'middle'
+                          }
+                        }>
+                          <span style={{ color: 'white' }}>Episodes:</span> {item.episodes}
+                        </Text>
+                      </Row>
+                    </Col>
+                  </Card.Footer>
+                </Card>
+              </Grid>
+            ))}
+          </Grid.Container>
+          {/* <ul className="movies-list">
 
             {recommendations?.map((anime) => {
               return (
@@ -285,7 +350,7 @@ const Recommendations = ({ recommendations }) => {
               )
             })}
 
-          </ul>
+          </ul> */}
 
         </div>
       </section>

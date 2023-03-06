@@ -10,13 +10,24 @@ import { BsSearch } from "react-icons/bs";
 export const Box = styled("div", {
   boxSizing: "border-box",
 });
-const Header = ({ children }) => {
+const Header = ({ children, active }) => {
   const [query, setQuery] = useState("");
   const [progress, setProgress] = useState(0);
   const router = useRouter();
   const SearchGenre = async (e, url) => {
     window.location.href = url;
   };
+  const IsActive = () => {
+    if (active === "home") {
+      return "Home";
+    } else if (active === "trnd") {
+      return "Trending";
+    } else if (active === "abt") {
+      return "About Us";
+    } else if (active === "pop") {
+      return "Popular";
+    }
+  }
   const Toggle = () => {
     const $targetEl = document.getElementById('targetEl');
     const $triggerEl = document.getElementById('triggerEl');
@@ -85,18 +96,19 @@ const Header = ({ children }) => {
             <Navbar.Toggle showIn="xs" aria-label="toggle navigation" id="NavbarToggler" title="Toggle" />
             <Text b color="primary" css={{
               mr: "$11", "@xsMax": {
-              ml: '$4'
-            } }} >
+                ml: '$4'
+              }
+            }} >
               AnimeTronix
             </Text>
-            <Navbar.Content hideIn="xs" variant="highlight-solid-rounded" style={{
+            <Navbar.Content hideIn="xs" variant="highlight-rounded" style={{
               color: 'white'
             }} >
-              <Navbar.Link isActive href="/">
+              <Navbar.Link isActive={IsActive() == "Home" ? true : active == null || active == undefined ? true : false} href="/">
                 Home
               </Navbar.Link>
-              <Navbar.Link href="#Trending">Trending</Navbar.Link>
-              <Navbar.Link href="#">Popular</Navbar.Link>
+              <Navbar.Link href="/trending" isActive={IsActive() == "Trending" ? true : false}>Trending</Navbar.Link>
+              <Navbar.Link href="#" isActive={IsActive() == "Popular" ? true : false}>Popular</Navbar.Link>
               <Dropdown isBordered>
                 <Navbar.Item>
                   <Dropdown.Button
@@ -221,7 +233,7 @@ const Header = ({ children }) => {
 
               </Navbar.CollapseItem>
             ))}
-           
+
           </Navbar.Collapse>
         </Navbar>
         {children}

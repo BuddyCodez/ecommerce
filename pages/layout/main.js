@@ -3,10 +3,10 @@ import { useEffect } from "react";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 
-const Layout = ({ children }) => {
+const Layout = ({ children, active }) => {
   return (
     <>
-      <Header>
+      <Header active={active}>
         <main>{children}</main>
         <Footer />
         <a href="#top" className="go-top" data-go-top>
