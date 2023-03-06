@@ -206,6 +206,14 @@ a:focus {
     opacity: 1;
   }
 }
+@media (max-width: 680px) {
+    .nextui-c-kRHeuF-iiJZQLf-css.xs {
+    max-width: 100%;
+  }
+  .nextui-c-BDLTQ-ihRDxUK-css {
+    width: 80vw;
+  }
+}
 #Loader {
   width: 100%;
   height: 100%;

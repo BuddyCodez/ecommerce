@@ -17,9 +17,11 @@ export default function Trending({ anime }) {
                     {anime?.results?.map((item, index) => (
                         <Grid xs={7} sm={3} key={index}>
                             <Card isPressable variant="bordered"
+                                className="NextUiCard"
                                 css={
                                     {
-                                        "@xsMax": {
+                                        maxWidth: '90vw',
+                                        '@xs': {
                                             width: '90vw'
                                         }
                                     }

@@ -35,9 +35,12 @@ const TopRated = ({ popular }) => {
                 router.push({ pathname: "/anime", query: { animeid: item.id } });
               }}
                 disableRipple={false}
+                className='NextUiCard'
+                
                 css={
                   {
-                    "@xsMax": {
+                    "@xsMin": {
+                      maxWidth: '90vw',
                       width: '90vw'
                     }
                   }
