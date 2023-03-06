@@ -2,7 +2,7 @@
 import Layout from "./layout/main";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Card, Grid, Row, Col, Text, Badge} from "@nextui-org/react";
+import { Card, Grid, Row, Col, Text, Badge } from "@nextui-org/react";
 import FourZeroFour from "./404";
 const Anime = ({ data, dub }) => {
   const { query } = useRouter();
@@ -108,7 +108,7 @@ const Anime = ({ data, dub }) => {
             <Recommendations recommendations={anime?.recommendations} />
           </article>) : (
             <>
-             <FourZeroFour />
+              <FourZeroFour />
             </>
           )
         }
@@ -227,9 +227,17 @@ const Recommendations = ({ recommendations }) => {
           <Grid.Container gap={2} justify="flex-start">
             {recommendations?.map((item, index) => (
               <Grid xs={6} sm={3} key={index}>
-                <Card isPressable variant="bordered" onPress={() => {
-                  router.push({ pathname: "/anime", query: { animeid: item.id } });
-                }}
+                <Card isPressable variant="bordered"
+                  css={
+                    {
+                      "@xsMax": {
+                        width: '70vw'
+                      }
+                    }
+                  }
+                  onPress={() => {
+                    router.push({ pathname: "/anime", query: { animeid: item.id } });
+                  }}
                   disableRipple={false}
                 >
                   <Card.Body css={{ p: 0 }} >
@@ -289,7 +297,7 @@ const Recommendations = ({ recommendations }) => {
                             {item.status.toUpperCase()}
                           </Badge>
                         </Text>
-                   
+
                         <Text css={
                           {
                             display: 'flex',

@@ -28,15 +28,24 @@ const TopRated = ({ popular }) => {
             View All
           </Button>
         </div>
-        <Grid.Container gap={2} justify="flex-start">
+        <Grid.Container gap={1} justify="center" >
           {anime?.results?.map((item, index) => (
-            <Grid xs={6} sm={3} key={index}>
+            <Grid xs={7} sm={3} key={index}>
               <Card isPressable variant="bordered" onPress={() => {
                 router.push({ pathname: "/anime", query: { animeid: item.id } });
               }}
-              disableRipple={false}
+                disableRipple={false}
+                css={
+                  {
+                    "@xsMax": {
+                      width: '70vw'
+                    }
+                  }
+                }
               >
-                <Card.Body css={{ p: 0 }} >
+                <Card.Body css={{
+                  p: 0,
+                }} >
                   <Card.Image
                     src={item.image}
                     objectFit="cover"

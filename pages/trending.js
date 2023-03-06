@@ -16,9 +16,17 @@ export default function Trending({ anime }) {
                 <Grid.Container gap={2} justify="flex-start">
                     {anime?.results?.map((item, index) => (
                         <Grid xs={6} sm={3} key={index}>
-                            <Card isPressable variant="bordered" onPress={() => {
-                                router.push({ pathname: "/anime", query: { animeid: item.id } });
-                            }}>
+                            <Card isPressable variant="bordered"
+                                css={
+                                    {
+                                        "@xsMax": {
+                                            width: '70vw'
+                                        }
+                                    }
+                                }
+                                onPress={() => {
+                                    router.push({ pathname: "/anime", query: { animeid: item.id } });
+                                }}>
                                 <Card.Body css={{ p: 0 }} >
                                     <Card.Image
                                         src={item.image}
