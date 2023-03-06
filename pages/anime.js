@@ -231,7 +231,7 @@ const Recommendations = ({ recommendations }) => {
                   css={
                     {
                       "@xsMax": {
-                        width: '70vw'
+                        width: '90vw'
                       }
                     }
                   }

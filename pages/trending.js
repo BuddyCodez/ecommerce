@@ -20,7 +20,7 @@ export default function Trending({ anime }) {
                                 css={
                                     {
                                         "@xsMax": {
-                                            width: '70vw'
+                                            width: '90vw'
                                         }
                                     }
                                 }
