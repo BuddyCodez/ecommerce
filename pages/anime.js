@@ -216,6 +216,7 @@ const EpisodeView = ({ episodes, dub, anime, mode }) => {
 
 
 const Recommendations = ({ recommendations }) => {
+  const router = useRouter();
   return (
     <>
       <section className="tv-series">
