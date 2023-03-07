@@ -23,6 +23,7 @@ const Anime = ({ data, dub }) => {
       const movieDetail = document.querySelector(".movie-detail");
       movieDetail.style.background = `url(${anime?.cover}) no-repeat`;
       movieDetail.style.backgroundSize = 'cover';
+      movieDetail.style.backgroundPosition = 'center';
     }
   }, []);
 
@@ -228,6 +229,7 @@ const Recommendations = ({ recommendations }) => {
             {recommendations?.map((item, index) => (
               <Grid xs={7} sm={3} key={index}>
                 <Card isPressable variant="bordered"
+                  className='NextUiCard'
                   css={
                     {
                       "@xsMax": {
