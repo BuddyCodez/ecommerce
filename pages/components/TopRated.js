@@ -36,15 +36,7 @@ const TopRated = ({ popular }) => {
               }}
                 disableRipple={false}
                 className='NextUiCard'
-                
-                css={
-                  {
-                    "@xsMin": {
-                      maxWidth: '90vw',
-                      width: '90vw'
-                    }
-                  }
-                }
+ 
               >
                 <Card.Body css={{
                   p: 0,

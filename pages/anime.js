@@ -2,14 +2,19 @@
 import Layout from "./layout/main";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Card, Grid, Row, Col, Text, Badge } from "@nextui-org/react";
+import { Card, Grid, Row, Col, Text, Badge, Switch, Loading, Image } from "@nextui-org/react";
 import FourZeroFour from "./404";
-const Anime = ({ data, dub }) => {
+import UseFetcher from "./utils/fetcher";
+const Anime = ({ data }) => {
+  const episodeId = data?.episodes[0].id.split("-episode")
+  const episodeUrl = episodeId ? episodeId[0] + "-dub-episode" + episodeId[1] : false
+  let fetchDub = episodeUrl ? UseFetcher("https://api.consumet.org/anime/gogoanime/watch/" + episodeUrl) : { data: false, error: true, isLoading: false };
+  const [dub, setDub] = useState(false);
+  const [mode, setMode] = useState("dub");
   const { query } = useRouter();
   const anime = data;
   if (!anime || !query.animeid) return <FourZeroFour />;
   const [episodes, setEpisodes] = useState(anime.episodes);
-  const [mode, setMode] = useState("dub");
   function HandleInputSearch(element) {
     if (!element.target.value) return setEpisodes(data.episodes);
     let FilteredEp = []
@@ -19,6 +24,7 @@ const Anime = ({ data, dub }) => {
     setEpisodes(FilteredEp);
   }
   useEffect(() => {
+
     if (anime && query.animeid && anime.cover != null) {
       const movieDetail = document.querySelector(".movie-detail");
       movieDetail.style.background = `url(${anime?.cover}) no-repeat`;
@@ -26,6 +32,13 @@ const Anime = ({ data, dub }) => {
       movieDetail.style.backgroundPosition = 'center';
     }
   }, []);
+  useEffect(() => {
+    console.log(fetchDub);
+    if (!fetchDub.isLoading) {
+      setDub(fetchDub.data && !fetchDub.error ? true : false);
+
+    }
+  }, [fetchDub.isLoading]);
 
   return (
     <Layout>
@@ -35,7 +48,12 @@ const Anime = ({ data, dub }) => {
             <section className="movie-detail">
               <div className="container">
                 <figure className="movie-detail-banner">
-                  <img src={anime?.image} alt={anime?.title} />
+                  <Image src={anime?.image} alt={anime?.title}
+                    showSkeleton
+                    maxDelay={10000}
+                    height={500}
+                  />
+
 
                 </figure>
 
@@ -83,18 +101,40 @@ const Anime = ({ data, dub }) => {
             </section>
             <section className="tv-series">
               <div className="container">
-                <label className="relative inline-flex items-center cursor-pointer text-info">
-                  <input type="checkbox" value="" className="sr-only peer" defaultChecked={dub ? true : false}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setMode("dub");
-                      } else {
-                        setMode("sub");
+                <label className="text-info flex items-center gap-2 mb-3 ">
+                  {fetchDub.isLoading ? <div className="flex items-center justify-center gap-3">
+                    <Loading />
+                    <span>
+                      Loading Episode Mode...
+                    </span>
+                  </div> :
+                    <Switch
+                      initialChecked={fetchDub.data ? true : false}
+                      shadow
+                      disabled={fetchDub.error ? true : false}
+                      id='Mode'
+                      iconOn={
+                        <span className=" capitalize text-info font-bold" style={
+                          { fontSize: '7px' }
+                        }>
+                          Dub
+                        </span>
                       }
-                    }} />
-
-                  <div className="w-11 h-6 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300  rounded-full peer bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-info " ></div>
-                  <span className="ml-3 text-sm font-medium">{dub ? "Dub Mode" : "Sub Mode"}</span>
+                      iconOff={
+                        <span className=" capitalize text-info font-bold" style={
+                          { fontSize: '7px' }
+                        }>
+                          Sub
+                        </span>
+                      }
+                      onChange={(e) => {
+                        document.getElementById("textMode").innerHTML = e.target.checked ? "dub mode" : "sub mode";
+                        setMode(e.target.checked ? "dub" : "sub");
+                      }}
+                    />
+                  }
+                  {fetchDub.isLoading ? null : <span className="ml-3 text-sm font-medium capitalize inline-block" id="textMode">{fetchDub?.data ? "dub mode" : "sub mode"}</span>
+                  }
                 </label>
                 <div className="relative overflow-hidden sm:rounded-lg">
                   <span className="hero-subtitle h1">{anime?.title?.english} Episodes ({episodes.length}):</span>
@@ -129,21 +169,7 @@ export async function getServerSideProps(context) {
       console.log("URL", url);
       const res = await fetch(url);
       data = await res.json();
-      console.log("Logs", data);
-      const episodeId = data.episodes[0].id.split("-episode")
-      const episodeUrl = episodeId[0] + "-dub-episode" + episodeId[1]
-      console.log(episodeUrl)
-      let duburl;
-      try {
-        duburl = "https://api.consumet.org/anime/gogoanime/watch/" + episodeUrl;
-        const res = await fetch(duburl);
-        if (res.status == 200) {
-          dubAvailable = true;
-        }
-      } catch (e) {
-        duburl = "";
-        dubAvailable = false
-      }
+
     } else {
       const url = "https://api.consumet.org/anime/gogoanime/info/" + query.anime;
       const res = await fetch(url);
@@ -152,14 +178,13 @@ export async function getServerSideProps(context) {
     }
 
   } catch (e) {
-    console.log(e);
+    // console.log(e);
     data = [];
   }
   if (!data) data = undefined;
   return {
     props: {
       data,
-      dub: dubAvailable
     },
   };
 }

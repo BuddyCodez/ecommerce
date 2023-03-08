@@ -91,7 +91,7 @@ export async function getServerSideProps(context) {
   const query = context.query;
   console.log(query);
   if (query.genre) {
-    if ((query.genre = "movie")) {
+    if ((query.genre == "movie")) {
       const url = "https://gogoanime.consumet.stream/anime-movies";
       const res = await fetch(url);
       const data = await res.json();

@@ -5,7 +5,7 @@ import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/react';
 import { DefaultSeo, LogoJsonLd } from 'next-seo';
 import { createTheme, NextUIProvider } from '@nextui-org/react';
-
+import 'vidstack/styles/defaults.css';
 export default function App({ Component, pageProps }) {
   const theme = createTheme({
     type: 'dark',

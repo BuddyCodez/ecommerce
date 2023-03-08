@@ -5,7 +5,17 @@ import { useEffect, useState } from "react";
 import Layout from "./layout/main";
 import { BsFillSkipEndFill, BsFillSkipStartFill, BsPlayCircle, } from "react-icons/bs";
 import useSWR from 'swr'
+import { MediaFullscreenButton, MediaOutlet, MediaPlayButton, MediaPlayer, MediaSeekButton, MediaTime, MediaTimeSlider } from "@vidstack/react";
+import { Loading } from "@nextui-org/react";
+import React from "react";
+import { Dropdown } from "@nextui-org/react";
 const watch = ({ anime, Episodes }) => {
+  const [selected, setSelected] = React.useState(new Set(["480p"]));
+
+  const selectedValue = React.useMemo(
+    () => Array.from(selected).join(", ").replaceAll("_", " "),
+    [selected]
+  );
   const fetcher = (...args) => fetch(...args).then((res) => res.json())
   const { query } = useRouter();
   const [FilterdSource, setFilterdSource] = useState([]);
@@ -13,7 +23,8 @@ const watch = ({ anime, Episodes }) => {
   const [episodes, setEpisodes] = useState(Episodes);
   const { data, error } = useSWR("https://api.consumet.org/anime/gogoanime/watch/" + query?.id, fetcher);
   const source = data?.sources;
-  const dub = query.id?.includes("dub")
+  const dub = query.id?.includes("dub");
+  data ? null : <Loading />
   useEffect(() => {
     const getAnime = async () => {
       const queryId = query?.id.replace("-dub", "");
@@ -25,24 +36,24 @@ const watch = ({ anime, Episodes }) => {
       })
       setEpisodes(FilterNextEp);
 
-      const Player = document.querySelector("vm-player");
-      const res = await fetch("/api/skip?malid=" + anime?.malId + "&epnumber=" + currentEP[0].number + "&eplen=" + 0);
-      const data = await res.json();
-      const FilterOpenings = data.filter((item) => {
-        return item.skipType === "op";
-      });
-      Player.addEventListener('vmCurrentTimeChange', event => {
-        const skip = document.querySelector("#SkipBtn").checked;
-        const currentTime = event.detail;
-        if (skip && Math.floor(currentTime) >= Math.floor(FilterOpenings[0]?.interval?.startTime) && Math.floor(currentTime) < Math.floor(FilterOpenings[0]?.interval?.endTime)) {
-          Player.currentTime = FilterOpenings[0]?.interval?.endTime;
-        }
-        if (Math.floor(currentTime) == Math.floor(event.duration)) {
-          const epid = FilterNextEp[0].id.split("-episode")
-          const id = epid[0] + "-dub-episode" + epid[1]
-          window.location.href = "/watch?id=" + query.id.includes("dub") ? id : FilterNextEp[0].id + "&anime=" + anime.id;
-        }
-      });
+      // const Player = document.querySelector("vm-player");
+      // const res = await fetch("/api/skip?malid=" + anime?.malId + "&epnumber=" + currentEP[0].number + "&eplen=" + 0);
+      // const data = await res.json();
+      // const FilterOpenings = data.filter((item) => {
+      //   return item.skipType === "op";
+      // });
+      // Player.addEventListener('vmCurrentTimeChange', event => {
+      //   const skip = document.querySelector("#SkipBtn").checked;
+      //   const currentTime = event.detail;
+      //   if (skip && Math.floor(currentTime) >= Math.floor(FilterOpenings[0]?.interval?.startTime) && Math.floor(currentTime) < Math.floor(FilterOpenings[0]?.interval?.endTime)) {
+      //     Player.currentTime = FilterOpenings[0]?.interval?.endTime;
+      //   }
+      //   if (Math.floor(currentTime) == Math.floor(event.duration)) {
+      //     const epid = FilterNextEp[0].id.split("-episode")
+      //     const id = epid[0] + "-dub-episode" + epid[1]
+      //     window.location.href = "/watch?id=" + query.id.includes("dub") ? id : FilterNextEp[0].id + "&anime=" + anime.id;
+      //   }
+      // });
     };
     if (query.anime) {
       getAnime();
@@ -53,29 +64,34 @@ const watch = ({ anime, Episodes }) => {
     const filter = async () => {
       console.log(source);
       const filterd = source?.filter((item) => {
-        return item.quality === videoQuality;
+        return item.quality === selectedValue;
       });
       setFilterdSource(filterd || []);
     };
     filter();
-  }, [source, videoQuality]);
+  }, [source, selected]);
   useEffect(() => {
-    const Player = document.querySelector("vm-player");
-    const forward = document.querySelector("button.forward");
-    const backward = document.querySelector("button.backward");
-    forward.addEventListener("click", () => {
-      console.log("forward");
-      if (Player.currentTime <= Player.duration) {
-        Player.currentTime += 10;
-      }
-    });
-    backward.addEventListener("click", () => {
-      console.log("backward");
-      if (Player.currentTime >= 0) {
-        Player.currentTime -= 10;
-      }
-    });
+    setTimeout(() => {
+      setSelected(new Set(["360p"]));
+    }, 6000);
   }, []);
+  // useEffect(() => {
+  //   const Player = document.querySelector("vm-player");
+  //   const forward = document.querySelector("button.forward");
+  //   const backward = document.querySelector("button.backward");
+  //   forward.addEventListener("click", () => {
+  //     console.log("forward");
+  //     if (Player.currentTime <= Player.duration) {
+  //       Player.currentTime += 10;
+  //     }
+  //   });
+  //   backward.addEventListener("click", () => {
+  //     console.log("backward");
+  //     if (Player.currentTime >= 0) {
+  //       Player.currentTime -= 10;
+  //     }
+  //   });
+  // }, []);
 
 
   return (
@@ -91,7 +107,120 @@ const watch = ({ anime, Episodes }) => {
                 {anime?.animeTitle}
               </h1>
               <div className="flex flex-col justify-center items-center gap-2">
-                <vm-player contorls class="player" autoplay>
+                {FilterdSource[0]?.url ? <MediaPlayer
+                  src={`http://cors.streamable.moe/${FilterdSource[0]?.url}`}
+                  // src={FilterdSource[0]?.url}
+                  poster={anime?.image}
+                  
+                  aspect-ratio={16 / 9}
+                  autoplay
+                >
+                  <div className="pointer-events-none absolute inset-0 z-50 flex h-full w-full items-center justify-center">
+                    <svg
+                      className="buffering:opacity-100 buffering:animate-spin h-24 w-24 text-white opacity-0 transition-opacity duration-200 ease-linear"
+                      fill="none"
+                      viewBox="0 0 120 120"
+                      aria-hidden="true"
+                    >
+                      <circle className="opacity-25" cx="60" cy="60" r="54" stroke="currentColor" strokeWidth="8" />
+                      <circle
+                        className="opacity-75"
+                        cx="60"
+                        cy="60"
+                        r="54"
+                        stroke="currentColor"
+                        strokeWidth="10"
+                        pathLength="100"
+                        style={{
+                          strokeDasharray: 100,
+                          strokeDashoffset: 50,
+                        }}
+                      />
+                    </svg>
+                  </div>
+                  <MediaOutlet />
+                  <div className="media-ui">
+                    <div
+                      className="can-control:opacity-100 pointer-events-none absolute inset-0 z-10 flex h-full flex-col justify-between text-white opacity-0 transition-opacity duration-200 ease-linear"
+                      role="group"
+                      aria-label="Media Controls"
+                    >
+                      <MediaControlGroup>
+                        <div className=" flex justify-end items-center " style={{ width: '100%' }}>
+                          <div className=" max-sm:visible md:visible lg:hidden xl:hidden w-100">
+                            <Dropdown
+                              triggerType="listbox"
+                              placement="bottom"
+                              auto
+                            >
+                              <Dropdown.Button flat css={{ tt: "capitalize", color: 'white' }}
+
+                              >
+                                {selectedValue}
+                              </Dropdown.Button>
+                              <Dropdown.Menu
+                                aria-label="Select Video Quality"
+                                css={{ color: 'white' }}
+                                disallowEmptySelection
+                                selectionMode="single"
+                                selectedKeys={selected}
+                                onSelectionChange={setSelected}
+                              >
+                                <Dropdown.Item key="360p" >360p</Dropdown.Item>
+                                <Dropdown.Item key="480p">480p</Dropdown.Item>
+                                <Dropdown.Item key="720p">720p</Dropdown.Item>
+                                <Dropdown.Item key="1080p">1080p</Dropdown.Item>
+                              </Dropdown.Menu>
+                            </Dropdown>
+                          </div>
+                        </div>
+                      </MediaControlGroup>
+                      {/* <MediaControlGroup>Controls Middle</MediaControlGroup> */}
+                      <MediaControlGroup>
+                        <MediaSeekButton seconds={-10} />
+                        <MediaPlayButton />
+                        <MediaSeekButton seconds={+10} />
+                        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }} id='VideoSliderContainer'>
+                          <div style={{ width: '100%' }}>
+                            <MediaTimeSlider />
+                          </div>
+                          <MediaTime type="current" remainder />
+                        </div>
+                        <div className="w-100 flex justify-end" style={{ width: '100%' }}>
+                          <div className="max-sm:hidden sm:opacity-0 visible ">
+                            <Dropdown >
+                              <Dropdown.Button flat color="primary" css={{ tt: "capitalize" }}>
+                                {selectedValue}
+                              </Dropdown.Button>
+                              <Dropdown.Menu
+                                aria-label="Select Video Quality"
+                                color="primary"
+                                disallowEmptySelection
+                                selectionMode="single"
+                                selectedKeys={selected}
+                                onSelectionChange={setSelected}
+                              >
+                                <Dropdown.Item key="360p" >360p</Dropdown.Item>
+                                <Dropdown.Item key="480p">480p</Dropdown.Item>
+                                <Dropdown.Item key="720p">720p</Dropdown.Item>
+                                <Dropdown.Item key="1080p">1080p</Dropdown.Item>
+                              </Dropdown.Menu>
+                            </Dropdown>
+                          </div>
+                          <MediaFullscreenButton />
+                        </div>
+                      </MediaControlGroup>
+                    </div>
+                  </div>
+                </MediaPlayer> : <div className="flex flex-col justify-center items-center gap-2">
+                  <Loading />
+                  <h1 className="section-subtitle text-2xl sm:text-md">
+                    Loading Video Links {anime?.animeTitle}
+                  </h1>
+                </div>}
+
+
+                {/* <vm-player contorls class="player" autoplay>
                   <vm-hls crossOrigin="true" poster={anime?.image}>
                     <source
                       data-src={FilterdSource[0]?.url}
@@ -135,7 +264,7 @@ const watch = ({ anime, Episodes }) => {
                       </vm-control-group>
                     </vm-controls>
                   </vm-ui>
-                </vm-player>
+                </vm-player> */}
               </div>
             </div>
           </div>
@@ -212,4 +341,11 @@ export async function getServerSideProps(context) {
       anime: animeData,
     },
   };
+}
+function MediaControlGroup({ children }) {
+  return (
+    <div className="can-control:pointer-events-auto pointer-events-none flex min-h-[48px] w-full p-2">
+      {children}
+    </div>
+  );
 }

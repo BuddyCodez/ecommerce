@@ -9,20 +9,22 @@ const Hero = () => {
           <p className="hero-subtitle text-info">Animetronix</p>
 
           <h1 className="h1 hero-title">
-            Unlimited <strong>Animes</strong>, Ads Free Watching, & More.
+            CountLess <strong>Animes</strong>, Ads Free Watching, & More.
           </h1>
 
           <div className="meta-wrapper">
             <div className="badge-wrapper">
-              <div className="badge badge-fill">All</div>
+              <div className="badge badge-fill badge-info">All</div>
 
               <div className="badge badge-outline">HD</div>
             </div>
 
             <div className="ganre-wrapper">
-              <a href="#">Romance,</a>
-
-              <a href="#">Drama</a>
+              <Link href="/search?genre=action">Action,</Link>
+              <Link href="/search?genre=fantacy">Fantacy,</Link>
+              <Link href="/search?genre=horror">Horror,</Link>
+              <Link href="/search?genre=adventure">Adventure,</Link>
+              <Link href="/search?genre=drama">Drama</Link>
             </div>
 
             <div className="date-time">
