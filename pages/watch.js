@@ -108,7 +108,7 @@ const watch = ({ anime, Episodes }) => {
               </h1>
               <div className="flex flex-col justify-center items-center gap-2">
                 {FilterdSource[0]?.url ? <MediaPlayer
-                  src={`http://cors.streamable.moe/${FilterdSource[0]?.url}`}
+                  src={`https://cors.streamable.moe/${FilterdSource[0]?.url}`}
                   // src={FilterdSource[0]?.url}
                   poster={anime?.image}
                   
