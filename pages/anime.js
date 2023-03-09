@@ -207,6 +207,7 @@ const EpisodeView = ({ episodes, dub, fetchDub, anime, mode }) => {
           Search Episode by Name
         </Text>
         <Input labelPlaceholder="Enter Episode"
+          className="EpisodeInput"
           color='primary'
           underlined
           style={{

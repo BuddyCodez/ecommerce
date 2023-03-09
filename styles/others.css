@@ -168,6 +168,9 @@ input.search-input {
   background: var(--jet);
   color: white;
 }
+.EpisodeInput .nextui-c-eXOOPO {
+  background: transparent;
+}
 .NavbarToggler:focus,
 button:focus,
 input:focus,
@@ -211,10 +214,9 @@ a:focus {
 @media (max-width: 680px) {
   .nextui-c-kRHeuF-iiJZQLf-css.xs {
     max-width: 100vw;
-    
   }
   .nextui-c-BDLTQ-ihRDxUK-css {
-     max-width: 100vw;
+    max-width: 100vw;
     width: 80vw;
   }
   #VideoSliderContainer {
