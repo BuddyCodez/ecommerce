@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Card, Grid, Row, Col, Text, Badge, Switch, Loading, Image } from "@nextui-org/react";
 import FourZeroFour from "./404";
 import UseFetcher from "./utils/fetcher";
-import { EpisodeCard } from "./components/EpisodeCard";
+import Link from "next/link";
 const Anime = ({ data }) => {
   const episodeId = data?.episodes[0].id.split("-episode")
   const episodeUrl = episodeId ? episodeId[0] + "-dub-episode" + episodeId[1] : false
@@ -401,3 +401,60 @@ const Recommendations = ({ recommendations }) => {
     </>
   );
 }
+
+function EpisodeCard({ episode, Epid, animeId }) {
+  return (
+    <Link
+      href={`/watch?id=${Epid}&anime=${animeId}`}
+    >
+      <Card css={{ w: "100%", h: "300px" }} isHoverable >
+        <Card.Header css={{ position: "absolute", zIndex: 1, bgBlur: '#00000011', }} >
+          <Col>
+            <Text size={12} weight="bold" transform="uppercase" color="secondary">
+              Episode Number: {episode?.number}
+            </Text>
+          </Col>
+        </Card.Header>
+        <Card.Body css={{ p: 0 }}>
+          <Card.Image
+            src={episode?.image}
+            width="100%"
+            height="100%"
+            objectFit="cover"
+            alt={episode?.title}
+            showSkeleton
+          />
+        </Card.Body>
+        <Card.Footer
+          isBlurred
+          css={{
+            position: "absolute",
+            bgBlur: "#00000066",
+            borderTop: "$borderWeights$light solid rgba(255, 255, 255, 0.2)",
+            bottom: 0,
+            zIndex: 1,
+          }}
+        >
+          <Row>
+            <Col>
+              <Text color="#fff" >
+                Air Date: {new Date(episode.airDate).toLocaleDateString(
+                  "en-US",
+                  {
+
+                    year: "numeric",
+                    month: "numeric",
+                    day: "numeric",
+                  }
+                )}
+              </Text>
+              <Text color="#fff" >
+                {episode?.title.length > 45 ? episode?.title.slice(0, 45) + "..." : episode?.title}
+              </Text>
+            </Col>
+          </Row>
+        </Card.Footer>
+      </Card>
+    </Link>
+  )
+};
