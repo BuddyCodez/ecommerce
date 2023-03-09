@@ -25,12 +25,14 @@ const watch = ({ anime, Episodes }) => {
   const source = data?.sources;
   const dub = query.id?.includes("dub");
   data ? null : <Loading />
+  const [currentEp, setCurrentEp] = useState(null);
   useEffect(() => {
     const getAnime = async () => {
       const queryId = query?.id.replace("-dub", "");
       const currentEP = episodes.filter((ep) => {
         return ep.id == queryId
       });
+      setCurrentEp(currentEP[0]);
       const FilterNextEp = episodes.filter((ep) => {
         return ep.number > currentEP[0].number
       })
@@ -110,8 +112,8 @@ const watch = ({ anime, Episodes }) => {
                 {FilterdSource[0]?.url ? <MediaPlayer
                   src={`https://cors.streamable.moe/${FilterdSource[0]?.url}`}
                   // src={FilterdSource[0]?.url}
-                  poster={anime?.image}
-                  
+                  poster={currentEp.image}
+
                   aspect-ratio={16 / 9}
                   autoplay
                 >
@@ -184,7 +186,7 @@ const watch = ({ anime, Episodes }) => {
                           <div style={{ width: '100%' }}>
                             <MediaTimeSlider />
                           </div>
-                          <MediaTime type="current" remainder />
+                          <MediaTime type="current" />
                         </div>
                         <div className="w-100 flex justify-end" style={{ width: '100%' }}>
                           <div className="max-sm:hidden sm:opacity-0 visible ">
