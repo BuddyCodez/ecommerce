@@ -2,10 +2,10 @@
 import Layout from "./layout/main";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Card, Grid, Row, Col, Text, Badge, Switch, Loading, Image, Pagination, Input } from "@nextui-org/react";
+import { Card, Grid, Row, Col, Text, Badge, Switch, Loading, Image, Pagination, Input, Dropdown } from "@nextui-org/react";
 import FourZeroFour from "./404";
 import UseFetcher from "./utils/fetcher";
-import Link from "next/link";
+import React from "react";
 
 const Anime = ({ data }) => {
   const episodeId = data?.episodes[0].id.split("-episode")
@@ -164,7 +164,6 @@ export default Anime;
 export async function getServerSideProps(context) {
   const { query } = context;
   let data;
-  let dubAvailable = false;
 
   try {
     if (query?.animeid) {
@@ -193,29 +192,55 @@ export async function getServerSideProps(context) {
 }
 const EpisodeView = ({ episodes, dub, fetchDub, anime, mode }) => {
   const router = useRouter();
+  const [selected, setSelected] = React.useState(new Set(["title"]));
+  const selectedValue = React.useMemo(
+    () => Array.from(selected).join(", ").replaceAll("_", " "),
+    [selected]
+  );
+
   const perPage = 25;
   const [Episodes, setEpisodes] = useState(episodes.slice(0, perPage));
   return (
     <>
-      <Row justify="space-between" css={{ p: '$4' }}>
+      <Row justify="space-between" align="center" css={{ p: '$4' }}>
         <Text b>
           Search Episode by Name
         </Text>
-        <Input labelPlaceholder="Enter Episode Name"
+        <Input labelPlaceholder="Enter Episode"
           color='primary'
-          bordered
+          underlined
           style={{
             border: 'none',
             boxShadow: 'none',
             background: 'transparent'
           }}
           css={{
-            background: 'transparent'
+            background: 'transparent',
           }}
+          labelRight={
+            <>
+              <Dropdown>
+                <Dropdown.Button flat color="primary" css={{ tt: "capitalize" }}>
+                  {selectedValue}
+                </Dropdown.Button>
+                <Dropdown.Menu
+                  aria-label="Single selection actions"
+                  color="primary"
+                  disallowEmptySelection
+                  selectionMode="single"
+                  selectedKeys={selected}
+                  onSelectionChange={setSelected}
+                >
+                  <Dropdown.Item key="title">Episode Name</Dropdown.Item>
+                  <Dropdown.Item key="number">Episode Number</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </>
+          }
           clearable
           onChange={
             (e) => {
-              e.target.value ? setEpisodes(episodes.filter(ep => ep.title.toLowerCase().includes(e.target.value.toLowerCase()))) : setEpisodes(episodes.slice(0, perPage))
+              e.target.value ? selectedValue == 'title' ? setEpisodes(episodes.filter(ep => ep.title.toLowerCase().includes(e.target.value.toLowerCase()))) : setEpisodes(episodes.filter(ep => String(ep.number) == e.target.value)) : setEpisodes(episodes.slice(0, perPage))
             }
           }
         />
