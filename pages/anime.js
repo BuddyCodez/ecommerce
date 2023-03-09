@@ -9,7 +9,7 @@ const Anime = ({ data }) => {
   const episodeId = data?.episodes[0].id.split("-episode")
   const episodeUrl = episodeId ? episodeId[0] + "-dub-episode" + episodeId[1] : false
   let Fetcher = episodeUrl ? UseFetcher("https://api.consumet.org/anime/gogoanime/watch/" + episodeUrl) : { data: false, error: true, isLoading: false };
-  let fetchDub = episodeUrl ? { isLoading: Fetcher[0] || false, data: Fetcher[1] || undefined, error: Fetcher[2] || "Unable to get data" } : { data: false, error: true, isLoading: false };
+  let fetchDub = episodeUrl ? { isLoading: Fetcher[0] || false, data: Fetcher[1] || undefined, error: Fetcher[2] || undefined } : { data: false, error: true, isLoading: false };
   const [dub, setDub] = useState(false);
   const [mode, setMode] = useState("dub");
   const { query } = useRouter();

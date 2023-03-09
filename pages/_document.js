@@ -26,15 +26,15 @@ class MyDocument extends Document {
           />
           <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
           <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link
+          {/* <link
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/@vime/core@^5/themes/default.css"
-          />
-
+          /> */}
+{/* 
           <link
             rel="preconnect"
             href="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
-          />
+          /> */}
           <link
             rel="preconnect"
             href="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
@@ -55,10 +55,10 @@ class MyDocument extends Document {
             noModule
             src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
           ></script>
-          <script
+          {/* <script
             type="module"
             src="https://cdn.jsdelivr.net/npm/@vime/core@^5/dist/vime/vime.esm.js"
-          ></script>
+          ></script> */}
         </body>
       </Html>
     );
