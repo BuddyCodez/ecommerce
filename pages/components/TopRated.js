@@ -17,7 +17,7 @@ const TopRated = ({ popular }) => {
     <section className="top-rated">
       <div className="container">
         <p className="section-subtitle">Online Anime Streaming</p>
-        <h2 className="h2 section-title">Top Trending Animes</h2>
+        <h2 className="h2 section-title">Top Popular Animes</h2>
         <div className="sectionAll">
           <Button light color="primary" auto ripple={true}
             iconRight={<ion-icon name="arrow-forward-outline"></ion-icon>}

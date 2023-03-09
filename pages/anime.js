@@ -2,10 +2,11 @@
 import Layout from "./layout/main";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Card, Grid, Row, Col, Text, Badge, Switch, Loading, Image } from "@nextui-org/react";
+import { Card, Grid, Row, Col, Text, Badge, Switch, Loading, Image, Pagination, Input } from "@nextui-org/react";
 import FourZeroFour from "./404";
 import UseFetcher from "./utils/fetcher";
 import Link from "next/link";
+
 const Anime = ({ data }) => {
   const episodeId = data?.episodes[0].id.split("-episode")
   const episodeUrl = episodeId ? episodeId[0] + "-dub-episode" + episodeId[1] : false
@@ -192,61 +193,143 @@ export async function getServerSideProps(context) {
 }
 const EpisodeView = ({ episodes, dub, fetchDub, anime, mode }) => {
   const router = useRouter();
+  const perPage = 25;
+  const [Episodes, setEpisodes] = useState(episodes.slice(0, perPage));
   return (
+    <>
+      <Row justify="space-between" css={{ p: '$4' }}>
+        <Text b>
+          Search Episode by Name
+        </Text>
+        <Input labelPlaceholder="Enter Episode Name"
+          color='primary'
+          bordered
+          style={{
+            border: 'none',
+            boxShadow: 'none',
+            background: 'transparent'
+          }}
+          css={{
+            background: 'transparent'
+          }}
+          clearable
+          onChange={
+            (e) => {
+              e.target.value ? setEpisodes(episodes.filter(ep => ep.title.toLowerCase().includes(e.target.value.toLowerCase()))) : setEpisodes(episodes.slice(0, perPage))
+            }
+          }
+        />
+      </Row>
+      <Grid.Container gap={2} justify="flex-start" style={{ overflowY: 'hidden' }}>
+        {episodes.length > perPage ? (
+          Episodes.map((ep, index) => {
+            const epid = ep.id.split("-episode");
+            const id = epid[0] + "-dub-episode" + epid[1];
+            if (!ep || episodes.length === 0) return "No Episodes Found!";
+            return (
+              <Grid xs={6} sm={3} key={index} alignItems='center' justify="center">
 
+                <Card isPressable variant="bordered" color="primary"
+                  onPress={() => {
+                    router.push(`/watch?id=${!fetchDub.data?.message && mode == "dub" ? id : ep.id}&anime=${anime.id}`);
+                  }}
+                >
+                  <Card.Body css={{ p: 0 }}>
+                    <Card.Image
+                      src={ep.image}
+                      objectFit="cover"
+                      width="100%"
+                      height={140}
+                      alt={ep.title}
+                      showSkeleton={true}
+                    />
+                  </Card.Body>
+                  <Card.Footer isBlurred
+                    css={{
+                      justifyItems: "flex-start"
+                    }}
 
-    <Grid.Container gap={2} justify="flex-start" style={{ overflowY: 'hidden' }}>
-      {episodes.map((ep, index) => {
-        const epid = ep.id.split("-episode");
-        const id = epid[0] + "-dub-episode" + epid[1];
-        if (!ep || episodes.length === 0) return "No Episodes Found!";
-        return (
-          <Grid xs={6} sm={3} key={index} alignItems='center' justify="center">
-            <EpisodeCard episode={ep} animeId={anime?.id} Epid={!fetchDub.data?.message && mode == "dub" ? id : ep.id} />
-            {/* <Card isPressable variant="bordered" color="primary"
-              onPress={() => {
-                router.push(`/watch?id=${dub && mode == "dub" ? id : ep.id}&anime=${anime.id}`);
-              }}
-            >
-              <Card.Body css={{ p: 0 }}>
-                <Card.Image
-                  src={ep.image}
-                  objectFit="cover"
-                  width="100%"
-                  height={140}
-                  alt={ep.title}
-                  showSkeleton={true}
-                />
-              </Card.Body>
-              <Card.Footer isBlurred
-                css={{
-                  justifyItems: "flex-start", bgBlur: "#ffffff66",
+                  >
+                    <Row wrap="wrap" justify="space-between" align="center">
+                      <Text b>{ep.title}</Text>
+                      {ep.airDate ? <Text css={{ color: "$accents7", fontWeight: "$semibold", fontSize: "$sm" }}>
+                        Air Date: {new Date(ep.airDate).toLocaleDateString(
+                          "en-US",
+                          {
+
+                            year: "numeric",
+                            month: "numeric",
+                            day: "numeric",
+                          }
+                        )}
+                      </Text> : null}
+                    </Row>
+                  </Card.Footer>
+                </Card>
+              </Grid>
+            )
+          })
+        ) : (episodes.map((ep, index) => {
+          const epid = ep.id.split("-episode");
+          const id = epid[0] + "-dub-episode" + epid[1];
+          if (!ep || episodes.length === 0) return "No Episodes Found!";
+          return (
+            <Grid xs={6} sm={3} key={index} alignItems='center' justify="center">
+
+              <Card isPressable variant="bordered" color="primary"
+                onPress={() => {
+                  router.push(`/watch?id=${!fetchDub.data?.message && mode == "dub" ? id : ep.id}&anime=${anime.id}`);
                 }}
-
               >
-                <Row wrap="wrap" justify="space-between" align="center">
-                  <Text b>{ep.title}</Text>
-                  <Text css={{ color: "$accents7", fontWeight: "$semibold", fontSize: "$sm" }}>
-                    Air Date: {new Date(ep.airDate).toLocaleDateString(
-                      "en-US",
-                      {
+                <Card.Body css={{ p: 0 }}>
+                  <Card.Image
+                    src={ep.image}
+                    objectFit="cover"
+                    width="100%"
+                    height={140}
+                    alt={ep.title}
+                    showSkeleton={true}
+                  />
+                </Card.Body>
+                <Card.Footer isBlurred
+                  css={{
+                    justifyItems: "flex-start"
+                  }}
 
-                        year: "numeric",
-                        month: "numeric",
-                        day: "numeric",
-                      }
-                    )}
-                  </Text>
-                </Row>
-              </Card.Footer>
-            </Card> */}
-          </Grid>
-        )
-      })}
-    </Grid.Container>
+                >
+                  <Row wrap="wrap" justify="space-between" align="center">
+                    <Text b>{ep.title}</Text>
+                    <Text css={{ color: "$accents7", fontWeight: "$semibold", fontSize: "$sm" }}>
+                      Air Date: {new Date(ep.airDate).toLocaleDateString(
+                        "en-US",
+                        {
+
+                          year: "numeric",
+                          month: "numeric",
+                          day: "numeric",
+                        }
+                      )}
+                    </Text>
+                  </Row>
+                </Card.Footer>
+              </Card>
+            </Grid>
+          )
+        }))}
+      </Grid.Container>
+      <Row justify="center">
+        {episodes.length > 25 ? <Pagination
+          total={Math.ceil(episodes.length / perPage)}
+          onChange={(page) => {
+            let end = (perPage * page);
+            setEpisodes(episodes.slice(end - perPage, end));
+            console.log(end - perPage, end);
+          }}
+        /> : null}
+      </Row>
+    </>
   );
 };
-
 
 const Recommendations = ({ recommendations }) => {
   const router = useRouter();
@@ -354,47 +437,7 @@ const Recommendations = ({ recommendations }) => {
               </Grid>
             ))}
           </Grid.Container>
-          {/* <ul className="movies-list">
 
-            {recommendations?.map((anime) => {
-              return (
-                <li>
-                  <div className="movie-card" key={anime.id}>
-
-                    <Link href={`/anime?animeid=${anime.id}`}>
-                      <figure className="card-banner">
-                        <img src={anime.image} alt={anime.title.english} />
-                      </figure>
-                    </Link>
-
-                    <div className="title-wrapper">
-                      <Link href={`/anime?animeid=${anime.id}`}>
-                        <h3 className="card-title">{anime.title.english}</h3>
-                      </Link>
-
-                      <time dateTime={anime.episodes}>{anime.episodes} episodes</time>
-                    </div>
-
-                    <div className="card-meta">
-                      <div className="badge badge-outline hover:bg-info hover:text-black cursor-pointer">{anime.status.toUpperCase()}</div>
-
-                      <div className="duration">
-                        <time dateTime="PT47M">{anime.type == "TV" ? "SERIES" : anime.type}</time>
-                      </div>
-
-                      <div className="rating">
-                        <ion-icon name="star"></ion-icon>
-
-                        <data>{anime.rating / 10}</data>
-                      </div>
-                    </div>
-
-                  </div>
-                </li>
-              )
-            })}
-
-          </ul> */}
 
         </div>
       </section>
@@ -402,59 +445,3 @@ const Recommendations = ({ recommendations }) => {
   );
 }
 
-function EpisodeCard({ episode, Epid, animeId }) {
-  return (
-    <Link
-      href={`/watch?id=${Epid}&anime=${animeId}`}
-    >
-      <Card css={{ w: "100%", h: "300px" }} isHoverable >
-        <Card.Header css={{ position: "absolute", zIndex: 1, bgBlur: '#00000011', }} >
-          <Col>
-            <Text size={12} weight="bold" transform="uppercase" color="secondary">
-              Episode Number: {episode?.number}
-            </Text>
-          </Col>
-        </Card.Header>
-        <Card.Body css={{ p: 0 }}>
-          <Card.Image
-            src={episode?.image}
-            width="100%"
-            height="100%"
-            objectFit="cover"
-            alt={episode?.title}
-            showSkeleton
-          />
-        </Card.Body>
-        <Card.Footer
-          isBlurred
-          css={{
-            position: "absolute",
-            bgBlur: "#00000066",
-            borderTop: "$borderWeights$light solid rgba(255, 255, 255, 0.2)",
-            bottom: 0,
-            zIndex: 1,
-          }}
-        >
-          <Row>
-            <Col>
-              <Text color="#fff" >
-                Air Date: {new Date(episode.airDate).toLocaleDateString(
-                  "en-US",
-                  {
-
-                    year: "numeric",
-                    month: "numeric",
-                    day: "numeric",
-                  }
-                )}
-              </Text>
-              <Text color="#fff" >
-                {episode?.title.length > 45 ? episode?.title.slice(0, 45) + "..." : episode?.title}
-              </Text>
-            </Col>
-          </Row>
-        </Card.Footer>
-      </Card>
-    </Link>
-  )
-};

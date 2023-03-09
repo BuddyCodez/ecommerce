@@ -105,8 +105,7 @@ export async function getServerSideProps(context) {
       };
     } else {
       const url = "https://gogoanime.consumet.stream/genre/" + query.genre;
-      const res = await fetch(url);
-      const data = await res.json();
+      const { data } = await axios.get(url);
       const anime = data;
       console.log(anime);
       return {
