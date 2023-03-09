@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import LoadingBar from "react-top-loading-bar";
 import { Collapse } from "flowbite";
-import { Navbar, Text, Dropdown, Input, useTheme } from "@nextui-org/react";
+import { Navbar, Text, Dropdown, Input, useTheme, Spacer } from "@nextui-org/react";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { styled } from "@nextui-org/react"
 import { BsSearch } from "react-icons/bs";
@@ -92,8 +92,7 @@ const Header = ({ children, active }) => {
         <Navbar isBordered={true} variant="floating"
 
         >
-          <Navbar.Brand css={{ mr: "$4" }}>
-            <Navbar.Toggle showIn="xs" aria-label="toggle navigation" id="NavbarToggler" title="Toggle" />
+          <Navbar.Brand css={{ mr: "$4" , width: '100%'}}>
             <Text b color="primary" css={{
               mr: "$11", "@xsMax": {
                 ml: '$4'
@@ -161,8 +160,79 @@ const Header = ({ children, active }) => {
                 </Dropdown.Menu>
               </Dropdown>
             </Navbar.Content>
+            <Navbar.Content
+              
+              css={{
+                display: "none",
+                visibility: "hidden",
+                opacity: 0,
+                "@xsMax": {
+                  w: "100%",
+                  jc: "space-between",
+                  display: "block",
+                  visibility: "visible",
+                  opacity: 1,
+                },
+                "@smMin": {
+                 
+                }
+
+              }}
+
+            >
+              <Navbar.Item
+                css={{
+                  "@xsMax": {
+                    w: "100%",
+                    jc: "center",
+                  },
+                }}
+              >
+                <Input
+                  
+                  clearable
+                  contentLeft={
+                    <BsSearch color="var(--nextui-gray-500)" width={20} />
+                  }
+                  onChange={(e) => setQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      Submit(e);
+                    }
+                  }}
+                  contentLeftStyling={false}
+                  color='primary'
+                  style={{
+                    border: 'none',
+                    boxShadow: 'none',
+                    background: 'var(--jet)',
+                  }}
+                  css={{
+                    w: "100%",
+                    "@xsMax": {
+                      mw: "300px",
+                      width: '80%'
+                    },
+                    "& .nextui-input-content--left": {
+                      h: "100%",
+                      ml: "$4",
+                      dflex: "center",
+                    },
+
+                  }}
+
+                  className=" focus:ring-transparent border-none shadow-none"
+                  placeholder="Search Anime..."
+                />
+              </Navbar.Item>
+            </Navbar.Content>
+
+            <Navbar.Toggle showIn="xs" aria-label="toggle navigation" id="NavbarToggler" title="Toggle"
+            css={{width: '25px'}}
+            />
           </Navbar.Brand>
           <Navbar.Content
+            hideIn='xs'
             css={{
               "@xsMax": {
                 w: "100%",

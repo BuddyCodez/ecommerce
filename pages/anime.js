@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Card, Grid, Row, Col, Text, Badge, Switch, Loading, Image } from "@nextui-org/react";
 import FourZeroFour from "./404";
 import UseFetcher from "./utils/fetcher";
+import { EpisodeCard } from "./components/EpisodeCard";
 const Anime = ({ data }) => {
   const episodeId = data?.episodes[0].id.split("-episode")
   const episodeUrl = episodeId ? episodeId[0] + "-dub-episode" + episodeId[1] : false
@@ -112,7 +113,7 @@ const Anime = ({ data }) => {
                     <Switch
                       initialChecked={fetchDub.data ? true : false}
                       shadow
-                      disabled={!fetchDub.error == undefined ? true : false}
+                      disabled={!fetchDub.error == undefined && !fetchDub.data?.message ? true : false}
                       id='Mode'
                       iconOn={
                         <span className=" capitalize text-info font-bold" style={
@@ -139,7 +140,7 @@ const Anime = ({ data }) => {
                 </label>
                 <div className="relative overflow-hidden sm:rounded-lg">
                   <span className="hero-subtitle h1">{anime?.title?.english} Episodes ({episodes.length}):</span>
-                  <EpisodeView episodes={episodes} mode={mode} anime={anime} dub={dub} />
+                  <EpisodeView episodes={episodes} mode={mode} anime={anime} dub={dub} fetchDub={fetchDub} />
                 </div>
 
 
@@ -189,7 +190,7 @@ export async function getServerSideProps(context) {
     },
   };
 }
-const EpisodeView = ({ episodes, dub, anime, mode }) => {
+const EpisodeView = ({ episodes, dub, fetchDub, anime, mode }) => {
   const router = useRouter();
   return (
 
@@ -200,8 +201,9 @@ const EpisodeView = ({ episodes, dub, anime, mode }) => {
         const id = epid[0] + "-dub-episode" + epid[1];
         if (!ep || episodes.length === 0) return "No Episodes Found!";
         return (
-          <Grid xs={6} sm={3} key={index}>
-            <Card isPressable variant="bordered" color="primary"
+          <Grid xs={6} sm={3} key={index} alignItems='center' justify="center">
+            <EpisodeCard episode={ep} animeId={anime?.id} Epid={!fetchDub.data?.message && mode == "dub" ? id : ep.id} />
+            {/* <Card isPressable variant="bordered" color="primary"
               onPress={() => {
                 router.push(`/watch?id=${dub && mode == "dub" ? id : ep.id}&anime=${anime.id}`);
               }}
@@ -216,7 +218,12 @@ const EpisodeView = ({ episodes, dub, anime, mode }) => {
                   showSkeleton={true}
                 />
               </Card.Body>
-              <Card.Footer css={{ justifyItems: "flex-start" }} isBlurred={true}>
+              <Card.Footer isBlurred
+                css={{
+                  justifyItems: "flex-start", bgBlur: "#ffffff66",
+                }}
+
+              >
                 <Row wrap="wrap" justify="space-between" align="center">
                   <Text b>{ep.title}</Text>
                   <Text css={{ color: "$accents7", fontWeight: "$semibold", fontSize: "$sm" }}>
@@ -232,7 +239,7 @@ const EpisodeView = ({ episodes, dub, anime, mode }) => {
                   </Text>
                 </Row>
               </Card.Footer>
-            </Card>
+            </Card> */}
           </Grid>
         )
       })}
