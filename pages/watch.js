@@ -73,7 +73,7 @@ const watch = ({ anime, Episodes }) => {
   useEffect(() => {
     setTimeout(() => {
       setSelected(new Set(["360p"]));
-    }, 6000);
+    }, 3000);
   }, []);
   // useEffect(() => {
   //   const Player = document.querySelector("vm-player");
@@ -111,7 +111,7 @@ const watch = ({ anime, Episodes }) => {
                   src={`https://cors.streamable.moe/${FilterdSource[0]?.url}`}
                   // src={FilterdSource[0]?.url}
                   poster={anime?.image}
-
+                  
                   aspect-ratio={16 / 9}
                   autoplay
                 >
@@ -184,7 +184,7 @@ const watch = ({ anime, Episodes }) => {
                           <div style={{ width: '100%' }}>
                             <MediaTimeSlider />
                           </div>
-                          <MediaTime type="current" />
+                          <MediaTime type="current" remainder />
                         </div>
                         <div className="w-100 flex justify-end" style={{ width: '100%' }}>
                           <div className="max-sm:hidden sm:opacity-0 visible ">
