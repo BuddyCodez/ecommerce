@@ -144,7 +144,6 @@ const Header = ({ children, active }) => {
                     },
                   }}
                 >
-
                   {Genres.map((genre) => {
                     return (
                       <Dropdown.Item
@@ -176,7 +175,6 @@ const Header = ({ children, active }) => {
                 "@smMin": {
                  
                 }
-
               }}
 
             >
