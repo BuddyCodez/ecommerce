@@ -112,7 +112,7 @@ const Anime = ({ data }) => {
                     <Switch
                       initialChecked={fetchDub.data ? true : false}
                       shadow
-                      disabled={fetchDub.error ? true : false}
+                      disabled={!fetchDub.error == undefined ? true : false}
                       id='Mode'
                       iconOn={
                         <span className=" capitalize text-info font-bold" style={
