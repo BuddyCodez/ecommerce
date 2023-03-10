@@ -202,7 +202,7 @@ const EpisodeView = ({ episodes, dub, fetchDub, anime, mode }) => {
   const [Episodes, setEpisodes] = useState(episodes.slice(0, perPage));
   return (
     <>
-      <Row justify="space-between" align="center" css={{ p: '$4' }}>
+      <Row justify="space-between" align="center" wrap="wrap" css={{ p: '$4' }}>
         <Text b>
           Search Episode by Name
         </Text>
@@ -247,55 +247,7 @@ const EpisodeView = ({ episodes, dub, fetchDub, anime, mode }) => {
         />
       </Row>
       <Grid.Container gap={2} justify="flex-start" style={{ overflowY: 'hidden' }}>
-        {episodes.length > perPage ? (
-          Episodes.map((ep, index) => {
-            const epid = ep.id.split("-episode");
-            const id = epid[0] + "-dub-episode" + epid[1];
-            if (!ep || episodes.length === 0) return "No Episodes Found!";
-            return (
-              <Grid xs={6} sm={3} key={index} alignItems='center' justify="center">
-
-                <Card isPressable variant="bordered" color="primary"
-                  onPress={() => {
-                    router.push(`/watch?id=${!fetchDub.data?.message && mode == "dub" ? id : ep.id}&anime=${anime.id}`);
-                  }}
-                >
-                  <Card.Body css={{ p: 0 }}>
-                    <Card.Image
-                      src={ep.image}
-                      objectFit="cover"
-                      width="100%"
-                      height={140}
-                      alt={ep.title}
-                      showSkeleton={true}
-                    />
-                  </Card.Body>
-                  <Card.Footer isBlurred
-                    css={{
-                      justifyItems: "flex-start"
-                    }}
-
-                  >
-                    <Row wrap="wrap" justify="space-between" align="center">
-                      <Text b>{ep.title}</Text>
-                      {ep.airDate ? <Text css={{ color: "$accents7", fontWeight: "$semibold", fontSize: "$sm" }}>
-                        Air Date: {new Date(ep.airDate).toLocaleDateString(
-                          "en-US",
-                          {
-
-                            year: "numeric",
-                            month: "numeric",
-                            day: "numeric",
-                          }
-                        )}
-                      </Text> : null}
-                    </Row>
-                  </Card.Footer>
-                </Card>
-              </Grid>
-            )
-          })
-        ) : (episodes.map((ep, index) => {
+        {Episodes && Episodes?.length > 0 ? (Episodes.map((ep, index) => {
           const epid = ep.id.split("-episode");
           const id = epid[0] + "-dub-episode" + epid[1];
           if (!ep || episodes.length === 0) return "No Episodes Found!";
@@ -341,7 +293,7 @@ const EpisodeView = ({ episodes, dub, fetchDub, anime, mode }) => {
               </Card>
             </Grid>
           )
-        }))}
+        })) : "No Episodes Found"}
       </Grid.Container>
       <Row justify="center">
         {episodes.length > 25 ? <Pagination

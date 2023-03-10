@@ -1,12 +1,10 @@
 import axios from "axios";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Layout from "./layout/main";
-import { BsFillSkipEndFill, BsFillSkipStartFill, BsPlayCircle, } from "react-icons/bs";
 import useSWR from 'swr'
 import { MediaFullscreenButton, MediaOutlet, MediaPlayButton, MediaPlayer, MediaSeekButton, MediaTime, MediaTimeSlider } from "@vidstack/react";
-import { Loading } from "@nextui-org/react";
+import { Badge, Button, Checkbox, Container, Grid, Image, Input, Loading, Row, Text } from "@nextui-org/react";
 import React from "react";
 import { Dropdown } from "@nextui-org/react";
 const watch = ({ anime, Episodes }) => {
@@ -36,7 +34,6 @@ const watch = ({ anime, Episodes }) => {
       const FilterNextEp = episodes.filter((ep) => {
         return ep.number > currentEP[0].number
       })
-      setEpisodes(FilterNextEp);
 
       // const Player = document.querySelector("vm-player");
       // const res = await fetch("/api/skip?malid=" + anime?.malId + "&epnumber=" + currentEP[0].number + "&eplen=" + 0);
@@ -99,21 +96,34 @@ const watch = ({ anime, Episodes }) => {
   return (
     <Layout>
       <article>
-        <section className="movie-detail">
-          <div className="container">
-            <div
-              className="player-wrapper flex flex-col justify-center items-center"
-              style={{ width: "100%" }}
-            >
-              <h1 className="section-subtitle text-2xl sm:text-md">
-                {anime?.animeTitle}
-              </h1>
-              <div className="flex flex-col justify-center items-center gap-2">
+        <section>
+          <Row gap={2} justify='center' align="center" wrap="wrap" css={{
+            p: '$0',
+            m: '$0',
+            '@lgMin': {
+              height: '100vh',
+              p: '$5',
+            }
+
+          }}>
+            <Container fluid css={
+              {
+                maxWidth: '100%',
+                height: '80%',
+                p: '$0',
+                background: 'var(--rich-black-fogra-29)',
+                overflowY: 'scroll',
+                '@lgMin': {
+                  width: '40%'
+                }
+              }
+            }>
+              <div className="flex flex-col justify-center items-center gap-2"
+              >
                 {FilterdSource[0]?.url ? <MediaPlayer
-                  src={`https://cors.streamable.moe/${FilterdSource[0]?.url}`}
+                  src={`https://cors.haikei.xyz/${FilterdSource[0]?.url}`}
                   // src={FilterdSource[0]?.url}
                   poster={currentEp.image}
-
                   aspect-ratio={16 / 9}
                   autoplay
                 >
@@ -220,109 +230,152 @@ const watch = ({ anime, Episodes }) => {
                     Loading Video Links {anime?.animeTitle}
                   </h1>
                 </div>}
-
-
-                {/* <vm-player contorls class="player" autoplay>
-                  <vm-hls crossOrigin="true" poster={anime?.image}>
-                    <source
-                      data-src={FilterdSource[0]?.url}
-                      type="application/x-mpegURL"
-                    />
-                  </vm-hls>
-                  <vm-ui>
-                    <vm-loading-screen></vm-loading-screen>
-                    <vm-spinner></vm-spinner>
-
-                    <vm-controls full-width>
-                      <vm-control-group>
-                        <vm-scrubber-control></vm-scrubber-control>
-                      </vm-control-group>
-
-                      <vm-control-group space="both">
-                        <vm-control>
-                          <vm-tooltip direction='right'>Backward 10s</vm-tooltip>
-                          <button className="backward">
-                            <BsFillSkipStartFill className="icon" />
-                          </button>
-                        </vm-control>
-                        <vm-playback-control></vm-playback-control>
-                        <vm-control>
-                          <vm-tooltip>Forward 10s</vm-tooltip>
-                          <button className="forward">
-                            <BsFillSkipEndFill className="icon" />
-                          </button>
-                        </vm-control>
-                        <vm-time-progress separator="/" />
-
-                        <vm-volume-control></vm-volume-control>
-                        <vm-control-spacer></vm-control-spacer>
-                        <vm-fullscreen-control>
-                        </vm-fullscreen-control>
-                        <vm-settings-control></vm-settings-control>
-                        <vm-contol>
-
-
-                        </vm-contol>
-                      </vm-control-group>
-                    </vm-controls>
-                  </vm-ui>
-                </vm-player> */}
               </div>
-            </div>
-          </div>
-          <div className="container flex-col mt-3">
-            <label className="relative inline-flex items-center cursor-pointer text-info">
-              <input type="checkbox" value="" className="sr-only peer" defaultChecked={true} id="SkipBtn" onChange={(e) => {
-                const skipText = document.querySelector("#skipText");
-                skipText.innerHTML = e.target.checked ? "ON" : "OFF";
+              <Row align="center" justify="space-between" wrap="wrap"
+                css={
+                  {
+                    p: '$5',
+                    background: 'Black'
+                  }
+                }>
+                <Checkbox.Group
+                  orientation="horizontal"
+                  color="primary"
+                  defaultValue={["play", "skip"]}>
+                  <Checkbox value="play">Auto Play</Checkbox>
+                  <Checkbox value="skip">Skip Intro</Checkbox>
+                </Checkbox.Group>
+                <Button flat color='primary' icon={
+                  <ion-icon name="play-skip-forward"></ion-icon>
+                } css={{ color: 'white' }} >
+                  Next Ep
+                </Button>
+              </Row>
+              <Row align="center" justify="space-between" wrap="wrap"
+                css={
+                  {
+                    p: '$10'
+                  }
+                }>
+                <Container fluid css={{
+                  p: '$0', maxWidth: '100%', width: '50%',
+                }}>
+                  <Text color='white'>
+                    Currently Watching:
+                  </Text>
+                  <Text color='primary'>
+                    Episode {currentEp?.number}
+                  </Text>
+                </Container>
+                <Container fluid css={{
+                  p: '$0', maxWidth: '100%', width: '50%',
+                }}>
+                  <Text color='white'>
+                    Servers :
+                  </Text>
 
-              }} />
+                </Container>
+              </Row>
+            </Container>
+            <Container fluid css={{
+              maxWidth: '100%',
+              background: 'var(--rich-black-fogra-39)',
+              height: '80%',
+              p: '$5',
+              overflowY: 'scroll',
+              '@lgMin': {
+                width: '30%'
+              }
+            }}>
+              <div className="w-full h-12 flex justify-between items-center px-5 bg-gray-900 mb-2">
+                <h1>List of Episodes:</h1>
+                <Input placeholder="Search Ep #" color='primary'
+                  clearable
+                  onChange={(e) => {
+                    e.target.value ? setEpisodes(Episodes.filter((ep) => {
+                      return String(ep.number) == e.target.value
+                    })) : setEpisodes(Episodes);
+                  }}
+                  contentLeft={
+                    <ion-icon name="search" size="small" />
+                  }
+                  style={{
+                    border: 'none',
+                    boxShadow: 'none',
+                    background: 'var(--jet)',
+                    color: 'var(--white)',
+                  }} />
+              </div>
+              <div className="flex justify-center items-center flex-wrap gap-2 px-8 transition-all">
+                {episodes?.map((ep, index) => (
+                  <div className={ep.number == currentEp?.number ? "rounded p-2 px-10 hover:bg-info cursor-pointer bg-info" : "rounded p-2 px-10 hover:bg-info cursor-pointer bg-gray-800"}>
+                    {ep?.number}
+                  </div>
+                ))}
+              </div>
+            </Container>
 
-              <div className="w-11 h-6 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300  rounded-full peer bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-info " ></div>
-              <span className="ml-3 text-sm font-mediu inline-block" >Skip Intro : <span className="text-red-600 inline-block" id="skipText">ON</span></span>
-            </label>
-            <p className="detail-subtitle">Next Up</p>
+            <Container fluid css={{
+              maxWidth: '100%',
+              height: '80%',
+              p: '$0',
+              '@lgMin': {
+                width: '30%'
+              }
+            }}>
+              <section className="movie-detail">
+                <div className="container">
+                  <figure className="movie-detail-banner">
+                    <Image src={anime?.image} alt={anime?.title}
+                      showSkeleton
+                      maxDelay={10000}
+                      height='auto'
+                    />
+                  </figure>
 
-            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 bg:dark-gray-700">
-              <thead className="text-xs text-gray-700 uppercase bg-info border rounded-lg dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                  <th scope="col" className="px-6 py-3">
-                    Episode Number
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Episode Title
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Watch
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {episodes?.map((ep) => {
-                  const epid = ep.id.split("-episode")
-                  const id = epid[0] + "-dub-episode" + epid[1]
-                  return (
-                    <tr className="border dark:bg-gray-800 border-gray-50  hover:bg-cyan-500 hover:text-black text-white" key={ep.id}>
-                      <th scope="row" className="px-6 py-4 font-medium whitespace-nowrap dark:text-white">
-                        {ep.number}
-                      </th>
-                      <td className="w-max">
-                        {ep.title}
-                      </td>
-                      <td className=" flex justify-center items-center hover:dark:text-cyan-700 text-info group-hover:text-cyan-300" style={{ height: "50px" }}>
-                        <Link href={`/watch?id=${dub ? id : ep.id}&anime=${anime.id}`}>
-                          <BsPlayCircle style={{ scale: "2.0", }} />
-                        </Link>
-                      </td>
-                    </tr>
-                  );
-                })}
+                  <div className="movie-detail-content">
 
-              </tbody>
-            </table>
+                    <h1 className="detail-title text-lg">
+                      <strong>{anime?.title?.english}</strong>
+                    </h1>
 
 
-          </div>
+                    <div className="meta-wrapper">
+                      <div className="badge-wrapper">
+                        <div className="badge badge-fill">{anime?.status}</div>
+                        {anime?.duration ? (<div className="badge badge-info">
+                          {anime?.duration} Min
+                        </div>) : ""}
+
+                        <div className="badge badge-outline badge-info">HD</div>
+                      </div>
+
+                      <div className="ganre-wrapper">
+                        {anime?.genres?.map((genre) => {
+                          return <span class="bg-transparent border border-info text-info text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-gray-700 dark:text-gray-300 hover:bg-info transition-all hover:text-black cursor-pointer" >{genre}</span>
+                        })}
+
+                      </div>
+
+                      <div className="date-time">
+                        <div>
+                          <ion-icon name="calendar-outline"></ion-icon>
+
+                          <time dateTime={anime?.releaseDate}>
+                            Release Date: {anime?.releaseDate}
+                          </time>
+                        </div>
+                      </div>
+                    </div>
+
+                    <p className="storyline">{String(anime?.description).replaceAll("<br>", "\n").replaceAll("<i>", "").replaceAll("</i>", "").replaceAll("(Source: Crunchyroll)", "")}</p>
+                  </div>
+                </div>
+              </section>
+            </Container>
+
+          </Row>
+
 
 
         </section>

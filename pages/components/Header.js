@@ -90,7 +90,6 @@ const Header = ({ children, active }) => {
         }}
       >
         <Navbar isBordered={true} variant="floating"
-
         >
           <Navbar.Brand css={{ mr: "$4" , width: '100%'}}>
             <Text b color="primary" css={{
