@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import LoadingBar from "react-top-loading-bar";
@@ -13,6 +13,7 @@ export const Box = styled("div", {
 const Header = ({ children, active }) => {
   const [query, setQuery] = useState("");
   const [progress, setProgress] = useState(0);
+  const loadRef = useRef(null);
   const router = useRouter();
   const SearchGenre = async (e, url) => {
     window.location.href = url;
@@ -53,10 +54,7 @@ const Header = ({ children, active }) => {
   ]
   useEffect(() => {
     router.events.on("routeChangeStart", (e) => {
-      const id = setInterval(() => {
-        progress <= 80 ? setProgress(progress + 10) : null;
-      }, 1000);
-      progress >= 80 ? clearInterval(id) : null;   
+      loadRef?.current?.continuousStart()
     });
     router.events.on("routeChangeComplete", () => {
       setProgress(100);
@@ -71,11 +69,12 @@ const Header = ({ children, active }) => {
     { name: 'Home', href: '/' },
     { name: 'Trending', href: '/trending' },
     { name: 'About Us', href: '/about' },
-    
+
   ];
   return (
     <>
       <LoadingBar
+        ref={loadRef}
         color="#52d6eb"
         shadow={true}
         progress={progress}
@@ -89,7 +88,7 @@ const Header = ({ children, active }) => {
       >
         <Navbar isBordered={true} variant="floating"
         >
-          <Navbar.Brand css={{ mr: "$4" , width: '100%'}}>
+          <Navbar.Brand css={{ mr: "$4", width: '100%' }}>
             <Text b color="primary" css={{
               mr: "$11", "@xsMax": {
                 ml: '$4'
@@ -157,7 +156,7 @@ const Header = ({ children, active }) => {
               </Dropdown>
             </Navbar.Content>
             <Navbar.Content
-              
+
               css={{
                 display: "none",
                 visibility: "hidden",
@@ -170,7 +169,7 @@ const Header = ({ children, active }) => {
                   opacity: 1,
                 },
                 "@smMin": {
-                 
+
                 }
               }}
 
@@ -184,7 +183,7 @@ const Header = ({ children, active }) => {
                 }}
               >
                 <Input
-                  
+
                   clearable
                   contentLeft={
                     <BsSearch color="var(--nextui-gray-500)" width={20} />
@@ -223,7 +222,7 @@ const Header = ({ children, active }) => {
             </Navbar.Content>
 
             <Navbar.Toggle showIn="xs" aria-label="toggle navigation" id="NavbarToggler" title="Toggle"
-            css={{width: '25px'}}
+              css={{ width: '25px' }}
             />
           </Navbar.Brand>
           <Navbar.Content

@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import Layout from "@/pages/layout/main";
 import useSWR from 'swr'
-import { MediaFullscreenButton, MediaOutlet, MediaPlayButton, MediaPlayer, MediaSeekButton, MediaTime, MediaTimeSlider } from "@vidstack/react";
+import { FullscreenArrowIcon, MediaFullscreenButton, MediaOutlet, MediaPlayButton, MediaPlayer, MediaSeekButton, MediaTime, MediaTimeSlider } from "@vidstack/react";
 import { Badge, Button, Card, Checkbox, Col, Container, Grid, Image, Input, Loading, Row, Text } from "@nextui-org/react";
 import React from "react";
 import { Dropdown } from "@nextui-org/react";
@@ -24,6 +24,13 @@ export default function WatchEpisode({ params, anime, Episodes, episodeId, curre
     const dub = true;
     data ? null : <Loading />
     const player = useRef(null);
+    const HandleFullScreen = async () => {
+        try {
+            player.enterFullscreen();
+        } catch (e) {
+        }
+
+    }
     useEffect(() => {
         const filter = async () => {
             console.log(source);
@@ -34,6 +41,14 @@ export default function WatchEpisode({ params, anime, Episodes, episodeId, curre
         };
         filter();
     }, [source, selected]);
+    useEffect(() => {
+        if (!FilterdSource[0]?.url) return;
+        const { paused } = player?.current?.state;
+        console.log(paused, "Paused ?")
+        return player?.current.subscribe(({ currentTime }) => {
+            console.log(currentTime);
+        });
+    }, [FilterdSource[0]?.url])
     return (
         <Layout>
             <article>
@@ -67,6 +82,9 @@ export default function WatchEpisode({ params, anime, Episodes, episodeId, curre
                                     poster={currentEp.image}
                                     aspect-ratio={16 / 9}
                                     autoplay
+                                    load="custom"
+                                    fullscreenOrientation="landscape"
+                                    ref={player}
                                 >
                                     <div className="pointer-events-none absolute inset-0 z-50 flex h-full w-full items-center justify-center">
                                         <svg
@@ -160,7 +178,7 @@ export default function WatchEpisode({ params, anime, Episodes, episodeId, curre
                                                             </Dropdown.Menu>
                                                         </Dropdown>
                                                     </div>
-                                                    <MediaFullscreenButton />
+                                                    <FullscreenArrowIcon onClick={HandleFullScreen} />
                                                 </div>
                                             </MediaControlGroup>
                                         </div>
