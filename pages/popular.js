@@ -7,11 +7,11 @@ export default function Trending({ anime }) {
     if (!anime) return (<FourZeroFour />)
     const router = useRouter();
     return (<>
-        <Layout active='trnd'>
+        <Layout active='pop'>
             <section className="top-rated">
                 <div className="container">
-                    <h1 className="h2 section-title">Trending Animes</h1>
-                    <p className="h2 section-subtitle">Top Trending Animes</p>
+                    <h1 className="h2 section-title">Popular Animes</h1>
+                    <p className="h2 section-subtitle">Top Popular Animes</p>
                 </div>
                 <Grid.Container gap={2} justify="center">
                     {anime?.results?.map((item, index) => (
@@ -84,7 +84,7 @@ export default function Trending({ anime }) {
     </>)
 }
 export async function getServerSideProps(context) {
-    const url = 'https://api.consumet.org/meta/anilist/trending';
+    const url = 'https://api.consumet.org/meta/anilist/popular';
     const { data } = await axios.get(url, {
         params: {
             page: 1,

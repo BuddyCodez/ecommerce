@@ -53,15 +53,12 @@ const Header = ({ children, active }) => {
   ]
   useEffect(() => {
     router.events.on("routeChangeStart", (e) => {
-      setProgress(30);
-      setProgress(40);
-      setProgress(50);
-      setProgress(60);
+      const id = setInterval(() => {
+        progress <= 80 ? setProgress(progress + 10) : null;
+      }, 1000);
+      progress >= 80 ? clearInterval(id) : null;   
     });
     router.events.on("routeChangeComplete", () => {
-      setProgress(70);
-      setProgress(80);
-      setProgress(90);
       setProgress(100);
     });
   });
@@ -74,6 +71,7 @@ const Header = ({ children, active }) => {
     { name: 'Home', href: '/' },
     { name: 'Trending', href: '/trending' },
     { name: 'About Us', href: '/about' },
+    
   ];
   return (
     <>
@@ -106,7 +104,7 @@ const Header = ({ children, active }) => {
                 Home
               </Navbar.Link>
               <Navbar.Link href="/trending" isActive={IsActive() == "Trending" ? true : false}>Trending</Navbar.Link>
-              <Navbar.Link href="#" isActive={IsActive() == "Popular" ? true : false}>Popular</Navbar.Link>
+              <Navbar.Link href="/popular" isActive={IsActive() == "Popular" ? true : false}>Popular</Navbar.Link>
               <Dropdown isBordered>
                 <Navbar.Item>
                   <Dropdown.Button

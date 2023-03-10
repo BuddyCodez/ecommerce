@@ -32,7 +32,7 @@ const TopRated = ({ popular }) => {
           {anime?.results?.map((item, index) => (
             <Grid xs={7} sm={3} key={index}>
               <Card isPressable variant="bordered" onPress={() => {
-                router.push({ pathname: "/anime", query: { animeid: item.id } });
+                router.push("/anime/" + item.id);
               }}
                 disableRipple={false}
                 className='NextUiCard'
