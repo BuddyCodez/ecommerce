@@ -8,12 +8,6 @@ import UseFetcher from "./utils/fetcher";
 import React from "react";
 
 const Anime = ({ data }) => {
-  const episodeId = data?.episodes[0].id.split("-episode")
-  const episodeUrl = episodeId ? episodeId[0] + "-dub-episode" + episodeId[1] : false
-  let Fetcher = episodeUrl ? UseFetcher("https://api.consumet.org/anime/gogoanime/watch/" + episodeUrl) : { data: false, error: true, isLoading: false };
-  let fetchDub = episodeUrl ? { isLoading: Fetcher[0] || false, data: Fetcher[1] || undefined, error: Fetcher[2] || undefined } : { data: false, error: true, isLoading: false };
-  const [dub, setDub] = useState(false);
-  const [mode, setMode] = useState("dub");
   const { query } = useRouter();
   const anime = data;
   if (!anime || !query.animeid) return <FourZeroFour />;
@@ -35,13 +29,6 @@ const Anime = ({ data }) => {
       movieDetail.style.backgroundPosition = 'center';
     }
   }, []);
-  useEffect(() => {
-    console.log(fetchDub);
-    if (!fetchDub.isLoading) {
-      setDub(fetchDub.data && !fetchDub.error ? true : false);
-
-    }
-  }, [fetchDub.isLoading]);
 
   return (
     <Layout>
@@ -104,44 +91,9 @@ const Anime = ({ data }) => {
             </section>
             <section className="tv-series">
               <div className="container">
-                <label className="text-info flex items-center gap-2 mb-3 ">
-                  {fetchDub.isLoading ? <div className="flex items-center justify-center gap-3">
-                    <Loading />
-                    <span>
-                      Loading Episode Mode...
-                    </span>
-                  </div> :
-                    <Switch
-                      initialChecked={fetchDub.data ? true : false}
-                      shadow
-                      disabled={!fetchDub.error == undefined && !fetchDub.data?.message ? true : false}
-                      id='Mode'
-                      iconOn={
-                        <span className=" capitalize text-info font-bold" style={
-                          { fontSize: '7px' }
-                        }>
-                          Dub
-                        </span>
-                      }
-                      iconOff={
-                        <span className=" capitalize text-info font-bold" style={
-                          { fontSize: '7px' }
-                        }>
-                          Sub
-                        </span>
-                      }
-                      onChange={(e) => {
-                        document.getElementById("textMode").innerHTML = e.target.checked ? "dub mode" : "sub mode";
-                        setMode(e.target.checked ? "dub" : "sub");
-                      }}
-                    />
-                  }
-                  {fetchDub.isLoading ? null : <span className="ml-3 text-sm font-medium capitalize inline-block" id="textMode">{fetchDub?.data ? "dub mode" : "sub mode"}</span>
-                  }
-                </label>
                 <div className="relative overflow-hidden sm:rounded-lg">
                   <span className="hero-subtitle h1">{anime?.title?.english} Episodes ({episodes.length}):</span>
-                  <EpisodeView episodes={episodes} mode={mode} anime={anime} dub={dub} fetchDub={fetchDub} />
+                  <EpisodeView episodes={episodes} anime={anime} />
                 </div>
 
 
@@ -190,7 +142,7 @@ export async function getServerSideProps(context) {
     },
   };
 }
-const EpisodeView = ({ episodes, dub, fetchDub, anime, mode }) => {
+const EpisodeView = ({ episodes, anime}) => {
   const router = useRouter();
   const [selected, setSelected] = React.useState(new Set(["title"]));
   const selectedValue = React.useMemo(
@@ -248,15 +200,13 @@ const EpisodeView = ({ episodes, dub, fetchDub, anime, mode }) => {
       </Row>
       <Grid.Container gap={2} justify="flex-start" style={{ overflowY: 'hidden' }}>
         {Episodes && Episodes?.length > 0 ? (Episodes.map((ep, index) => {
-          const epid = ep.id.split("-episode");
-          const id = epid[0] + "-dub-episode" + epid[1];
           if (!ep || episodes.length === 0) return "No Episodes Found!";
           return (
             <Grid xs={6} sm={3} key={index} alignItems='center' justify="center">
 
               <Card isPressable variant="bordered" color="primary"
                 onPress={() => {
-                  router.push(`/watch?id=${!fetchDub.data?.message && mode == "dub" ? id : ep.id}&anime=${anime.id}`);
+                  router.push(`/watch/${anime?.id}/1`);
                 }}
               >
                 <Card.Body css={{ p: 0 }}>

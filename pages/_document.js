@@ -20,6 +20,10 @@ class MyDocument extends Document {
 
           <meta name="google-site-verification" content="d8Q9bSGyoBL8RSathwiLAJd3qbQhUcl_au7udJd5XZo" />
           <link
+            rel="preconnect"
+            href="https://api.consumet.org/"
+          />
+          <link
             rel="shortcut icon"
             href="/images/BrandedLogo.png"
             type="image/svg+xml"

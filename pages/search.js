@@ -167,14 +167,14 @@ const QuerySearch = ({ anime }) => {
         return (
           <li key={item.id}>
             <div className="movie-card">
-              <Link href={"/anime?animeid=" + item.id}>
+              <Link href={"/anime/" + item.id}>
                 <figure className="card-banner">
                   <img src={item.image} alt={item.title?.english} />
                 </figure>
               </Link>
 
               <div className="title-wrapper">
-                <Link href={"/anime?animeid=" + item.id}>
+                <Link href={"/anime/" + item.id}>
                   {item.title?.english ? (<h3 className="card-title">{item.title?.english}</h3>) : <h3 className="card-title">{item.title?.userPreferred.length > 20 ? item.title?.userPreferred.slice(0, 20) + ".." : item.title?.userPreferred}</h3>}
 
                 </Link>

@@ -1,12 +1,13 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Layout from "./layout/main";
 import useSWR from 'swr'
 import { MediaFullscreenButton, MediaOutlet, MediaPlayButton, MediaPlayer, MediaSeekButton, MediaTime, MediaTimeSlider } from "@vidstack/react";
 import { Badge, Button, Checkbox, Container, Grid, Image, Input, Loading, Row, Text } from "@nextui-org/react";
 import React from "react";
 import { Dropdown } from "@nextui-org/react";
+import Link from "next/link";
 const watch = ({ anime, Episodes }) => {
   const [selected, setSelected] = React.useState(new Set(["480p"]));
 
@@ -16,6 +17,7 @@ const watch = ({ anime, Episodes }) => {
   );
   const fetcher = (...args) => fetch(...args).then((res) => res.json())
   const { query } = useRouter();
+  const router = useRouter();
   const [FilterdSource, setFilterdSource] = useState([]);
   const [videoQuality, setVideoQuality] = useState("360p");
   const [episodes, setEpisodes] = useState(Episodes);
@@ -24,6 +26,7 @@ const watch = ({ anime, Episodes }) => {
   const dub = query.id?.includes("dub");
   data ? null : <Loading />
   const [currentEp, setCurrentEp] = useState(null);
+  const player = useRef(null);
   useEffect(() => {
     const getAnime = async () => {
       const queryId = query?.id.replace("-dub", "");
@@ -74,30 +77,18 @@ const watch = ({ anime, Episodes }) => {
       setSelected(new Set(["360p"]));
     }, 3000);
   }, []);
-  // useEffect(() => {
-  //   const Player = document.querySelector("vm-player");
-  //   const forward = document.querySelector("button.forward");
-  //   const backward = document.querySelector("button.backward");
-  //   forward.addEventListener("click", () => {
-  //     console.log("forward");
-  //     if (Player.currentTime <= Player.duration) {
-  //       Player.currentTime += 10;
-  //     }
-  //   });
-  //   backward.addEventListener("click", () => {
-  //     console.log("backward");
-  //     if (Player.currentTime >= 0) {
-  //       Player.currentTime -= 10;
-  //     }
-  //   });
-  // }, []);
-
+  useEffect(() => {
+    const { paused } = !player.current?.state;
+    return player.subscribe(({ currentTime }) => {
+      console.log(currentTime);
+    });
+  }, []);
 
   return (
     <Layout>
       <article>
         <section>
-          <Row gap={2} justify='center' align="center" wrap="wrap" css={{
+          <Row gap={2} justify='center' align="start" wrap="wrap" css={{
             p: '$0',
             m: '$0',
             '@lgMin': {
@@ -112,7 +103,7 @@ const watch = ({ anime, Episodes }) => {
                 height: '80%',
                 p: '$0',
                 background: 'var(--rich-black-fogra-29)',
-                overflowY: 'scroll',
+                overflowY: 'auto',
                 '@lgMin': {
                   width: '40%'
                 }
@@ -247,7 +238,13 @@ const watch = ({ anime, Episodes }) => {
                 </Checkbox.Group>
                 <Button flat color='primary' icon={
                   <ion-icon name="play-skip-forward"></ion-icon>
-                } css={{ color: 'white' }} >
+                } css={{ color: 'white' }}
+                  onPress={() => {
+                    if (currentEp?.number === anime?.episodes?.length) return;
+                    const nextEp = anime?.episodes?.find((ep) => ep.number === currentEp?.number + 1)
+                    router.push(`/watch?anime=${anime?.id}&id=${nextEp?.number}`)
+                  }}
+                >
                   Next Ep
                 </Button>
               </Row>
@@ -282,7 +279,7 @@ const watch = ({ anime, Episodes }) => {
               background: 'var(--rich-black-fogra-39)',
               height: '80%',
               p: '$5',
-              overflowY: 'scroll',
+              overflowY: 'auto',
               '@lgMin': {
                 width: '30%'
               }
@@ -308,9 +305,13 @@ const watch = ({ anime, Episodes }) => {
               </div>
               <div className="flex justify-center items-center flex-wrap gap-2 px-8 transition-all">
                 {episodes?.map((ep, index) => (
-                  <div className={ep.number == currentEp?.number ? "rounded p-2 px-10 hover:bg-info cursor-pointer bg-info" : "rounded p-2 px-10 hover:bg-info cursor-pointer bg-gray-800"}>
+                  <Link href={dub ?
+                    ep.id.split("-episode")[0] + "-dub-episode" + ep.id.split("-episode")[1]
+                    : ep.id
+                  }
+                    className={ep.number == currentEp?.number ? "rounded p-2 px-10 hover:bg-info cursor-pointer bg-info" : "rounded p-2 px-10 hover:bg-info cursor-pointer bg-gray-800"}>
                     {ep?.number}
-                  </div>
+                  </Link>
                 ))}
               </div>
             </Container>
@@ -387,7 +388,7 @@ export default watch;
 export async function getServerSideProps(context) {
   const { id, anime } = context.query;
   const url =
-    "https://api.consumet.org/meta/anilist/info/" + anime;
+    "https://api.consumet.org/meta/anilist/info/" + anime + "?dub=true";
   const animeData = await fetch(url).then((res) => res.json());
   const episodes = animeData.episodes;
   return {
