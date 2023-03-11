@@ -206,7 +206,7 @@ const EpisodeView = ({ episodes, anime}) => {
 
               <Card isPressable variant="bordered" color="primary"
                 onPress={() => {
-                  router.push(`/watch/${anime?.id}/1`);
+                  router.push(`/watch/${anime?.id}/${ep.number}`);
                 }}
               >
                 <Card.Body css={{ p: 0 }}>

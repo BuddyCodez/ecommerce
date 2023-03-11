@@ -2,7 +2,6 @@
 import AniSkip from "./utils/aniskip";
 export default function handler(req, res) {
   let { malid, epnumber, eplen } = req.query;
-  console.log(req);
   const aniskip = new AniSkip({
     userId: Math.random().toString(36).substring(7),
     providerName: "gogoanime",

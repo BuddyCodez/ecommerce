@@ -17,7 +17,9 @@ export default function WatchEpisode({ params, anime, Episodes, episodeId, curre
     const fetcher = (...args) => fetch(...args).then((res) => res.json())
     const router = useRouter();
     const [FilterdSource, setFilterdSource] = useState([]);
-    const [videoQuality, setVideoQuality] = useState("360p");
+    // const [videoQuality, setVideoQuality] = useState("360p");
+    const [skip, setSkip] = useState(null);
+    const [skipSelected, setSkipSelected] = useState(["play", "skip"]);
     const [episodes, setEpisodes] = useState(Episodes);
     const { data, error } = useSWR("https://api.consumet.org/anime/gogoanime/watch/" + episodeId, fetcher);
     const source = data?.sources;
@@ -26,27 +28,56 @@ export default function WatchEpisode({ params, anime, Episodes, episodeId, curre
     const player = useRef(null);
     const HandleFullScreen = async () => {
         try {
-            player.enterFullscreen();
+            console.log(player?.current);
+            player?.current?.requestFullscreen();
         } catch (e) {
+            console.log(e);
         }
-
+        try {
+            await player?.current?.exitFullscreen();
+        } catch (e) {
+            console.log(e);
+        }
     }
     useEffect(() => {
+        setTimeout(() => {
+            setSelected(new Set(["360p"]));
+        }, 5000);
+    }, [FilterdSource])
+    useEffect(() => {
         const filter = async () => {
-            console.log(source);
+            console.log(selectedValue);
             const filterd = source?.filter((item) => {
                 return item.quality === selectedValue;
             });
             setFilterdSource(filterd || []);
         };
         filter();
+
     }, [source, selected]);
+
     useEffect(() => {
         if (!FilterdSource[0]?.url) return;
-        const { paused } = player?.current?.state;
-        console.log(paused, "Paused ?")
+        let SKIP = [];
+        const SkipTiminigs = async () => {
+            const timings = await fetch("/api/skip?malid=" + anime?.malId + "&epnumber=" + currentEp?.number + "&eplen=" + 0);
+            const data = await timings.json();
+            console.log(data);
+            SKIP = data;
+        }
+        SkipTiminigs();
         return player?.current.subscribe(({ currentTime }) => {
-            console.log(currentTime);
+            if (skipSelected.includes("skip") && SKIP?.length > 0) {
+                // console.log("Skip Mode Is On");
+                let op = SKIP?.filter((item) => {
+                    return item.skipType === "op";
+                })
+                op = op ? op[0] : null;
+                if (currentTime >= op?.interval.startTime && currentTime <= op?.interval.endTime){
+                    // player?.current?.seek(op?.interval.endTime);
+                    
+                }
+            }
         });
     }, [FilterdSource[0]?.url])
     return (
@@ -80,9 +111,8 @@ export default function WatchEpisode({ params, anime, Episodes, episodeId, curre
                                     src={`https://cors.haikei.xyz/${FilterdSource[0]?.url}`}
                                     // src={FilterdSource[0]?.url}
                                     poster={currentEp.image}
-                                    aspect-ratio={16 / 9}
+
                                     autoplay
-                                    load="custom"
                                     fullscreenOrientation="landscape"
                                     ref={player}
                                 >
@@ -200,9 +230,17 @@ export default function WatchEpisode({ params, anime, Episodes, episodeId, curre
                                 <Checkbox.Group
                                     orientation="horizontal"
                                     color="primary"
-                                    defaultValue={["play", "skip"]}>
-                                    <Checkbox value="play">Auto Play</Checkbox>
-                                    <Checkbox value="skip">Skip Intro</Checkbox>
+                                    defaultValue={["play", "skip"]}
+                                    css={{ fontSize: '0.5rem' }}
+                                    value={skipSelected}
+                                    onChange={(value) => {
+                                        setSkipSelected(value)
+
+                                    }}
+
+                                >
+                                    <Checkbox value="play"><Text size={12}>Auto Play</Text></Checkbox>
+                                    <Checkbox value="skip"><Text size={12}>Skip Intro</Text></Checkbox>
                                 </Checkbox.Group>
                                 <Button flat color='primary' icon={
                                     <ion-icon name="play-skip-forward"></ion-icon>
