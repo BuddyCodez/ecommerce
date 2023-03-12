@@ -74,8 +74,7 @@ export default function WatchEpisode({ params, anime, Episodes, episodeId, curre
                 })
                 op = op ? op[0] : null;
                 if (currentTime >= op?.interval.startTime && currentTime <= op?.interval.endTime){
-                    // player?.current?.seek(op?.interval.endTime);
-                    
+                  player.current.currentTime = op?.interval.endTime;
                 }
             }
         });
@@ -230,6 +229,7 @@ export default function WatchEpisode({ params, anime, Episodes, episodeId, curre
                                 <Checkbox.Group
                                     orientation="horizontal"
                                     color="primary"
+                                    ariaLabel="Select Video Quality"
                                     defaultValue={["play", "skip"]}
                                     css={{ fontSize: '0.5rem' }}
                                     value={skipSelected}
@@ -295,6 +295,7 @@ export default function WatchEpisode({ params, anime, Episodes, episodeId, curre
                                 <h1>List of Episodes:</h1>
                                 <Input placeholder="Search Ep #" color='primary'
                                     clearable
+                                    ariaLabel="Search"
                                     width="170px"
                                     onChange={(e) => {
                                         e.target.value ? setEpisodes(Episodes.filter((ep) => {
@@ -313,7 +314,7 @@ export default function WatchEpisode({ params, anime, Episodes, episodeId, curre
                             </div>
                             <div className="flex justify-center items-center flex-wrap gap-2 px-8 transition-all">
                                 {episodes?.map((ep, index) => (
-                                    <Card css={{ w: "80%", h: "200px" }} key={index}>
+                                    <Card css={{ w: "80%", h: "200px" }} key={ep?.id}>
 
                                         <Card.Body css={{ p: 0 }}>
                                             <Card.Image

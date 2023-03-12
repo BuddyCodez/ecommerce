@@ -27,8 +27,8 @@ export default function Home({ popular }) {
 export async function getStaticProps() {
   let popular
   try {
-    const res = await fetch("https://api.consumet.org/meta/anilist/popular");
-    popular = await res.json();
+    const { data } = await axios.get("https://api.consumet.org/meta/anilist/popular");
+    popular = data;
   } catch (e) {
     popular = [];
   }

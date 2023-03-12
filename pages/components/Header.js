@@ -183,7 +183,7 @@ const Header = ({ children, active }) => {
                 }}
               >
                 <Input
-
+                  ariaLabel="Search Anime"
                   clearable
                   contentLeft={
                     <BsSearch color="var(--nextui-gray-500)" width={20} />
@@ -245,6 +245,7 @@ const Header = ({ children, active }) => {
               }}
             >
               <Input
+                ariaLabel="Search Anime"
                 clearable
                 contentLeft={
                   <BsSearch color="var(--nextui-gray-500)" />
