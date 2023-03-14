@@ -27,7 +27,7 @@ export default function Home({ popular }) {
 export async function getStaticProps() {
   let popular
   try {
-    const { data } = await axios.get("https://api.consumet.org/meta/anilist/popular");
+    const { data } = await axios.get("https://api.haikei.xyz/meta/anilist/popular");
     popular = data;
   } catch (e) {
     popular = [];
@@ -35,7 +35,7 @@ export async function getStaticProps() {
   // console.log(popular);
   return {
     props: {
-      popular,
+      popular: popular,
     },
 
   };
