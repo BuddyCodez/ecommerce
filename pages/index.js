@@ -35,7 +35,7 @@ export async function getStaticProps() {
   // console.log(popular);
   return {
     props: {
-      popular,
+      popular: popular,
     },
 
   };
