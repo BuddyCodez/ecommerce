@@ -252,3 +252,14 @@ a:focus {
   box-shadow: var(--shadow-1);
   z-index: 1;
 }
+*, ::before, ::after {
+    box-sizing: border-box;
+    border-width: 0;
+    border-style: solid;
+    border-color: transparent;
+}
+button.nextui-dropdown-button{
+  padding-left: 0px;
+  padding-right: 0px;
+  font-size: 1.2rem;
+}

@@ -29,7 +29,7 @@ const SearchResult = ({ anime, genre }) => {
               </div>
             ) : (<div className="container">
               {animes?.length > 0 || animes.results?.length > 0 ? (
-                <h2 className="h2 section-title">
+                <h2 className="h2 section-title uppercase">
                   {genre ? animes?.totalResults : animes?.results?.length}  Search Results for {query?.query || query?.genre + " Animes"}
                 </h2>
               ) : (

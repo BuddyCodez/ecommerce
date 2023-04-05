@@ -43,6 +43,7 @@ const Header = ({ children, active }) => {
       href: `/search?genre=${genre.toLowerCase().replace(/ /g, '+')}`
     }
   });
+
   useEffect(() => {
     router.events.on("routeChangeStart", (e) => {
       loadRef?.current?.continuousStart()
@@ -57,9 +58,21 @@ const Header = ({ children, active }) => {
   };
   const { isDark } = useTheme(true);
   const collapseItems = [
-    { name: 'Home', href: '/' },
-    { name: 'Trending', href: '/trending' },
-    { name: 'About Us', href: '/about' },
+    {
+      name: 'Home', href: '/',
+      icon: "home",
+
+    },
+    {
+      name: 'Trending', href: '/trending', icon: "trending-up",
+    },
+    {
+      name: 'About Us', href: '/about', icon: "information-circle",
+    },
+    {
+      name: 'Popular', href: '/popular', icon: "star",
+    },
+
 
   ];
   return (
@@ -284,12 +297,44 @@ const Header = ({ children, active }) => {
                   }}
                   href={item?.href || '#'}
                 >
-                  {item?.name}
+
+                  <span className="inline-block">
+                    <ion-icon name={item?.icon}></ion-icon>
+                  </span>
+                  &nbsp;
+                  <span className="inline-block">{item?.name}</span>
                 </Link>
 
               </Navbar.CollapseItem>
             ))}
+            <Navbar.CollapseItem>
+              <Dropdown
+                css={{
+                  fontSize: '1.3rem',
+                  paddingLeft: '0px',
+                  paddingRight: '0px',
+                }}
+              >
+                <Dropdown.Button light color='default'
+         
+                  iconRight={
+                    <ion-icon name="chevron-down-outline"></ion-icon>
+                  }
 
+                >Genres</Dropdown.Button>
+                <Dropdown.Menu aria-label="Genre Select">
+                  {
+                    Genres.map(genre => {
+                      return (
+                        <Dropdown.Item key={genre.name} >
+                          <Link href={genre.href} className="footer-link"> {genre.name} </Link>
+                        </Dropdown.Item>
+                      )
+                    })
+                  }
+                </Dropdown.Menu>
+              </Dropdown>
+            </Navbar.CollapseItem>
           </Navbar.Collapse>
         </Navbar>
         {children}

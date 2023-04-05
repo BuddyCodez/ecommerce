@@ -1,11 +1,20 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { Dropdown } from "@nextui-org/react";
 const Footer = () => {
   const router = useRouter();
   const SearchGenre = (e) => {
     const genre = e.target.innerText.toLowerCase();
-    router.push(`/search?genre=${genre}`, undefined, { shallow: true });
+    router.push(`/search?genre=${genre}`);
   };
+  const genres = ["Action", "Adventure", "Cars", "Comedy", "Drama", "Fantasy", "Horror", "Mahou Shoujo", "Mecha", "Music", "Mystery", "Psychological", "Romance", "Sci-Fi", "Slice of Life", "Sports", "Supernatural", "Thriller"];
+
+  const Genres = genres.map(genre => {
+    return {
+      name: genre,
+      href: `/search?genre=${genre.toLowerCase().replace(/ /g, '+')}`
+    }
+  });
   return (
     <footer className="footer">
       <div className="footer-top">
@@ -23,43 +32,30 @@ const Footer = () => {
               </li>
 
               <li>
-                <Link href="#" className="footer-link">
-                  Genres
+                <Link href="/popular" className="footer-link">
+                  Popular Animes
                 </Link>
               </li>
 
               <li>
-                <div className="dropdown dropdown-top dropdown-end">
-                  <label tabIndex="0" className="footer-link">
-                    Genres
-                  </label>
-                  <ul
-                    tabIndex="0"
-                    className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
-                  >
-                    <li>
-                      <button onClick={(e) => SearchGenre(e)}>Action</button>
-                    </li>
-                    <li>
-                      <button onClick={(e) => SearchGenre(e)}>Drama</button>
-                    </li>
-                    <li>
-                      <button onClick={(e) => SearchGenre(e)}>Comedy</button>
-                    </li>
-                    <li>
-                      <button onClick={(e) => SearchGenre(e)}>Horror</button>
-                    </li>
-                    <li>
-                      <button onClick={(e) => SearchGenre(e)}>Thriller</button>
-                    </li>
-                    <li>
-                      <button onClick={(e) => SearchGenre(e)}>Sci-Fi</button>
-                    </li>
-                    <li>
-                      <a onClick={(e) => SearchGenre(e)}>Romance</a>
-                    </li>
-                  </ul>
-                </div>
+                <Dropdown>
+                  <Dropdown.Button light color='default' iconRight={
+                    <ion-icon name="chevron-up-outline"></ion-icon>
+                  }
+
+                  >Genres</Dropdown.Button>
+                  <Dropdown.Menu aria-label="Genre Select">
+                    {
+                      Genres.map(genre => {
+                        return (
+                          <Dropdown.Item key={genre.name} >
+                            <Link href={genre.href} className="footer-link"> {genre.name} </Link>
+                          </Dropdown.Item>
+                        )
+                      })
+                    }
+                  </Dropdown.Menu>
+                </Dropdown>
               </li>
 
               <li>
@@ -125,7 +121,7 @@ const Footer = () => {
           </p>
         </div>
       </div>
-    </footer>
+    </footer >
 
   );
 };
