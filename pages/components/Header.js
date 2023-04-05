@@ -35,23 +35,14 @@ const Header = ({ children, active }) => {
     const collapse = new Collapse($targetEl, $triggerEl, options);
     collapse.toggle();
   }
-  const Genres = [
-    { name: 'Action', href: '/search?genre=action' },
-    { name: 'Adventure', href: '/search?genre=adventure' },
-    { name: 'Comedy', href: '/search?genre=comedy' },
-    { name: 'Demons', href: '/search?genre=demons' },
-    { name: 'Drama', href: '/search?genre=drama' },
-    { name: 'Fantasy', href: '/search?genre=fantasy' },
-    { name: 'Horror', href: '/search?genre=horror' },
-    { name: 'Martial Arts', href: '/search?genre=martial-arts' },
-    { name: 'Mecha', href: '/search?genre=mecha' },
-    { name: 'Mystery', href: '/search?genre=mystery' },
-    { name: 'Romance', href: '/search?genre=romance' },
-    { name: 'Samurai', href: '/search?genre=samurai' },
-    { name: 'School', href: '/search?genre=school' },
-    { name: 'Sci-Fi', href: '/search?genre=sci-fi' },
-    { name: 'Seinen', href: '/search?genre=seinen' },
-  ]
+  const genres = ["Action", "Adventure", "Cars", "Comedy", "Drama", "Fantasy", "Horror", "Mahou Shoujo", "Mecha", "Music", "Mystery", "Psychological", "Romance", "Sci-Fi", "Slice of Life", "Sports", "Supernatural", "Thriller"];
+
+  const Genres = genres.map(genre => {
+    return {
+      name: genre,
+      href: `/search?genre=${genre.toLowerCase().replace(/ /g, '+')}`
+    }
+  });
   useEffect(() => {
     router.events.on("routeChangeStart", (e) => {
       loadRef?.current?.continuousStart()
@@ -94,7 +85,7 @@ const Header = ({ children, active }) => {
                 ml: '$4'
               }
             }} >
-              AnimeTronix
+              Anime Avenue
             </Text>
             <Navbar.Content hideIn="xs" variant="highlight-rounded" style={{
               color: 'white'

@@ -9,7 +9,7 @@ import React from "react";
 import { Dropdown } from "@nextui-org/react";
 import Link from "next/link";
 export default function WatchEpisode({ params, anime, Episodes, episodeId, currentEp }) {
-    const [selected, setSelected] = React.useState(new Set(["480p"]));
+    const [selected, setSelected] = React.useState(new Set(["360p"]));
     const selectedValue = React.useMemo(
         () => Array.from(selected).join(", ").replaceAll("_", " "),
         [selected]
@@ -21,7 +21,7 @@ export default function WatchEpisode({ params, anime, Episodes, episodeId, curre
     const [skip, setSkip] = useState(null);
     const [skipSelected, setSkipSelected] = useState(["play", "skip"]);
     const [episodes, setEpisodes] = useState(Episodes);
-    const { data, error } = useSWR("https://api.consumet.org/anime/gogoanime/watch/" + episodeId, fetcher);
+    const { data, error } = useSWR("https://api.haikei.xyz/anime/gogoanime/watch/" + episodeId, fetcher);
     const source = data?.sources;
     const dub = true;
     data ? null : <Loading />
@@ -39,11 +39,6 @@ export default function WatchEpisode({ params, anime, Episodes, episodeId, curre
             console.log(e);
         }
     }
-    useEffect(() => {
-        setTimeout(() => {
-            setSelected(new Set(["360p"]));
-        }, 5000);
-    }, [FilterdSource])
     useEffect(() => {
         const filter = async () => {
             console.log(selectedValue);
@@ -73,8 +68,8 @@ export default function WatchEpisode({ params, anime, Episodes, episodeId, curre
                     return item.skipType === "op";
                 })
                 op = op ? op[0] : null;
-                if (currentTime >= op?.interval.startTime && currentTime <= op?.interval.endTime){
-                  player.current.currentTime = op?.interval.endTime;
+                if (currentTime >= op?.interval.startTime && currentTime <= op?.interval.endTime) {
+                    player.current.currentTime = op?.interval.endTime;
                 }
             }
         });
@@ -112,7 +107,7 @@ export default function WatchEpisode({ params, anime, Episodes, episodeId, curre
                                     poster={currentEp.image}
 
                                     autoplay
-                                    fullscreenOrientation="landscape"
+                                    fullscreenOrientation="landscape-secondary"
                                     ref={player}
                                 >
                                     <div className="pointer-events-none absolute inset-0 z-50 flex h-full w-full items-center justify-center">
@@ -463,7 +458,7 @@ export async function getServerSideProps(context) {
     const { anime, episode } = context.query;
     if (!anime) context.res.redirect("/");
     if (anime && !episode) context.res.redirect(`/watch/${anime}/1`);
-    const data = await fetch("https://api.consumet.org/meta/anilist/info/" + anime + "?dub=true").then(res => res.json());
+    const data = await fetch("https://api.haikei.xyz/meta/anilist/info/" + anime + "?dub=true").then(res => res.json());
     const episodeId = data?.episodes?.find((ep) => ep.number == episode)?.id;
     // console.log(data?.episodes)
     return {

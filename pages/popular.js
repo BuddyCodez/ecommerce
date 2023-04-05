@@ -84,7 +84,7 @@ export default function Trending({ anime }) {
     </>)
 }
 export async function getServerSideProps(context) {
-    const url = 'https://api.consumet.org/meta/anilist/popular';
+    const url = 'https://api.haikei.xyz/meta/anilist/popular';
     const { data } = await axios.get(url, {
         params: {
             page: 1,

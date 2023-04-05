@@ -21,7 +21,7 @@ const watch = ({ anime, Episodes }) => {
   const [FilterdSource, setFilterdSource] = useState([]);
   const [videoQuality, setVideoQuality] = useState("360p");
   const [episodes, setEpisodes] = useState(Episodes);
-  const { data, error } = useSWR("https://api.consumet.org/anime/gogoanime/watch/" + query?.id, fetcher);
+  const { data, error } = useSWR("https://api.haikei.xyz/anime/gogoanime/watch/" + query?.id, fetcher);
   const source = data?.sources;
   const dub = query.id?.includes("dub");
   data ? null : <Loading />
@@ -388,7 +388,7 @@ export default watch;
 export async function getServerSideProps(context) {
   const { id, anime } = context.query;
   const url =
-    "https://api.consumet.org/meta/anilist/info/" + anime + "?dub=true";
+    "https://api.haikei.xyz/meta/anilist/info/" + anime + "?dub=true";
   const animeData = await fetch(url).then((res) => res.json());
   const episodes = animeData.episodes;
   return {

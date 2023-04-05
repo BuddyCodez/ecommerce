@@ -6,18 +6,10 @@ const Hero = () => {
     <section className="hero">
       <div className="container">
         <div className="hero-content">
-          <p className="hero-subtitle text-info">Animetronix</p>
+          <p>Looking for a hub of all things anime? Look no further than <strong>Anime Avenue</strong>! Our vibrant community of passionate fans is dedicated to exploring the exciting world of Japanese animation, with the latest news, reviews, and recommendations for all your favorite shows. Whether you're a die-hard otaku or just dipping your toes into this amazing universe, <strong>Anime Avenue</strong> is the perfect place to start your journey. Join us today and discover your new obsession!</p>
 
-          <h1 className="h1 hero-title">
-            CountLess <strong>Animes</strong>, Ads Free Watching, & More.
-          </h1>
 
           <div className="meta-wrapper">
-            <div className="badge-wrapper">
-              <div className="badge badge-fill badge-info">All</div>
-
-              <div className="badge badge-outline">HD</div>
-            </div>
 
             <div className="ganre-wrapper">
               <Link href="/search?genre=action">Action,</Link>
@@ -27,19 +19,7 @@ const Hero = () => {
               <Link href="/search?genre=drama">Drama</Link>
             </div>
 
-            <div className="date-time">
-              <div>
-                <ion-icon name="calendar-outline"></ion-icon>
-
-                <time dateTime="2022">2022</time>
-              </div>
-
-              <div>
-                <ion-icon name="time-outline"></ion-icon>
-
-                <time dateTime="PT128M">128 min</time>
-              </div>
-            </div>
+          
           </div>
 
           <Button shadow color="primary" auto icon={

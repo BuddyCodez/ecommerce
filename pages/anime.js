@@ -119,13 +119,13 @@ export async function getServerSideProps(context) {
 
   try {
     if (query?.animeid) {
-      const url = "https://api.consumet.org/meta/anilist/info/" + query.animeid + "?provider=gogoanime";
+      const url = "https://api.haikei.xyz/meta/anilist/info/" + query.animeid + "?provider=gogoanime";
       console.log("URL", url);
       const res = await fetch(url);
       data = await res.json();
 
     } else {
-      const url = "https://api.consumet.org/anime/gogoanime/info/" + query.anime;
+      const url = "https://api.haikei.xyz/anime/gogoanime/info/" + query.anime;
       const res = await fetch(url);
       data = await res.json();
 
@@ -136,13 +136,14 @@ export async function getServerSideProps(context) {
     data = [];
   }
   if (!data) data = undefined;
+ 
   return {
     props: {
       data,
     },
   };
 }
-const EpisodeView = ({ episodes, anime}) => {
+const EpisodeView = ({ episodes, anime }) => {
   const router = useRouter();
   const [selected, setSelected] = React.useState(new Set(["title"]));
   const selectedValue = React.useMemo(

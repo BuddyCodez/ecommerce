@@ -4,29 +4,12 @@ import axios from "axios";
 import Layout from "./layout/main";
 import Head from "next/head";
 import Script from "next/script";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Loading, Pagination } from "@nextui-org/react";
 const SearchResult = ({ anime, genre }) => {
   const { query } = useRouter();
   const [animes, setAnimes] = useState(anime);
   const [loading, setLoading] = useState(null);
-  async function HandlePageShift(type) {
-    let page = animes.currentPage
-    setLoading(true);
-    if (type == "prev" && page > 1) {
-      page -= 1;
-    } else if (type == "next" && animes.hasNextPage) {
-      page += 1;
-    }
-    const url = "https://api.consumet.org/meta/anilist/" + query.keyword;
-    const { data } = await axios.get(url, {
-      params: {
-        page: page
-      }
-    });
-    console.log(data);
-    setAnimes(data);
-    setLoading(false);
-  }
 
   return (
     <>
@@ -47,7 +30,7 @@ const SearchResult = ({ anime, genre }) => {
             ) : (<div className="container">
               {animes?.length > 0 || animes.results?.length > 0 ? (
                 <h2 className="h2 section-title">
-                  {genre ? animes.length : animes?.results?.length}  Search Results for {query.query}
+                  {genre ? animes?.totalResults : animes?.results?.length}  Search Results for {query?.query || query?.genre + " Animes"}
                 </h2>
               ) : (
                 <h2 className="h2 section-title">
@@ -55,30 +38,8 @@ const SearchResult = ({ anime, genre }) => {
                   No Search Results for {query.query}
                 </h2>
               )}
-              <p className=" section-subtitle">Current Page: {animes?.currentPage}</p>
-              {genre ? <Genre anime={animes} /> : <QuerySearch anime={animes} />}
-              <div className="flex justify-center">
-                {animes?.currentPage == 1 ? <button type="button" class="inline-flex items-center px-4 py-2 mr-3 text-sm font-medium text-white border border-gray-300 rounded-lg hover:bg-gray-400 hover:text-gray-700 bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white cursor-not-allowed" disabled>
-                  <svg aria-hidden="true" class="w-5 h-5 mr-2" fill="white" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
-                  Previous
-                </button> : <button
-                  onClick={() => HandlePageShift("prev")}
-                  type="button" class="inline-flex items-center px-4 py-2 mr-3 text-sm font-medium text-white border border-gray-300 rounded-lg hover:bg-gray-400 hover:text-gray-700 bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                  <svg aria-hidden="true" class="w-5 h-5 mr-2" fill="white" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
-                  Previous
-                </button>}
-                {animes?.hasNextPage ? <button type="button" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white border border-gray-300 rounded-lg hover:bg-gray-400 hover:text-gray-700 bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                  onClick={() => HandlePageShift("next")}
-                >
-                  Next
-                  <svg aria-hidden="true" class="w-5 h-5 ml-2" fill="white" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                </button> : <button type="button" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white border border-gray-300 rounded-lg hover:bg-gray-400 hover:text-gray-700 bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white cursor-not-allowed"
-                  disabled
-                >
-                  Next
-                  <svg aria-hidden="true" class="w-5 h-5 ml-2" fill="white" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                </button>}
-              </div>
+              {genre ? <Genre anime={animes} query={query} /> : <QuerySearch anime={animes} />}
+
             </div>)}
           </section>
         </article>
@@ -104,8 +65,9 @@ export async function getServerSideProps(context) {
         },
       };
     } else {
-      const url = "https://gogoanime.consumet.stream/genre/" + query.genre;
-      const { data } = await axios.get(url);
+      const url = "https://api.consumet.org/meta/anilist/advanced-search";
+      const Genre = query.genre.charAt(0).toUpperCase() + query.genre.slice(1);
+      const { data } = await axios.get(url, { params: { genres: `["${Genre}"]` } });
       const anime = data;
       console.log(anime);
       return {
@@ -116,11 +78,12 @@ export async function getServerSideProps(context) {
       };
     }
   } else {
-    const url = "https://api.consumet.org/meta/anilist/" + query.keyword;
+    const url = "https://api.haikei.xyz/meta/anilist/" + query.keyword;
     const res = await fetch(url);
     const data = await res.json();
     const anime = data;
     console.log(anime);
+
     return {
       props: {
         anime,
@@ -130,33 +93,55 @@ export async function getServerSideProps(context) {
   }
 }
 
-const Genre = ({ anime }) => {
+const Genre = ({ anime, query }) => {
+  const [animes, setAnimes] = useState(anime);
+  const [loading, setLoading] = useState(false);
+  const ref = useRef(null);
   return (
-    <ul className="movies-list">
-      {anime?.map((item) => {
-        return (
-          <li key={item.animeId + item.animeTitle}>
-            <div className="movie-card">
-              <Link href={"/anime?anime=" + item.animeId}>
-                <figure className="card-banner">
-                  <img src={item.animeImg} alt={item.animeTitle} />
-                </figure>
-              </Link>
-
-              <div className="title-wrapper">
-                <Link href={"/anime?anime=" + item.animeId}>
-                  <h3 className="card-title">{item.animeTitle}</h3>
+    <>
+      {loading ? (
+        <div className=" flex justify-center items-center h-screen max-h-screen">
+          <Loading color='primary' size="xl" />
+        </div>
+      ) : (<ul className="movies-list" ref={ref}>
+        {animes.results?.map((item) => {
+          return (
+            <li key={item?.id} >
+              <div className="movie-card">
+                <Link href={"/anime/=" + item?.id}>
+                  <figure className="card-banner">
+                    <img src={item?.image} alt={item?.title?.english} />
+                  </figure>
                 </Link>
 
-                <span className="section-subtitle">
-                  Release Date: {item.releasedDate}
-                </span>
+                <div className="title-wrapper">
+                  <Link href={"/anime/" + item.id}>
+                    <h3 className="card-title">{item?.title?.english || item?.title?.userPreferred || item?.title?.romaji}</h3>
+                  </Link>
+
+                  <span className="section-subtitle">
+                    Release Date: {item.releaseDate}
+                  </span>
+                </div>
               </div>
-            </div>
-          </li>
-        );
-      })}
-    </ul>
+            </li>
+          );
+        })}
+      </ul >)}
+      <div className="flex w-full justify-center" >
+        <Pagination total={anime?.totalPages} initialPage={anime?.currentPage}
+          onChange={async (page) => {
+            setLoading(true);
+            const { data } = await axios.get("https://api.consumet.org/meta/anilist/advanced-search", { params: { genres: [query.genre], page: page } });
+            setAnimes(data);
+            setLoading(false);
+            // ref.current.scrollIntoView({ behavior: "smooth" });
+            ref?.current?.scrollIntoView({ behavior: "smooth" });
+          }}
+        />
+
+      </div>
+    </>
   );
 };
 const QuerySearch = ({ anime }) => {

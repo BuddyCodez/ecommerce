@@ -99,7 +99,7 @@ const Anime = ({ data }) => {
 
                             </div>
                         </section>
-                        <Recommendations recommendations={anime?.recommendations} />
+                        {anime?.recommendations.length > 0 && <Recommendations recommendations={anime?.recommendations} />}
                     </article>) : (
                         <>
                             <FourZeroFour />
@@ -123,7 +123,7 @@ export async function getServerSideProps(context) {
             data = await res.json();
 
         } else {
-            const url = "https://api.consumet.org/anime/gogoanime/info/" + query.anime;
+            const url = "https://api.haikei.xyz/anime/gogoanime/info/" + query.anime;
             const res = await fetch(url);
             data = await res.json();
 
@@ -134,6 +134,7 @@ export async function getServerSideProps(context) {
         data = [];
     }
     if (!data) data = undefined;
+    console.log("DATA", data);
     return {
         props: {
             data,
@@ -191,7 +192,7 @@ const EpisodeView = ({ episodes, anime }) => {
                     clearable
                     onChange={
                         (e) => {
-                            e.target.value ? selectedValue == 'title' ? setEpisodes(episodes.filter(ep => ep.title.toLowerCase().includes(e.target.value.toLowerCase()))) : setEpisodes(episodes.filter(ep => String(ep.number) == e.target.value)) : setEpisodes(episodes.slice(0, perPage))
+                            e.target.value ? selectedValue == 'title' ? setEpisodes(episodes.filter(ep => ep?.title?.toLowerCase().includes(e.target.value.toLowerCase()))) : setEpisodes(episodes.filter(ep => String(ep.number) == e.target.value)) : setEpisodes(episodes.slice(0, perPage))
                         }
                     }
                 />
