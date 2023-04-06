@@ -21,7 +21,7 @@ export default function WatchEpisode({ params, anime, Episodes, episodeId, curre
     const [skip, setSkip] = useState(null);
     const [skipSelected, setSkipSelected] = useState(["play", "skip"]);
     const [episodes, setEpisodes] = useState(Episodes);
-    const { data, error } = useSWR("https://api.haikei.xyz/anime/gogoanime/watch/" + episodeId, fetcher);
+    const { data, error } = useSWR("https://api.consumet.org/anime/gogoanime/watch/" + episodeId, fetcher);
     const source = data?.sources;
     const dub = true;
     data ? null : <Loading />
@@ -102,7 +102,7 @@ export default function WatchEpisode({ params, anime, Episodes, episodeId, curre
                             <div className="flex flex-col justify-center items-center gap-2"
                             >
                                 {FilterdSource[0]?.url ? <MediaPlayer
-                                    src={`https://cors.haikei.xyz/${FilterdSource[0]?.url}`}
+                                    src={`https://m3u8proxy-cors.buddycodez.repl.co/cors?url=${FilterdSource[0]?.url}`}
                                     // src={FilterdSource[0]?.url}
                                     poster={currentEp.image}
 
@@ -458,7 +458,7 @@ export async function getServerSideProps(context) {
     const { anime, episode } = context.query;
     if (!anime) context.res.redirect("/");
     if (anime && !episode) context.res.redirect(`/watch/${anime}/1`);
-    const data = await fetch("https://api.haikei.xyz/meta/anilist/info/" + anime + "?dub=true").then(res => res.json());
+    const data = await fetch("https://api.consumet.org/meta/anilist/info/" + anime + "?dub=true").then(res => res.json());
     const episodeId = data?.episodes?.find((ep) => ep.number == episode)?.id;
     // console.log(data?.episodes)
     return {

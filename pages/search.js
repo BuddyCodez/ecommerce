@@ -30,7 +30,7 @@ const SearchResult = ({ anime, genre }) => {
             ) : (<div className="container">
               {animes?.length > 0 || animes.results?.length > 0 ? (
                 <h2 className="h2 section-title uppercase">
-                  {genre ? animes?.totalResults : animes?.results?.length}  Search Results for {query?.query || query?.genre + " Animes"}
+                  {genre ? animes?.totalResults : animes?.results?.length}  Search Results for {query?.keyword || query?.genre + " Animes"}
                 </h2>
               ) : (
                 <h2 className="h2 section-title">
@@ -78,7 +78,7 @@ export async function getServerSideProps(context) {
       };
     }
   } else {
-    const url = "https://api.haikei.xyz/meta/anilist/" + query.keyword;
+    const url = "https://api.consumet.org/meta/anilist/" + query.keyword;
     const res = await fetch(url);
     const data = await res.json();
     const anime = data;
