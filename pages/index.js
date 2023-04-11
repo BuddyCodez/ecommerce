@@ -20,7 +20,7 @@ export default function Home({ popular, news}) {
         <article>
           <Hero />
           <TopRated popular={popular} />
-          <News news={news} />
+          {news ? <News news={news}  /> : ""}
         </article>
       </Layout>
     </>
