@@ -3,7 +3,8 @@ import Head from "next/head";
 import Hero from "./components/Hero";
 import TopRated from "./components/TopRated";
 import Layout from "./layout/main";
-export default function Home({ popular }) {
+import News from "./components/News";
+export default function Home({ popular, news}) {
   return (
     <>
       <Head>
@@ -19,23 +20,31 @@ export default function Home({ popular }) {
         <article>
           <Hero />
           <TopRated popular={popular} />
+          <News news={news} />
         </article>
       </Layout>
     </>
   );
 }
+
 export async function getStaticProps() {
-  let popular
+  let popular;
+  let newsData;
   try {
     const { data } = await axios.get("https://api.haikei.xyz/meta/anilist/popular");
+    const { data: news } = await axios.get("https://api.consumet.org/news/ANN/recent-feeds");
+    console.log("NEWS",news);
+    newsData = news;
     popular = data;
   } catch (e) {
     popular = [];
+    newsData = [];
   }
   // console.log(popular);
   return {
     props: {
       popular: popular,
+      news: newsData,
     },
 
   };

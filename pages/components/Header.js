@@ -265,12 +265,14 @@ const Header = ({ children, active }) => {
                 style={{
                   border: 'none',
                   boxShadow: 'none',
-                  background: 'var(--jet)'
+                  background: 'var(--jet)',
+                  width: '100%'
                 }}
                 css={{
                   w: "100%",
                   "@xsMax": {
                     mw: "300px",
+                    width: '100%'
                   },
                   "& .nextui-input-content--left": {
                     h: "100%",

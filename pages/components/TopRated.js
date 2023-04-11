@@ -50,6 +50,9 @@ const TopRated = ({ popular }) => {
             className='NextUiCard'
             css={{
               height: '500px',
+              '@lgMin': {
+                width: '300px',
+              },
               '@mdMax': {
                 width: '350px',
               },

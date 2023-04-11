@@ -21,7 +21,7 @@ const Footer = () => {
         <div className="container">
           <div className="footer-brand-wrapper">
             <a href="./index.html" className="logo">
-              <h1 className="logo-text">Animetronix</h1>
+              <h1 className="logo-text">Anime Avenue</h1>
             </a>
 
             <ul className="footer-list">
@@ -114,10 +114,6 @@ const Footer = () => {
             &copy; 2023- 2024{" "}
             <a href="https://uditvegad.vercel.app">Udit Vegad</a>. All Rights
             Reserved
-          </p>
-
-          <p className="credit">
-            Designed by <a href="https://uditvegad.vercel.app" className="text-info">Udit Vegad</a>
           </p>
         </div>
       </div>
