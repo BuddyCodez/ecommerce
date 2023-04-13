@@ -21,7 +21,7 @@ class MyDocument extends Document {
           <meta name="google-site-verification" content="d8Q9bSGyoBL8RSathwiLAJd3qbQhUcl_au7udJd5XZo" />
           <link
             rel="preconnect"
-            href="https://api.consumet.org/"
+            href="https://api.haikei.xyz/"
           />
           <link
             rel="shortcut icon"
@@ -34,7 +34,7 @@ class MyDocument extends Document {
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/@vime/core@^5/themes/default.css"
           /> */}
-{/* 
+          {/* 
           <link
             rel="preconnect"
             href="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"

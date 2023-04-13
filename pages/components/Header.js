@@ -1,57 +1,49 @@
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import LoadingBar from "react-top-loading-bar";
-import { Collapse } from "flowbite";
-import { Navbar, Text, Dropdown, Input, useTheme, Spacer } from "@nextui-org/react";
-import { IoMdArrowDropdown } from "react-icons/io";
+import { Navbar, Button, Link, Text, Input } from "@nextui-org/react";
 import { styled } from "@nextui-org/react"
-import { BsSearch } from "react-icons/bs";
+import axios from "axios";
 export const Box = styled("div", {
   boxSizing: "border-box",
 });
-const Header = ({ children, active }) => {
-  const [query, setQuery] = useState("");
+import Logo from "../../public/images/logo.png";
+const Header = ({ children }) => {
   const [progress, setProgress] = useState(0);
   const loadRef = useRef(null);
   const router = useRouter();
-  const SearchGenre = async (e, url) => {
-    window.location.href = url;
+  const [categories, setCategories] = useState([]);
+  const [displayCategories, setDisplayCategories] = useState([]);
+  const Caller = async () => {
+    loadRef?.current?.continuousStart();
+    const { data } = await axios.get(window.location.origin + "/api/navcategories", {
+   
+    });
+    const filteredCategories = data?.data?.filter((category) => {
+      return category?.title !== "Electronics";
+    });
+    setCategories(data);
+    setDisplayCategories({ data: filteredCategories });
+    loadRef?.current?.complete();
   };
-  const IsActive = () => {
-    if (active === "home") {
-      return "Home";
-    } else if (active === "trnd") {
-      return "Trending";
-    } else if (active === "abt") {
-      return "About Us";
-    } else if (active === "pop") {
-      return "Popular";
-    }
-  }
-  const Toggle = () => {
-    const $targetEl = document.getElementById('targetEl');
-    const $triggerEl = document.getElementById('triggerEl');
-    const collapse = new Collapse($targetEl, $triggerEl, options);
-    collapse.toggle();
-  }
-  const Genres = [
-    { name: 'Action', href: '/search?genre=action' },
-    { name: 'Adventure', href: '/search?genre=adventure' },
-    { name: 'Comedy', href: '/search?genre=comedy' },
-    { name: 'Demons', href: '/search?genre=demons' },
-    { name: 'Drama', href: '/search?genre=drama' },
-    { name: 'Fantasy', href: '/search?genre=fantasy' },
-    { name: 'Horror', href: '/search?genre=horror' },
-    { name: 'Martial Arts', href: '/search?genre=martial-arts' },
-    { name: 'Mecha', href: '/search?genre=mecha' },
-    { name: 'Mystery', href: '/search?genre=mystery' },
-    { name: 'Romance', href: '/search?genre=romance' },
-    { name: 'Samurai', href: '/search?genre=samurai' },
-    { name: 'School', href: '/search?genre=school' },
-    { name: 'Sci-Fi', href: '/search?genre=sci-fi' },
-    { name: 'Seinen', href: '/search?genre=seinen' },
-  ]
+  useEffect(() => {
+    Caller();
+  }, []);
+
+  // Promise.all([isLoading, data, error]).then((values) => {
+  //   // if there is no error, set categories
+  //   if (!error) {
+  //     setCategories(data);
+  //     const filteredCategories = data?.data?.filter((category) => {
+  //       return category?.title !== "Electronics";
+  //     });
+  //     setDisplayCategories({ data: filteredCategories });
+  //   }
+  //   loadRef?.current?.complete();
+  //   return values;
+  // });
+
+
   useEffect(() => {
     router.events.on("routeChangeStart", (e) => {
       loadRef?.current?.continuousStart()
@@ -60,17 +52,7 @@ const Header = ({ children, active }) => {
       setProgress(100);
     });
   });
-  const Submit = async (e) => {
-    e.preventDefault();
-    router.push(`/search?keyword=${query}`);
-  };
-  const { isDark } = useTheme(true);
-  const collapseItems = [
-    { name: 'Home', href: '/' },
-    { name: 'Trending', href: '/trending' },
-    { name: 'About Us', href: '/about' },
 
-  ];
   return (
     <>
       <LoadingBar
@@ -86,222 +68,438 @@ const Header = ({ children, active }) => {
           width: "100%",
         }}
       >
-        <Navbar isBordered={true} variant="floating"
-        >
-          <Navbar.Brand css={{ mr: "$4", width: '100%' }}>
-            <Text b color="primary" css={{
-              mr: "$11", "@xsMax": {
-                ml: '$4'
-              }
-            }} >
-              AnimeTronix
-            </Text>
-            <Navbar.Content hideIn="xs" variant="highlight-rounded" style={{
-              color: 'white'
-            }} >
-              <Navbar.Link isActive={IsActive() == "Home" ? true : active == null || active == undefined ? true : false} href="/">
-                Home
-              </Navbar.Link>
-              <Navbar.Link href="/trending" isActive={IsActive() == "Trending" ? true : false}>Trending</Navbar.Link>
-              <Navbar.Link href="/popular" isActive={IsActive() == "Popular" ? true : false}>Popular</Navbar.Link>
-              <Dropdown isBordered>
-                <Navbar.Item>
-                  <Dropdown.Button
-                    auto
-                    light
-                    css={{
-                      px: 0,
-                      dflex: "center",
-                      svg: { pe: "none" },
-                      color: 'white'
-                    }}
-                    ripple={false}
-                  >
-                    Genres
-                  </Dropdown.Button>
-                </Navbar.Item>
-                <Dropdown.Menu
-                  aria-label="dropdown menu"
-                  css={{
-                    $$dropdownMenuWidth: "340px",
-                    $$dropdownItemHeight: "70px",
-                    "& .nextui-dropdown-item": {
-                      py: "$4",
-                      // dropdown item left icon
-                      svg: {
-                        color: "$secondary",
-                        mr: "$4",
-                      },
-                      // dropdown item title
-                      "& .nextui-dropdown-item-content": {
-                        w: "100%",
-                        fontWeight: "$semibold",
-                      },
-                    },
-                  }}
-                >
-                  {Genres.map((genre) => {
-                    return (
-                      <Dropdown.Item
-                        key={genre.name}
-                        title={<Link href={genre.href}> {genre.name}</Link>}
-                      >
-                        <Link href={genre.href} />
-                      </Dropdown.Item>
 
-                    )
-                  })}
+        <header>
 
-                </Dropdown.Menu>
-              </Dropdown>
-            </Navbar.Content>
-            <Navbar.Content
+          <div class="header-top">
 
-              css={{
-                display: "none",
-                visibility: "hidden",
-                opacity: 0,
-                "@xsMax": {
-                  w: "100%",
-                  jc: "space-between",
-                  display: "block",
-                  visibility: "visible",
-                  opacity: 1,
-                },
-                "@smMin": {
+            <div class="container">
 
-                }
-              }}
+              <ul class="header-social-container">
 
-            >
-              <Navbar.Item
-                css={{
-                  "@xsMax": {
-                    w: "100%",
-                    jc: "center",
-                  },
-                }}
-              >
-                <Input
-                  ariaLabel="Search Anime"
-                  clearable
-                  contentLeft={
-                    <BsSearch color="var(--nextui-gray-500)" width={20} />
-                  }
-                  onChange={(e) => setQuery(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      Submit(e);
+                <li>
+                  <a href="#" class="social-link">
+                    <ion-icon name="logo-facebook"></ion-icon>
+                  </a>
+                </li>
+
+                <li>
+                  <a href="#" class="social-link">
+                    <ion-icon name="logo-twitter"></ion-icon>
+                  </a>
+                </li>
+
+                <li>
+                  <a href="#" class="social-link">
+                    <ion-icon name="logo-instagram"></ion-icon>
+                  </a>
+                </li>
+
+                <li>
+                  <a href="#" class="social-link">
+                    <ion-icon name="logo-linkedin"></ion-icon>
+                  </a>
+                </li>
+
+              </ul>
+
+              <div class="header-alert-news">
+                <p>
+                  <b>Free Shipping</b>
+                  This Week Order Over - $55
+                </p>
+              </div>
+
+
+
+            </div>
+
+          </div>
+
+          <div class="header-main">
+
+            <div class="container">
+
+              <a href="/" class="header-logo">
+                {/* Ecommerce APP */}
+                <img src="/images/logo.png" alt="ShopWave" width="120" height="36" />
+              </a>
+
+              <div class="header-search-container">
+
+                <input type="search" name="search" class="search-field" placeholder="Enter your product name..." />
+
+                <button class="search-btn">
+                  <ion-icon name="search-outline"></ion-icon>
+                </button>
+
+              </div>
+
+              <div class="header-user-actions">
+
+                <button class="action-btn">
+                  <ion-icon name="person-outline"></ion-icon>
+                </button>
+
+                <button class="action-btn">
+                  <ion-icon name="heart-outline"></ion-icon>
+                  <span class="count">0</span>
+                </button>
+
+                <button class="action-btn">
+                  <ion-icon name="bag-handle-outline"></ion-icon>
+                  <span class="count">0</span>
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <nav class="desktop-navigation-menu">
+
+            <div class="container">
+
+              <ul class="desktop-menu-category-list">
+
+                <li class="menu-category">
+                  <a href="#" class="menu-title">Home</a>
+                </li>
+
+                <li class="menu-category">
+                  <a href="#" class="menu-title">Categories</a>
+
+                  <div class="dropdown-panel">
+                    {
+                      categories?.data?.map((category, index) => {
+                        return <>
+                          <ul class="dropdown-panel-list" key={category?.title}>
+                            <li class="menu-title">
+                              <a href="#">{category?.title}</a>
+                            </li>
+                            {category?.subcategories?.map((subcategory) => {
+                              return <li class="panel-list-item" key={subcategory?.title}>
+                                <a href="#">{subcategory?.title}</a>
+                              </li>
+                            })
+                            }
+                            <li class="panel-list-item">
+                              <a href="#">
+                                <img src={categories?.data[0].images[index].url} alt="men's fashion" width="250" height="119" />
+                              </a>
+                            </li>
+
+                          </ul>
+                        </>;
+                      })
                     }
-                  }}
-                  contentLeftStyling={false}
-                  color='primary'
-                  style={{
-                    border: 'none',
-                    boxShadow: 'none',
-                    background: 'var(--jet)',
-                  }}
-                  css={{
-                    w: "100%",
-                    "@xsMax": {
-                      mw: "300px",
-                      width: '80%'
-                    },
-                    "& .nextui-input-content--left": {
-                      h: "100%",
-                      ml: "$4",
-                      dflex: "center",
-                    },
 
-                  }}
 
-                  className=" focus:ring-transparent border-none shadow-none"
-                  placeholder="Search Anime..."
-                />
-              </Navbar.Item>
-            </Navbar.Content>
 
-            <Navbar.Toggle showIn="xs" aria-label="toggle navigation" id="NavbarToggler" title="Toggle"
-              css={{ width: '25px' }}
-            />
-          </Navbar.Brand>
-          <Navbar.Content
-            hideIn='xs'
-            css={{
-              "@xsMax": {
-                w: "100%",
-                jc: "space-between",
-              },
+                  </div>
+                </li>
+                {displayCategories?.data?.map((category, index) => {
+                  return <>
+                    <li class="menu-category" key={category?.title}>
+                      <a href="#" class="menu-title">{category?.title}</a>
+                      <ul class="dropdown-list">
+                        {category?.subcategories?.map((subcategory) => {
+                          return <li class="dropdown-item" key={subcategory?.title}>
+                            <a href="#">{subcategory?.title}</a>
+                          </li>
+                        })
+                        }
+                      </ul>
+                    </li>
+                  </>;
+                })}
 
-            }}
 
-          >
-            <Navbar.Item
-              css={{
-                "@xsMax": {
-                  w: "100%",
-                  jc: "center",
-                },
-              }}
-            >
-              <Input
-                ariaLabel="Search Anime"
-                clearable
-                contentLeft={
-                  <BsSearch color="var(--nextui-gray-500)" />
-                }
-                onChange={(e) => setQuery(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    Submit(e);
-                  }
-                }}
-                contentLeftStyling={false}
-                color='primary'
-                style={{
-                  border: 'none',
-                  boxShadow: 'none',
-                  background: 'var(--jet)'
-                }}
-                css={{
-                  w: "100%",
-                  "@xsMax": {
-                    mw: "300px",
-                  },
-                  "& .nextui-input-content--left": {
-                    h: "100%",
-                    ml: "$4",
-                    dflex: "center",
-                  },
+                <li class="menu-category">
+                  <a href="#" class="menu-title">Blog</a>
+                </li>
 
-                }}
+                <li class="menu-category">
+                  <a href="#" class="menu-title">Hot Offers</a>
+                </li>
 
-                className=" focus:ring-transparent border-none shadow-none"
-                placeholder="Search Anime..."
-              />
-            </Navbar.Item>
-          </Navbar.Content>
-          <Navbar.Collapse style={{
-            overflowY: 'hidden'
-          }}>
-            {collapseItems.map((item, index) => (
-              <Navbar.CollapseItem key={item.name}>
-                <Link
-                  color="inherit"
-                  css={{
-                    minWidth: "100%",
-                  }}
-                  href={item?.href || '#'}
-                >
-                  {item?.name}
-                </Link>
+              </ul>
 
-              </Navbar.CollapseItem>
-            ))}
+            </div>
 
-          </Navbar.Collapse>
-        </Navbar>
+          </nav>
+
+          <div class="mobile-bottom-navigation">
+
+            <button class="action-btn" data-mobile-menu-open-btn>
+              <ion-icon name="menu-outline"></ion-icon>
+            </button>
+
+            <button class="action-btn">
+              <ion-icon name="bag-handle-outline"></ion-icon>
+
+              <span class="count">0</span>
+            </button>
+
+            <button class="action-btn">
+              <ion-icon name="home-outline"></ion-icon>
+            </button>
+
+            <button class="action-btn">
+              <ion-icon name="heart-outline"></ion-icon>
+
+              <span class="count">0</span>
+            </button>
+
+            <button class="action-btn" data-mobile-menu-open-btn>
+              <ion-icon name="grid-outline"></ion-icon>
+            </button>
+
+          </div>
+
+          <nav class="mobile-navigation-menu  has-scrollbar" data-mobile-menu>
+
+            <div class="menu-top">
+              <h2 class="menu-title">Menu</h2>
+
+              <button class="menu-close-btn" data-mobile-menu-close-btn>
+                <ion-icon name="close-outline"></ion-icon>
+              </button>
+            </div>
+
+            <ul class="mobile-menu-category-list">
+
+              <li class="menu-category">
+                <a href="#" class="menu-title">Home</a>
+              </li>
+
+              <li class="menu-category">
+
+                <button class="accordion-menu" data-accordion-btn>
+                  <p class="menu-title">Men's</p>
+
+                  <div>
+                    <ion-icon name="add-outline" class="add-icon"></ion-icon>
+                    <ion-icon name="remove-outline" class="remove-icon"></ion-icon>
+                  </div>
+                </button>
+
+                <ul class="submenu-category-list" data-accordion>
+
+                  <li class="submenu-category">
+                    <a href="#" class="submenu-title">Shirt</a>
+                  </li>
+
+                  <li class="submenu-category">
+                    <a href="#" class="submenu-title">Shorts & Jeans</a>
+                  </li>
+
+                  <li class="submenu-category">
+                    <a href="#" class="submenu-title">Safety Shoes</a>
+                  </li>
+
+                  <li class="submenu-category">
+                    <a href="#" class="submenu-title">Wallet</a>
+                  </li>
+
+                </ul>
+
+              </li>
+
+              <li class="menu-category">
+
+                <button class="accordion-menu" data-accordion-btn>
+                  <p class="menu-title">Women's</p>
+
+                  <div>
+                    <ion-icon name="add-outline" class="add-icon"></ion-icon>
+                    <ion-icon name="remove-outline" class="remove-icon"></ion-icon>
+                  </div>
+                </button>
+
+                <ul class="submenu-category-list" data-accordion>
+
+                  <li class="submenu-category">
+                    <a href="#" class="submenu-title">Dress & Frock</a>
+                  </li>
+
+                  <li class="submenu-category">
+                    <a href="#" class="submenu-title">Earrings</a>
+                  </li>
+
+                  <li class="submenu-category">
+                    <a href="#" class="submenu-title">Necklace</a>
+                  </li>
+
+                  <li class="submenu-category">
+                    <a href="#" class="submenu-title">Makeup Kit</a>
+                  </li>
+
+                </ul>
+
+              </li>
+
+              <li class="menu-category">
+
+                <button class="accordion-menu" data-accordion-btn>
+                  <p class="menu-title">Jewelry</p>
+
+                  <div>
+                    <ion-icon name="add-outline" class="add-icon"></ion-icon>
+                    <ion-icon name="remove-outline" class="remove-icon"></ion-icon>
+                  </div>
+                </button>
+
+                <ul class="submenu-category-list" data-accordion>
+
+                  <li class="submenu-category">
+                    <a href="#" class="submenu-title">Earrings</a>
+                  </li>
+
+                  <li class="submenu-category">
+                    <a href="#" class="submenu-title">Couple Rings</a>
+                  </li>
+
+                  <li class="submenu-category">
+                    <a href="#" class="submenu-title">Necklace</a>
+                  </li>
+
+                  <li class="submenu-category">
+                    <a href="#" class="submenu-title">Bracelets</a>
+                  </li>
+
+                </ul>
+
+              </li>
+
+              <li class="menu-category">
+
+                <button class="accordion-menu" data-accordion-btn>
+                  <p class="menu-title">Perfume</p>
+
+                  <div>
+                    <ion-icon name="add-outline" class="add-icon"></ion-icon>
+                    <ion-icon name="remove-outline" class="remove-icon"></ion-icon>
+                  </div>
+                </button>
+
+                <ul class="submenu-category-list" data-accordion>
+
+                  <li class="submenu-category">
+                    <a href="#" class="submenu-title">Clothes Perfume</a>
+                  </li>
+
+                  <li class="submenu-category">
+                    <a href="#" class="submenu-title">Deodorant</a>
+                  </li>
+
+                  <li class="submenu-category">
+                    <a href="#" class="submenu-title">Flower Fragrance</a>
+                  </li>
+
+                  <li class="submenu-category">
+                    <a href="#" class="submenu-title">Air Freshener</a>
+                  </li>
+
+                </ul>
+
+              </li>
+
+              <li class="menu-category">
+                <a href="#" class="menu-title">Blog</a>
+              </li>
+
+              <li class="menu-category">
+                <a href="#" class="menu-title">Hot Offers</a>
+              </li>
+
+            </ul>
+
+            <div class="menu-bottom">
+
+              <ul class="menu-category-list">
+
+                <li class="menu-category">
+
+                  <button class="accordion-menu" data-accordion-btn>
+                    <p class="menu-title">Language</p>
+
+                    <ion-icon name="caret-back-outline" class="caret-back"></ion-icon>
+                  </button>
+
+                  <ul class="submenu-category-list" data-accordion>
+
+                    <li class="submenu-category">
+                      <a href="#" class="submenu-title">English</a>
+                    </li>
+
+                    <li class="submenu-category">
+                      <a href="#" class="submenu-title">Espa&ntilde;ol</a>
+                    </li>
+
+                    <li class="submenu-category">
+                      <a href="#" class="submenu-title">Fren&ccedil;h</a>
+                    </li>
+
+                  </ul>
+
+                </li>
+
+                <li class="menu-category">
+                  <button class="accordion-menu" data-accordion-btn>
+                    <p class="menu-title">Currency</p>
+                    <ion-icon name="caret-back-outline" class="caret-back"></ion-icon>
+                  </button>
+
+                  <ul class="submenu-category-list" data-accordion>
+                    <li class="submenu-category">
+                      <a href="#" class="submenu-title">USD &dollar;</a>
+                    </li>
+
+                    <li class="submenu-category">
+                      <a href="#" class="submenu-title">EUR &euro;</a>
+                    </li>
+                  </ul>
+                </li>
+
+              </ul>
+
+              <ul class="menu-social-container">
+
+                <li>
+                  <a href="#" class="social-link">
+                    <ion-icon name="logo-facebook"></ion-icon>
+                  </a>
+                </li>
+
+                <li>
+                  <a href="#" class="social-link">
+                    <ion-icon name="logo-twitter"></ion-icon>
+                  </a>
+                </li>
+
+                <li>
+                  <a href="#" class="social-link">
+                    <ion-icon name="logo-instagram"></ion-icon>
+                  </a>
+                </li>
+
+                <li>
+                  <a href="#" class="social-link">
+                    <ion-icon name="logo-linkedin"></ion-icon>
+                  </a>
+                </li>
+
+              </ul>
+
+            </div>
+
+          </nav>
+
+        </header>
         {children}
+
       </Box>
     </>
   );
